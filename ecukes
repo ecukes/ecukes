@@ -1,6 +1,6 @@
 #!/usr/bin/emacs --script
 
-;;; ecukes.el --- TODO
+;;; ecukes.el --- Cucumber for Emacs
 
 ;; Copyright (C) 2010 Johan Andersson
 
