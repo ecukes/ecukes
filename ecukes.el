@@ -34,4 +34,13 @@
 ;;; Code:
 
 (add-to-list 'load-path (file-name-directory load-file-name))
+
+(dolist (feature-file argv)
+  (let ((feature (ecukes-parse-feature feature-file)))
+
+    )
+  )
+
+(provide 'ecukes)
+
 ;;; ecukes.el ends here
