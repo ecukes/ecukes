@@ -1,0 +1,18 @@
+#!/usr/bin/emacs --script
+
+;; Set the path to the test directory.
+(setq ecukes-test-path (file-name-directory load-file-name))
+
+;; Add test directories to load path.
+(add-to-list 'load-path ecukes-test-path)
+(add-to-list 'load-path (concat ecukes-test-path "ert"))
+
+;; Require testing framework.
+(require 'ert)
+
+;; Load the test helpers.
+(load-file (concat ecukes-test-path "test-helper.el"))
+
+;; Load all files ending with "-test.el" in the test directory.
+(dolist (test-file (directory-files ecukes-test-path t "-test.el"))
+  (load-file test-file))
