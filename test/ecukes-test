@@ -16,3 +16,6 @@
 ;; Load all files ending with "-test.el" in the test directory.
 (dolist (test-file (directory-files ecukes-test-path t "-test.el"))
   (load-file test-file))
+
+;; Run all tests.
+(ert-run-tests-batch t)
