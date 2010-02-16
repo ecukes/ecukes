@@ -1,4 +1,18 @@
 # Ecukes - Cucumber for Emacs
+There are plenty of unit and regression testing tools for Emacs out
+there, and even some for functional testing. What Emacs is missing
+though is a really good testing framework for integration
+testing. This is where [Ecukes](http://github.com/rejeep/ecukes) comes in.
+
+[Cucumber](http://cukes.info/) is a great integration testing tool,
+used mostly for testing web applications. Ecukes is Cucumber for
+Emacs. No, it's **not** a major mode for editing feature files. It is
+a package that makes it possible to write Cucumber like tests for your
+Emacs packages. **Note** that all Cucumber features are not
+included. Only the once that makes sense to have in Emacs.
+
+If you don't know anything about Cucumber I suggest you read up a bit
+about it before continuing with Ecukes.
 
 ## Installation
 
