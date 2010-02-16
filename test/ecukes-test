@@ -3,11 +3,13 @@
 ;; Set the path to the test directory.
 (setq ecukes-test-path (file-name-directory load-file-name))
 
-;; Add test directories to load path.
+;; Add some directories to load-path.
 (add-to-list 'load-path ecukes-test-path)
 (add-to-list 'load-path (concat ecukes-test-path "ert"))
+(add-to-list 'load-path (file-name-directory (directory-file-name ecukes-test-path)))
 
-;; Require testing framework.
+;; Require libraries.
+(require 'ecukes)
 (require 'ert)
 
 ;; Load the test helpers.
