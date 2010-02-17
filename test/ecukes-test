@@ -9,7 +9,6 @@
 (add-to-list 'load-path (file-name-directory (directory-file-name ecukes-test-path)))
 
 ;; Require libraries.
-(require 'ecukes)
 (require 'ert)
 
 ;; Load the test helpers.
