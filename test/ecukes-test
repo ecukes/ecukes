@@ -6,10 +6,12 @@
 ;; Add some directories to load-path.
 (add-to-list 'load-path ecukes-test-path)
 (add-to-list 'load-path (concat ecukes-test-path "ert"))
+(add-to-list 'load-path (concat ecukes-test-path "el-mock"))
 (add-to-list 'load-path (file-name-directory (directory-file-name ecukes-test-path)))
 
-;; Require libraries.
+;; Require testing libraries.
 (require 'ert)
+(require 'el-mock)
 
 ;; Load the test helpers.
 (load-file (concat ecukes-test-path "test-helper.el"))
