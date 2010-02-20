@@ -42,6 +42,4 @@
     )
   )
 
-(provide 'ecukes)
-
 ;;; ecukes.el ends here
