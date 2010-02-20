@@ -7,5 +7,13 @@
       (setq description(ecukes-intro-description intro)))
     (funcall fn feature intro header description)))
 
+(defun ecukes-test-parse-feature-background (feature-file fn)
+  (let* ((feature (ecukes-test-parse-feature (concat "background/" feature-file)))
+         (background (ecukes-feature-background feature))
+         (steps))
+    (when background
+      (setq steps (ecukes-background-steps background)))
+    (funcall fn feature background steps)))
+
 (defun ecukes-test-parse-feature (feature-file)
   (ecukes-parse-feature (concat ecukes-test-path "features/" feature-file)))

@@ -35,6 +35,32 @@
         (forward-line 1))
       (make-ecukes-intro :header header :description description))))
 
+(defun ecukes-parse-background ()
+  "Parses a feature background."
+  (goto-char (point-min))
+  (when (re-search-forward ecukes-background-re nil t)
+    (forward-line 1)
+    (let ((steps (list)))
+      (ecukes-parse-block
+       (lambda (step)
+         (add-to-list 'steps step t)))
+      (make-ecukes-background :steps steps))))
+
+(defun ecukes-parse-block (fn)
+  "Parses a block.
+
+This function assumes that the cursor is at the top
+position. It the above example that is on the \"Header:\" line."
+  (while (not (string= (ecukes-line) ""))
+    (let ((step (ecukes-parse-step)))
+      (funcall fn step))
+    (forward-line 1)))
+
+(defun ecukes-parse-step ()
+  ""
+  (make-ecukes-step :name (ecukes-line))
+  )
+
 (defun ecukes-line (&optional n)
   "Returns the current line +-N at point with removed leading and
 trailing whitespace."
