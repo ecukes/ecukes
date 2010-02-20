@@ -33,11 +33,15 @@
 
 ;;; Code:
 
+(eval-when-compile
+  (require 'cl))
+
 ;; Add the current directory to the load path.
 (add-to-list 'load-path (file-name-directory load-file-name))
 
 ;; Require Ecukes packages.
 (require 'ecukes-init)
+(require 'ecukes-parse)
 
 (defvar ecukes-feature-files '()
   "List of all feature files.")
