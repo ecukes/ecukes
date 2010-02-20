@@ -20,7 +20,7 @@
 (load-file (concat ecukes-test-path "test-helper.el"))
 
 ;; Load all files ending with "-test.el" in the test directory.
-(dolist (test-file (directory-files ecukes-test-path t "-test.el"))
+(dolist (test-file (or argv (directory-files ecukes-test-path t "-test.el")))
   (load-file test-file))
 
 ;; Run all tests.
