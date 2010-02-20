@@ -1,33 +1,31 @@
 ;;; ecukes-parse.el --- Parser stuff
 
-(defstruct ecukes-feature intro)
+(defstruct ecukes-feature intro background)
 (defstruct ecukes-intro header description)
+(defstruct ecukes-background steps)
+(defstruct ecukes-step name)
 
 (defvar ecukes-feature-re "Feature: *\\(.+[^ ]\\) *$"
   "Regular expression matching a feature header.")
 
+(defvar ecukes-background-re "Background:"
+  "Regular expression matching a background.")
+
 (defun ecukes-parse-feature (feature-file)
   (with-temp-buffer
     (insert-file-contents-literally feature-file)
-    (goto-char (point-min))
 
-    (let ((intro (ecukes-parse-intro)))
-      (make-ecukes-feature :intro intro)
+    (let ((intro (ecukes-parse-intro))
+          (background (ecukes-parse-background)))
+      (make-ecukes-feature :intro intro :background background)
       )
 
     )
   )
 
 (defun ecukes-parse-intro ()
-  "Parses the intro of a feature.
-
-Example
-
-  Feature: Addition of two numbers
-    In order to aviod silly mistakes
-    As a math idiot
-    I want to be told the sum of two numbers
-"
+  "Parses the intro of a feature."
+  (goto-char (point-min))
   (when (re-search-forward ecukes-feature-re nil t)
     (let ((header (match-string-no-properties 1))
           (description (list)))
