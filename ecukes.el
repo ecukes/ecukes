@@ -36,7 +36,18 @@
 ;; Add the current directory to the load path.
 (add-to-list 'load-path (file-name-directory load-file-name))
 
-(dolist (feature-file argv)
+;; Require Ecukes packages.
+(require 'ecukes-init)
+
+(defvar ecukes-feature-files '()
+  "List of all feature files.")
+(setq ecukes-feature-files (ecukes-init-feature-files argv))
+
+;; Make sure there are features passed in by the user.
+(unless ecukes-feature-files
+  (error "You did not provide any features"))
+
+(dolist (feature-file ecukes-feature-files)
   (let ((feature (ecukes-parse-feature feature-file)))
 
     )

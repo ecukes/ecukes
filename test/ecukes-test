@@ -13,6 +13,9 @@
 (require 'ert)
 (require 'el-mock)
 
+;; Require Ecukes packages.
+(require 'ecukes-init)
+
 ;; Load the test helpers.
 (load-file (concat ecukes-test-path "test-helper.el"))
 
