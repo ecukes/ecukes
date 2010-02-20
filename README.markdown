@@ -31,5 +31,10 @@ Before submitting a patch, make sure to write a test for it (if
 possible). Ecukes is tested with a testing framework called
 [Emacs Lisp Regression Testing](http://github.com/emacsmirror/ert).
 
-To run the tests, you simply run:
+To run the tests, you have to fetch two packages: **ert** and **el-mock**.
+    $ cd /path/to/ecukes
+    $ git submodule init
+    $ git submodule update
+    
+Then run the tests with:
     $ /path/to/ecukes/test/ecukes-test
