@@ -1,8 +1,9 @@
 ;;; ecukes-parse.el --- Parser stuff
 
-(defstruct ecukes-feature intro background)
+(defstruct ecukes-feature intro background scenarios)
 (defstruct ecukes-intro header description)
 (defstruct ecukes-background steps)
+(defstruct ecukes-scenario name steps)
 (defstruct ecukes-step name)
 
 (defvar ecukes-feature-re "Feature: *\\(.+[^ ]\\) *$"
@@ -11,17 +12,16 @@
 (defvar ecukes-background-re "Background:"
   "Regular expression matching a background.")
 
+(defvar ecukes-scenario-re "Scenario: *\\(.+[^ ]\\) *$"
+  "Regular expression matching a scenario header.")
+
 (defun ecukes-parse-feature (feature-file)
   (with-temp-buffer
     (insert-file-contents-literally feature-file)
-
     (let ((intro (ecukes-parse-intro))
-          (background (ecukes-parse-background)))
-      (make-ecukes-feature :intro intro :background background)
-      )
-
-    )
-  )
+          (background (ecukes-parse-background))
+          (scenarios (ecukes-parse-scenarios)))
+      (make-ecukes-feature :intro intro :background background :scenarios scenarios))))
 
 (defun ecukes-parse-intro ()
   "Parses the intro of a feature."
@@ -45,6 +45,19 @@
        (lambda (step)
          (add-to-list 'steps step t)))
       (make-ecukes-background :steps steps))))
+
+(defun ecukes-parse-scenarios ()
+  "Parses a feature scenario."
+  (let ((scenarios (list)))
+    (while (re-search-forward ecukes-scenario-re nil t)
+      (let ((steps (list)) (name))
+        (setq name (match-string-no-properties 1))
+        (forward-line 1)
+        (ecukes-parse-block
+         (lambda (step)
+           (add-to-list 'steps step t)))
+        (add-to-list 'scenarios (make-ecukes-scenario :name name :steps steps) t)))
+    scenarios))
 
 (defun ecukes-parse-block (fn)
   "Parses a block.
