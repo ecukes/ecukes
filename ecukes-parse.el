@@ -4,7 +4,7 @@
 (defstruct ecukes-intro header description)
 (defstruct ecukes-background steps)
 (defstruct ecukes-scenario name steps)
-(defstruct ecukes-step name)
+(defstruct ecukes-step name arg)
 
 (defconst ecukes-feature-re "Feature: *\\(.+[^ ]\\) *$"
   "Regular expression matching a feature header.")
@@ -14,6 +14,13 @@
 
 (defconst ecukes-scenario-re "Scenario: *\\(.+[^ ]\\) *$"
   "Regular expression matching a scenario header.")
+
+(defconst ecukes-py-string-re "\\(.+\\)\"\"\""
+  "Regular expression matching a py string step with grouping for
+  whitespace at the beginning.")
+
+(defconst ecukes-table-re "^ *|.+|"
+  "Regular expression matching a table step.")
 
 (defun ecukes-parse-feature (feature-file)
   (with-temp-buffer
@@ -70,9 +77,32 @@ position. It the above example that is on the \"Header:\" line."
     (forward-line 1)))
 
 (defun ecukes-parse-step ()
-  ""
-  (make-ecukes-step :name (ecukes-line))
-  )
+  "Parses a step."
+  (let ((peek (ecukes-line 1))
+        (name (ecukes-blank-line))
+        (offset) (arg))
+    (cond ((string-match ecukes-py-string-re peek)
+           (setq offset (length (match-string-no-properties 1 peek)))
+           (let ((lines (list)) (line))
+             (forward-line 2)
+             (while (not (string-match-p ecukes-py-string-re (ecukes-line)))
+               (setq line (replace-regexp-in-string (concat "^[[:space:]]" "\\{" (number-to-string offset) "\\}") "" (ecukes-line)))
+               (add-to-list 'lines line t)
+               (forward-line 1))
+             (setq arg (mapconcat 'identity lines "\n"))))
+          ((string-match ecukes-table-re peek)
+           (setq arg (list))
+           (forward-line 2)
+           (let ((line) (temp))
+             (while (string-match-p ecukes-table-re (ecukes-line))
+               (setq temp (list))
+               (setq line (split-string (ecukes-blank-line) "[[:blank:]]*|[[:blank:]]*"))
+               (dolist (col line)
+                 (unless (string= "" col)
+                   (add-to-list 'temp col t)))
+               (add-to-list 'arg temp t)
+               (forward-line 1)))))
+    (make-ecukes-step :name name :arg arg)))
 
 (defun ecukes-line (&optional n)
   (save-excursion

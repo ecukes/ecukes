@@ -12,6 +12,11 @@
          (scenarios (ecukes-feature-scenarios feature)))
     (funcall fn feature scenarios)))
 
+(defun ecukes-test-parse-feature-step (feature-file)
+  (with-temp-buffer
+    (insert-file-contents-literally (concat "features/step/" feature-file))
+    (ecukes-parse-step)))
+
 (defun ecukes-test-parse-feature-background (feature-file fn)
   (let* ((feature (ecukes-test-parse-feature (concat "background/" feature-file)))
          (background (ecukes-feature-background feature))
