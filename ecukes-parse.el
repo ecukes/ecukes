@@ -22,6 +22,9 @@
 (defconst ecukes-table-re "^ *|.+|"
   "Regular expression matching a table step.")
 
+(defconst ecukes-step-re "^[[:blank:]]*\\(Given\\|When\\|Then\\|And\\|But\\)"
+  "Regular expression matching a step.")
+
 (defun ecukes-parse-feature (feature-file)
   (with-temp-buffer
     (insert-file-contents-literally feature-file)
@@ -69,9 +72,9 @@
 (defun ecukes-parse-block (fn)
   "Parses a block."
   (while (not (string= (ecukes-blank-line) ""))
-    ;; TODO: Check if step
-    (let ((step (ecukes-parse-step)))
-      (funcall fn step))
+    (if (string-match-p ecukes-step-re (ecukes-blank-line))
+        (let ((step (ecukes-parse-step)))
+          (funcall fn step)))
     (forward-line 1)))
 
 (defun ecukes-parse-step ()

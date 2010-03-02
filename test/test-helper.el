@@ -38,3 +38,13 @@
   (with-temp-buffer
     (insert-file-contents-literally (concat ecukes-test-path "features/line/" feature-file))
     (funcall fn n)))
+
+(defun ecukes-test-parse-block-steps (feature-file)
+  (with-temp-buffer
+    (insert-file-contents-literally (concat ecukes-test-path "features/block/" feature-file))
+    (forward-line 1)
+    (let ((steps (list)))
+      (ecukes-parse-block
+       (lambda (step)
+         (add-to-list 'steps step t)))
+      steps)))
