@@ -38,3 +38,6 @@ To run the tests, you have to fetch two packages: **ert** and **el-mock**.
     
 Then run the tests with:
     $ /path/to/ecukes/test/ecukes-test
+
+You can also run specific tests with:
+    $ /path/to/ecukes/test/ecukes-test some-test.el ...
