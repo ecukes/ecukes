@@ -12,7 +12,7 @@
 (defconst ecukes-background-re "Background:"
   "Regular expression matching a background.")
 
-(defconst ecukes-scenario-re "Scenario: *\\(.+[^ ]\\)[[:blank:]]*$"
+(defconst ecukes-scenario-re "Scenario:[[:blank:]]*\\(.+[^ ]\\)[[:blank:]]*$"
   "Regular expression matching a scenario header.")
 
 (defconst ecukes-py-string-re "\\(.+\\)\"\"\""
