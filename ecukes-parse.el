@@ -6,13 +6,13 @@
 (defstruct ecukes-scenario name steps)
 (defstruct ecukes-step name)
 
-(defvar ecukes-feature-re "Feature: *\\(.+[^ ]\\) *$"
+(defconst ecukes-feature-re "Feature: *\\(.+[^ ]\\) *$"
   "Regular expression matching a feature header.")
 
-(defvar ecukes-background-re "Background:"
+(defconst ecukes-background-re "Background:"
   "Regular expression matching a background.")
 
-(defvar ecukes-scenario-re "Scenario: *\\(.+[^ ]\\) *$"
+(defconst ecukes-scenario-re "Scenario: *\\(.+[^ ]\\) *$"
   "Regular expression matching a scenario header.")
 
 (defun ecukes-parse-feature (feature-file)
