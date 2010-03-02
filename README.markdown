@@ -8,8 +8,10 @@ testing. This is where [Ecukes](http://github.com/rejeep/ecukes) comes in.
 used mostly for testing web applications. Ecukes is Cucumber for
 Emacs. No, it's **not** a major mode for editing feature files. It is
 a package that makes it possible to write Cucumber like tests for your
-Emacs packages. **Note** that all Cucumber features are not
-included. Only the once that makes sense to have in Emacs.
+Emacs packages. **Note** that Ecukes is **not** a complete clone of
+Cucumber, so there might be some functionality missing. If Ecukes is
+missing something that you feel really should be included, please make
+a bug report.
 
 If you don't know anything about Cucumber I suggest you read up a bit
 about it before continuing with Ecukes.
