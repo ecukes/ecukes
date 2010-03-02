@@ -27,6 +27,7 @@ about it before continuing with Ecukes.
 ## Running the features
 
 ## Contributing
+All contributions are much welcome and appreciated!
 
 ### Testing
 Before submitting a patch, make sure to write a test for it (if
