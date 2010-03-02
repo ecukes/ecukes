@@ -22,3 +22,14 @@
 
 (defun ecukes-test-parse-feature (feature-file)
   (ecukes-parse-feature (concat ecukes-test-path "features/" feature-file)))
+
+(defun ecukes-test-parse-line (feature-file &optional n)
+  (ecukes-test-parse-line-helper feature-file 'ecukes-line n))
+
+(defun ecukes-test-parse-blank-line (feature-file &optional n)
+  (ecukes-test-parse-line-helper feature-file 'ecukes-blank-line n))
+
+(defun ecukes-test-parse-line-helper (feature-file fn &optional n)
+  (with-temp-buffer
+    (insert-file-contents-literally (concat ecukes-test-path "features/line/" feature-file))
+    (funcall fn n)))

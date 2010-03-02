@@ -75,12 +75,13 @@ position. It the above example that is on the \"Header:\" line."
   )
 
 (defun ecukes-line (&optional n)
-  "Returns the current line +-N at point with removed leading and
-trailing whitespace."
-  (forward-line (or n 0))
-  (let ((line (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
-    (string-match "^ *\\(.*\\) *$" line)
-    (match-string-no-properties 1 line)))
+  (save-excursion
+    (forward-line (or n 0))
+    (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+
+(defun ecukes-blank-line (&optional n)
+  (let ((line (ecukes-line n)))
+    (replace-regexp-in-string "\\(^[[:space:]]*\\|[[:space:]]*$\\)" "" line)))
 
 (provide 'ecukes-parse)
 
