@@ -67,42 +67,41 @@
     scenarios))
 
 (defun ecukes-parse-block (fn)
-  "Parses a block.
-
-This function assumes that the cursor is at the top
-position. It the above example that is on the \"Header:\" line."
-  (while (not (string= (ecukes-line) ""))
+  "Parses a block."
+  (while (not (string= (ecukes-blank-line) ""))
+    ;; TODO: Check if step
     (let ((step (ecukes-parse-step)))
       (funcall fn step))
     (forward-line 1)))
 
 (defun ecukes-parse-step ()
   "Parses a step."
-  (let ((peek (ecukes-line 1))
-        (name (ecukes-blank-line))
-        (offset) (arg))
+  (let ((peek (ecukes-line 1)) (name (ecukes-blank-line)) (arg))
     (cond ((string-match ecukes-py-string-re peek)
-           (setq offset (length (match-string-no-properties 1 peek)))
-           (let ((lines (list)) (line))
-             (forward-line 2)
-             (while (not (string-match-p ecukes-py-string-re (ecukes-line)))
-               (setq line (replace-regexp-in-string (concat "^[[:space:]]" "\\{" (number-to-string offset) "\\}") "" (ecukes-line)))
-               (add-to-list 'lines line t)
-               (forward-line 1))
-             (setq arg (mapconcat 'identity lines "\n"))))
+           (setq arg (ecukes-parse-py-string)))
           ((string-match ecukes-table-re peek)
-           (setq arg (list))
-           (forward-line 2)
-           (let ((line) (temp))
-             (while (string-match-p ecukes-table-re (ecukes-line))
-               (setq temp (list))
-               (setq line (split-string (ecukes-blank-line) "[[:blank:]]*|[[:blank:]]*"))
-               (dolist (col line)
-                 (unless (string= "" col)
-                   (add-to-list 'temp col t)))
-               (add-to-list 'arg temp t)
-               (forward-line 1)))))
+           (setq arg (ecukes-parse-table))))
     (make-ecukes-step :name name :arg arg)))
+
+(defun ecukes-parse-py-string ()
+  "Parses a py string step"
+  (let ((lines) (offset (length (match-string-no-properties 1 (ecukes-line 1)))))
+    (forward-line 2)
+    (while (not (string-match-p ecukes-py-string-re (ecukes-line)))
+      (let ((line (replace-regexp-in-string (concat "^[[:space:]]" "\\{" (number-to-string offset) "\\}") "" (ecukes-line))))
+        (add-to-list 'lines line t)
+        (forward-line 1)))
+    (mapconcat 'identity lines "\n")))
+
+(defun ecukes-parse-table ()
+  "Parses a table step"
+  (forward-line 2)
+  (let ((rows (list)))
+    (while (string-match-p ecukes-table-re (ecukes-line))
+      (let ((cols (delete "" (split-string (ecukes-blank-line) "[[:blank:]]*|[[:blank:]]*"))))
+        (add-to-list 'rows cols t)
+        (forward-line 1)))
+    rows))
 
 (defun ecukes-line (&optional n)
   (save-excursion
