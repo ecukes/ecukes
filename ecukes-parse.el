@@ -37,8 +37,8 @@
     (let ((header (match-string-no-properties 1))
           (description (list)))
       (forward-line 1)
-      (while (not (string= (ecukes-line) ""))
-        (add-to-list 'description (ecukes-line) t)
+      (while (not (string= (ecukes-blank-line) ""))
+        (add-to-list 'description (ecukes-blank-line) t)
         (forward-line 1))
       (make-ecukes-intro :header header :description description))))
 
