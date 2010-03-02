@@ -101,6 +101,7 @@
       (let ((cols (delete "" (split-string (ecukes-blank-line) "[[:blank:]]*|[[:blank:]]*"))))
         (add-to-list 'rows cols t)
         (forward-line 1)))
+    (forward-line -1)
     rows))
 
 (defun ecukes-line (&optional n)
