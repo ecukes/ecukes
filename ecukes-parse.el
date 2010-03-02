@@ -6,20 +6,20 @@
 (defstruct ecukes-scenario name steps)
 (defstruct ecukes-step name arg)
 
-(defconst ecukes-feature-re "Feature: *\\(.+[^ ]\\) *$"
+(defconst ecukes-feature-re "Feature:[[:blank:]]*\\(.+[^ ]\\)[[:blank:]]*$"
   "Regular expression matching a feature header.")
 
 (defconst ecukes-background-re "Background:"
   "Regular expression matching a background.")
 
-(defconst ecukes-scenario-re "Scenario: *\\(.+[^ ]\\) *$"
+(defconst ecukes-scenario-re "Scenario: *\\(.+[^ ]\\)[[:blank:]]*$"
   "Regular expression matching a scenario header.")
 
 (defconst ecukes-py-string-re "\\(.+\\)\"\"\""
   "Regular expression matching a py string step with grouping for
   whitespace at the beginning.")
 
-(defconst ecukes-table-re "^ *|.+|"
+(defconst ecukes-table-re "^[[:blank:]]*|.+|"
   "Regular expression matching a table step.")
 
 (defconst ecukes-step-re "^[[:blank:]]*\\(Given\\|When\\|Then\\|And\\|But\\)"
@@ -91,7 +91,7 @@
   (let ((lines) (offset (length (match-string-no-properties 1 (ecukes-line 1)))))
     (forward-line 2)
     (while (not (string-match-p ecukes-py-string-re (ecukes-line)))
-      (let ((line (replace-regexp-in-string (concat "^[[:space:]]" "\\{" (number-to-string offset) "\\}") "" (ecukes-line))))
+      (let ((line (replace-regexp-in-string (concat "^[[:blank:]]" "\\{" (number-to-string offset) "\\}") "" (ecukes-line))))
         (add-to-list 'lines line t)
         (forward-line 1)))
     (mapconcat 'identity lines "\n")))
@@ -114,7 +114,7 @@
 
 (defun ecukes-blank-line (&optional n)
   (let ((line (ecukes-line n)))
-    (replace-regexp-in-string "\\(^[[:space:]]*\\|[[:space:]]*$\\)" "" line)))
+    (replace-regexp-in-string "\\(^[[:blank:]]*\\|[[:blank:]]*$\\)" "" line)))
 
 (provide 'ecukes-parse)
 
