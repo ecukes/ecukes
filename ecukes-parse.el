@@ -1,11 +1,5 @@
 ;;; ecukes-parse.el --- Parser stuff
 
-(defstruct ecukes-feature intro background scenarios)
-(defstruct ecukes-intro header description)
-(defstruct ecukes-background steps)
-(defstruct ecukes-scenario name steps)
-(defstruct ecukes-step name arg)
-
 (defconst ecukes-feature-re "Feature:[[:blank:]]*\\(.+[^ ]\\)[[:blank:]]*$"
   "Regular expression matching a feature header.")
 

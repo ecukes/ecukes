@@ -41,6 +41,7 @@
 
 ;; Require Ecukes packages.
 (require 'ecukes-init)
+(require 'ecukes-def)
 (require 'ecukes-parse)
 
 (defvar ecukes-feature-files '()
