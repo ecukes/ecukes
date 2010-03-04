@@ -74,15 +74,17 @@
 (defun ecukes-parse-step ()
   "Parses a step."
   (let ((peek (ecukes-line 1)) (name (ecukes-blank-line)) (arg))
-    (cond ((string-match ecukes-py-string-re peek)
+    (cond ((string-match-p ecukes-py-string-re peek)
            (setq arg (ecukes-parse-py-string)))
-          ((string-match ecukes-table-re peek)
+          ((string-match-p ecukes-table-re peek)
            (setq arg (ecukes-parse-table))))
     (make-ecukes-step :name name :arg arg)))
 
 (defun ecukes-parse-py-string ()
   "Parses a py string step"
-  (let ((lines) (offset (length (match-string-no-properties 1 (ecukes-line 1)))))
+  (let ((peek (ecukes-line 1)) (lines) (offset))
+    (string-match ecukes-py-string-re peek)
+    (setq offset (length (match-string-no-properties 1 peek)))
     (forward-line 2)
     (while (not (string-match-p ecukes-py-string-re (ecukes-line)))
       (let ((line (replace-regexp-in-string (concat "^[[:blank:]]" "\\{" (number-to-string offset) "\\}") "" (ecukes-line))))
