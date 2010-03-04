@@ -9,7 +9,7 @@
 (defconst ecukes-scenario-re "Scenario:[[:blank:]]*\\(.+[^ ]\\)[[:blank:]]*$"
   "Regular expression matching a scenario header.")
 
-(defconst ecukes-py-string-re "\\(.+\\)\"\"\""
+(defconst ecukes-py-string-re "^\\([[:space:]]*\\)\"\"\""
   "Regular expression matching a py string step with grouping for
   whitespace at the beginning.")
 
