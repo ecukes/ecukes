@@ -42,6 +42,7 @@
 ;; Require Ecukes packages.
 (require 'ecukes-init)
 (require 'ecukes-def)
+(require 'ecukes-output)
 (require 'ecukes-parse)
 (require 'ecukes-dump)
 
