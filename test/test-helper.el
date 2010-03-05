@@ -48,3 +48,12 @@
        (lambda (step)
          (add-to-list 'steps step t)))
       steps)))
+
+(defun mock-scenario ()
+  (make-ecukes-scenario :name "Addition" :steps (list (mock-step))))
+
+(defun mock-background ()
+  (make-ecukes-background :steps (list (mock-step))))
+
+(defun mock-step ()
+  (make-ecukes-step :name "Given I have this or that"))
