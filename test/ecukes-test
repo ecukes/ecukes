@@ -19,6 +19,7 @@
 (require 'ecukes-output)
 (require 'ecukes-parse)
 (require 'ecukes-dump)
+(require 'ecukes-run)
 
 ;; Load the test helpers.
 (load-file (concat ecukes-test-path "test-helper.el"))

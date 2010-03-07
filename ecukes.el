@@ -45,6 +45,7 @@
 (require 'ecukes-output)
 (require 'ecukes-parse)
 (require 'ecukes-dump)
+(require 'ecukes-run)
 
 (defvar ecukes-feature-files '()
   "List of all feature files.")
