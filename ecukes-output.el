@@ -6,6 +6,12 @@
 (defconst ecukes-output-color-white 37
   "White color code.")
 
+(defconst ecukes-output-color-red 31
+  "Red color code.")
+
+(defconst ecukes-output-color-green 32
+  "Green color code.")
+
 (defun ecukes-output-intro (intro)
   "Outputs the feature intro"
   (setq ecukes-output-offset 0)
@@ -18,6 +24,14 @@
 (defun ecukes-output-white (text)
   "Outputs TEXT in white."
   (ecukes-output-text text ecukes-output-color-white))
+
+(defun ecukes-output-red (text)
+  "Outputs TEXT in red."
+  (ecukes-output-text text ecukes-output-color-red))
+
+(defun ecukes-output-green (text)
+  "Outputs TEXT in green."
+  (ecukes-output-text text ecukes-output-color-green))
 
 (defun ecukes-output-text (text color)
   "Outputs TEXT in COLOR."
