@@ -1,4 +1,4 @@
-(ert-deftest ecukes-dump-background ()
+(ert-deftest dump-background ()
   (let ((background (mock-background)))
     ;; Dump the background
     (ecukes-dump-background background)
@@ -19,7 +19,7 @@
     ;; Make sure the background is deleted
     (should-not (file-exists-p ecukes-dump-background-file))))
 
-(ert-deftest ecukes-dump-scenario ()
+(ert-deftest dump-scenario ()
   (let ((scenario (mock-scenario)))
     ;; Dump the scenario
     (ecukes-dump-scenario scenario)
@@ -40,7 +40,7 @@
     ;; Make sure the scenario is deleted
     (should-not (file-exists-p ecukes-dump-scenario-file))))
  
-(ert-deftest ecukes-dump-offset ()
+(ert-deftest dump-offset ()
   (let ((offset 666))
     ;; Dump the offset
     (ecukes-dump-offset offset)

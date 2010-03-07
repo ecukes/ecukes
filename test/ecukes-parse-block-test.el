@@ -31,13 +31,9 @@
 
     ;; Table
     (let* ((table (nth 2 steps)) (arg (ecukes-step-arg table)))
-      (print arg)
       (should (equal "h1" (car (nth 0 arg))))
       (should (equal "p" (car (nth 1 arg))))
       (should (equal "div" (car (nth 2 arg)))))
 
     ;; Last regular step
-    (should (equal "And I should be happy" (ecukes-step-name (nth 3 steps))))
-    )
-  )
-
+    (should (equal "And I should be happy" (ecukes-step-name (nth 3 steps))))))
