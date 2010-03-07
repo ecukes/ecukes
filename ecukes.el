@@ -56,7 +56,39 @@
   (error "You did not provide any features"))
 
 (dolist (feature-file ecukes-feature-files)
-  (let ((feature (ecukes-parse-feature feature-file)))
+  (let* ((feature (ecukes-parse-feature feature-file))
+         (background (ecukes-feature-background feature)))
+
+    ;; Print the intro
+    (let ((intro (ecukes-feature-intro feature)))
+      (ecukes-output-intro intro))
+
+    ;; Dump the background
+    (ecukes-dump-background background)
+
+    ;; Run and print the background (just for show)
+    (ecukes-run-sub-process 'ecukes-run-and-print-background)
+
+    ;; Dump the current offset
+    (ecukes-dump-offset ecukes-output-offset)
+
+    (dolist (scenario (ecukes-feature-scenarios feature))
+      ;; Dump the scenario
+      (ecukes-dump-scenario scenario)
+
+      ;; Run background and scenario in sub process
+      (ecukes-run-sub-process
+       'ecukes-run-background
+       'ecukes-run-and-print-scenario)
+
+      ;; Delete the background and scenario dumps
+      (ecukes-dump-delete-background)
+      (ecukes-dump-delete-scenario)
+
+      )
+
+    ;; Delete the offset dump
+    (ecukes-dump-delete-offset)
 
     )
   )
