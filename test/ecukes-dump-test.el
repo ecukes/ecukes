@@ -40,3 +40,23 @@
     ;; Make sure the scenario is deleted
     (should-not (file-exists-p ecukes-dump-scenario-file))))
  
+(ert-deftest ecukes-dump-offset ()
+  (let ((offset 666))
+    ;; Dump the offset
+    (ecukes-dump-offset offset)
+
+    ;; Make sure the offset was dumped
+    (should (file-exists-p ecukes-dump-offset-file))
+    (with-temp-buffer
+      (insert-file-contents-literally ecukes-dump-offset-file)
+      (should (equal "666" (buffer-substring-no-properties (point-min) (point-max)))))
+
+    ;; Read the offset and make sure it's correct
+    (let ((offset (ecukes-dump-read-offset)))
+      (should (equal 666 offset)))
+
+    ;; Delete the offset
+    (ecukes-dump-delete-offset)
+
+    ;; Make sure the offset is deleted
+    (should-not (file-exists-p ecukes-dump-offset-file))))
