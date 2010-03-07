@@ -17,7 +17,7 @@
 (defun ecukes-dump-object (object file)
   "Dumps OBJECT to FILE."
   (with-temp-file file
-    (princ object (current-buffer))))
+    (prin1 object (current-buffer))))
 
 (defun ecukes-dump-delete-background ()
   "Deletes background dump file."
