@@ -68,7 +68,7 @@
     (ecukes-dump-background background)
 
     ;; Run and print the background (just for show)
-    (ecukes-run-sub-process 'ecukes-run-and-print-background)
+    (ecukes-sub-run-process 'ecukes-run-and-print-background)
 
     ;; Dump the current offset
     (ecukes-dump-offset ecukes-output-offset)
@@ -78,7 +78,7 @@
       (ecukes-dump-scenario scenario)
 
       ;; Run background and scenario in sub process
-      (ecukes-run-sub-process
+      (ecukes-sub-run-process
        'ecukes-run-background
        'ecukes-run-and-print-scenario)
 

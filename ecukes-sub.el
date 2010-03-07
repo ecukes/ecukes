@@ -1,6 +1,6 @@
 ;;; ecukes-sub.el --- For running an Emacs sub process
 
-(defun ecukes-run-sub-process (&rest functions)
+(defun ecukes-sub-run-process (&rest functions)
   ""
 
   )
