@@ -27,6 +27,20 @@
   "Deletes scenario dump file."
   (delete-file ecukes-dump-scenario-file))
 
+(defun ecukes-dump-read-background ()
+  "Reads background from file."
+  (ecukes-dump-read-object ecukes-dump-background-file))
+
+(defun ecukes-dump-read-scenario ()
+  "Reads scenario from file."
+  (ecukes-dump-read-object ecukes-dump-scenario-file))
+
+(defun ecukes-dump-read-object (file)
+  "Reads object from file."
+  (with-temp-buffer
+    (insert-file-contents-literally file)
+    (read (buffer-substring-no-properties (point-min) (point-max)))))
+
 (provide 'ecukes-dump)
 
 ;;; ecukes-dump.el ends here
