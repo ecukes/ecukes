@@ -64,14 +64,14 @@
     (let ((intro (ecukes-feature-intro feature)))
       (ecukes-output-intro intro))
 
+    ;; Dump the current offset
+    (ecukes-dump-offset ecukes-output-offset)
+    
     ;; Dump the background
     (ecukes-dump-background background)
 
     ;; Run and print the background (just for show)
     (ecukes-sub-run-process 'ecukes-run-and-print-background)
-
-    ;; Dump the current offset
-    (ecukes-dump-offset ecukes-output-offset)
 
     (dolist (scenario (ecukes-feature-scenarios feature))
       ;; Dump the scenario
