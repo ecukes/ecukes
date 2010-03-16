@@ -18,12 +18,12 @@
         (ecukes-run-and-print-step step)))))
 
 (defun ecukes-run-step (step)
-  ""
+  "Runs STEP."
   ;; TODO: Run step
   )
 
 (defun ecukes-run-and-print-step (step)
-  "Runs and prints step. If running step results in an error, the
+  "Runs and prints STEP. If running step results in an error, the
 error message is printed."
   (condition-case err
       (progn
