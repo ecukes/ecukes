@@ -44,13 +44,10 @@
 (require 'ecukes-def)
 (require 'ecukes-output)
 (require 'ecukes-parse)
-(require 'ecukes-dump)
 (require 'ecukes-run)
-(require 'ecukes-sub)
 
-(defvar ecukes-feature-files '()
+(defvar ecukes-feature-files (ecukes-init-feature-files argv)
   "List of all feature files.")
-(setq ecukes-feature-files (ecukes-init-feature-files argv))
 
 ;; Make sure there are features passed in by the user.
 (unless ecukes-feature-files
@@ -61,36 +58,22 @@
          (background (ecukes-feature-background feature)))
 
     ;; Print the intro
+    ;; TODO: Make sure intro exists!
     (let ((intro (ecukes-feature-intro feature)))
       (ecukes-output-intro intro))
 
-    ;; Dump the current offset
-    (ecukes-dump-offset ecukes-output-offset)
-    
-    ;; Dump the background
-    (ecukes-dump-background background)
-
     ;; Run and print the background (just for show)
-    (ecukes-sub-run-process 'ecukes-run-and-print-background)
+    ;; TODO: Make sure background exists!
+    (ecukes-run-and-print-background background)
 
     (dolist (scenario (ecukes-feature-scenarios feature))
-      ;; Dump the scenario
-      (ecukes-dump-scenario scenario)
+      ;; Run background
+      ;; TODO: Make sure background exists!
+      (ecukes-run-background background)
 
-      ;; Run background and scenario in sub process
-      (ecukes-sub-run-process
-       'ecukes-run-background
-       'ecukes-run-and-print-scenario)
-
-      ;; Delete the background and scenario dumps
-      (ecukes-dump-delete-background)
-      (ecukes-dump-delete-scenario)
-
+      ;; Run scenario
+      (ecukes-run-and-print-scenario scenario)
       )
-
-    ;; Delete the offset dump
-    (ecukes-dump-delete-offset)
-
     )
   )
 

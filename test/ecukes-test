@@ -18,7 +18,6 @@
 (require 'ecukes-def)
 (require 'ecukes-output)
 (require 'ecukes-parse)
-(require 'ecukes-dump)
 (require 'ecukes-run)
 
 ;; Load the test helpers.
