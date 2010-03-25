@@ -36,10 +36,10 @@
 (eval-when-compile
   (require 'cl))
 
-;; Add the current directory to the load path.
+;; Add the current directory to the load path
 (add-to-list 'load-path (file-name-directory load-file-name))
 
-;; Require Ecukes packages.
+;; Require Ecukes packages
 (require 'ecukes-init)
 (require 'ecukes-def)
 (require 'ecukes-output)
@@ -49,7 +49,7 @@
 (defvar ecukes-feature-files (ecukes-init-feature-files argv)
   "List of all feature files.")
 
-;; Make sure there are features passed in by the user.
+;; Make sure there are features passed in by the user
 (unless ecukes-feature-files
   (error "You did not provide any features"))
 
@@ -57,22 +57,27 @@
   (let* ((feature (ecukes-parse-feature feature-file))
          (background (ecukes-feature-background feature)))
 
-    ;; Print the intro
-    ;; TODO: Make sure intro exists!
+    ;; TODO: Make sure intro exists
     (let ((intro (ecukes-feature-intro feature)))
       (ecukes-output-intro intro))
 
-    ;; Run and print the background (just for show)
-    ;; TODO: Make sure background exists!
-    (ecukes-run-and-print-background background)
+    ;; TODO: Make sure background exists
+    (ecukes-output-background background)
+    (ecukes-run-background
+     background
+     (lambda (step success)
+       (ecukes-output-step step success)))
 
     (dolist (scenario (ecukes-feature-scenarios feature))
-      ;; Run background
-      ;; TODO: Make sure background exists!
+      ;; TODO: Make sure background exists
       (ecukes-run-background background)
 
-      ;; Run scenario
-      (ecukes-run-and-print-scenario scenario)
+      (ecukes-output-scenario scenario)
+      (ecukes-run-scenario
+       scenario
+       (lambda (step success)
+         (ecukes-output-step step success)))
+
       )
     )
   )
