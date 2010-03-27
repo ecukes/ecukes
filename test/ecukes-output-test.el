@@ -7,17 +7,17 @@
 
 (ert-deftest output-scenario ()
   (let ((ecukes-output-offset 0))
-    (should (equal "Addition:" (ecukes-output-scenario (mock-scenario))))
+    (should (equal "\e[37mAddition:\e[0m" (ecukes-output-scenario (mock-scenario))))
     (should (equal ecukes-output-offset 2))))
 
 (ert-deftest output-background ()
   (let ((ecukes-output-offset 0))
-    (should (equal "Background:" (ecukes-output-background)))
+    (should (equal "\e[37mBackground:\e[0m" (ecukes-output-background)))
     (should (equal ecukes-output-offset 2))))
 
 (ert-deftest output-header ()
   (let ((ecukes-output-offset 0))
-    (should (equal "Header:" (ecukes-output-header "Header")))
+    (should (equal "\e[37mHeader:\e[0m" (ecukes-output-header "Header")))
     (should (equal ecukes-output-offset 2))))
 
 ;; (ert-deftest output-step ()
@@ -28,13 +28,16 @@
   (should (equal "" (ecukes-output-newline))))
 
 (ert-deftest output-white ()
-  (let ((text "text"))
-    (should (equal "\e[37mtext\e[0m" (ecukes-output-white text)))))
+  (should (equal "\e[37mtext\e[0m" (ecukes-output-white "text"))))
 
 (ert-deftest output-red ()
-  (let ((text "text"))
-    (should (equal "\e[31mtext\e[0m" (ecukes-output-red text)))))
+  (should (equal "\e[31mtext\e[0m" (ecukes-output-red "text"))))
 
 (ert-deftest output-green ()
-  (let ((text "text"))
-    (should (equal "\e[32mtext\e[0m" (ecukes-output-green text)))))
+  (should (equal "\e[32mtext\e[0m" (ecukes-output-green "text"))))
+
+(ert-deftest output-color ()
+  (should (equal "\e[666mtext\e[0m" (ecukes-output-color "text" 666))))
+
+(ert-deftest output-text ()
+  (should (equal "text" (ecukes-output-text "text"))))

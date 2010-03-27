@@ -32,7 +32,7 @@
 
 (defun ecukes-output-header (header)
   "Output HEADER and increase offset size."
-  (let ((output (message (concat header ":"))))
+  (let ((output (ecukes-output-white (concat header ":"))))
     (setq ecukes-output-offset (+ ecukes-output-offset 2))
     output))
 
@@ -47,7 +47,7 @@
 
 (defun ecukes-output-newline ()
   "Outputs a newline."
-  (message ""))
+  (ecukes-output-text ""))
 
 (defun ecukes-output-white (text)
   "Outputs TEXT in white."
@@ -63,7 +63,11 @@
 
 (defun ecukes-output-color (text color)
   "Outputs TEXT in COLOR."
-  (message (concat "\e[" (number-to-string color) "m" (make-string ecukes-output-offset 32) text "\e[0m")))
+  (ecukes-output-text (concat "\e[" (number-to-string color) "m" text "\e[0m")))
+
+(defun ecukes-output-text (text)
+  "Outputs TEXT."
+  (message (concat (make-string ecukes-output-offset 32) text)))
 
 (provide 'ecukes-output)
 
