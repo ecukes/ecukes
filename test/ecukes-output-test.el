@@ -1,23 +1,6 @@
-;; TODO: Mock message to avoid output
-
 (ert-deftest output-intro ()
   (let ((ecukes-output-offset 0))
     (ecukes-output-intro (mock-intro))
-    (should (equal ecukes-output-offset 2))))
-
-(ert-deftest output-scenario ()
-  (let ((ecukes-output-offset 0))
-    (should (equal "\e[37mAddition:\e[0m" (ecukes-output-scenario (mock-scenario))))
-    (should (equal ecukes-output-offset 2))))
-
-(ert-deftest output-background ()
-  (let ((ecukes-output-offset 0))
-    (should (equal "\e[37mBackground:\e[0m" (ecukes-output-background)))
-    (should (equal ecukes-output-offset 2))))
-
-(ert-deftest output-header ()
-  (let ((ecukes-output-offset 0))
-    (should (equal "\e[37mHeader:\e[0m" (ecukes-output-header "Header")))
     (should (equal ecukes-output-offset 2))))
 
 ;; (ert-deftest output-step ()

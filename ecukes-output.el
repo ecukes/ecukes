@@ -22,19 +22,21 @@
     (ecukes-output-white description))
   (ecukes-output-newline))
 
-(defun ecukes-output-scenario (scenario)
-  "Output scenario header."
-  (ecukes-output-header (ecukes-scenario-name scenario)))
+(defmacro ecukes-output-scenario (scenario &rest body)
+  "Output SCENARIO header, then execute BODY."
+  `(let ((scenario-name (ecukes-scenario-name ,scenario)))
+     (ecukes-output-block scenario-name ,@body)))
 
-(defun ecukes-output-background ()
-  "Output background header."
-  (ecukes-output-header "Background"))
+(defmacro ecukes-output-background (&rest body)
+  "Output background header, then execute BODY."
+  `(ecukes-output-block "Background" ,@body))
 
-(defun ecukes-output-header (header)
-  "Output HEADER and increase offset size."
-  (let ((output (ecukes-output-white (concat header ":"))))
-    (setq ecukes-output-offset (+ ecukes-output-offset 2))
-    output))
+(defmacro ecukes-output-block (header &rest body)
+  "Output HEADER, execute BODY and output newline."
+  `(let ((output (ecukes-output-white (concat ,header ":")))
+         (ecukes-output-offset (+ ecukes-output-offset 2)))
+     ,@body
+     (ecukes-output-newline)))
 
 (defun ecukes-output-step (step success)
   "Output STEP."
