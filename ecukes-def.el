@@ -4,7 +4,7 @@
 (defstruct ecukes-intro header description)
 (defstruct ecukes-background steps)
 (defstruct ecukes-scenario name steps)
-(defstruct ecukes-step name arg)
+(defstruct ecukes-step name arg type)
 
 (provide 'ecukes-def)
 

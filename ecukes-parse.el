@@ -73,12 +73,14 @@
 
 (defun ecukes-parse-step ()
   "Parses a step."
-  (let ((peek (ecukes-line 1)) (name (ecukes-blank-line)) (arg))
+  (let ((peek (ecukes-line 1)) (name (ecukes-blank-line)) arg type)
     (cond ((string-match-p ecukes-py-string-re peek)
-           (setq arg (ecukes-parse-py-string)))
+           (setq arg (ecukes-parse-py-string))
+           (setq type 'py-string))
           ((string-match-p ecukes-table-re peek)
-           (setq arg (ecukes-parse-table))))
-    (make-ecukes-step :name name :arg arg)))
+           (setq arg (ecukes-parse-table))
+           (setq type 'table)))
+    (make-ecukes-step :name name :arg arg :type (or type 'regular))))
 
 (defun ecukes-parse-py-string ()
   "Parses a py string step"

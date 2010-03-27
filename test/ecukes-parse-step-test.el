@@ -1,22 +1,27 @@
 (ert-deftest parse-step-given ()
   (let ((step (ecukes-test-parse-feature-step "given.feature")))
-    (should (equal "Given I see something on the screen" (ecukes-step-name step)))))
+    (should (equal "Given I see something on the screen" (ecukes-step-name step)))
+    (should-be-regular-step step)))
 
 (ert-deftest parse-step-when ()
   (let ((step (ecukes-test-parse-feature-step "when.feature")))
-    (should (equal "When I see something on the screen" (ecukes-step-name step)))))
+    (should (equal "When I see something on the screen" (ecukes-step-name step)))
+    (should-be-regular-step step)))
 
 (ert-deftest parse-step-then ()
   (let ((step (ecukes-test-parse-feature-step "then.feature")))
-    (should (equal "Then I should see something on the screen" (ecukes-step-name step)))))
+    (should (equal "Then I should see something on the screen" (ecukes-step-name step)))
+    (should-be-regular-step step)))
 
 (ert-deftest parse-step-and ()
   (let ((step (ecukes-test-parse-feature-step "and.feature")))
-    (should (equal "And I see something else on the screen" (ecukes-step-name step)))))
+    (should (equal "And I see something else on the screen" (ecukes-step-name step)))
+    (should-be-regular-step step)))
 
 (ert-deftest parse-step-but ()
   (let ((step (ecukes-test-parse-feature-step "but.feature")))
-    (should (equal "But I dont see something on the screen" (ecukes-step-name step)))))
+    (should (equal "But I dont see something on the screen" (ecukes-step-name step)))
+    (should-be-regular-step step)))
 
 (ert-deftest parse-step-py-string-all-good ()
   (let* ((step (ecukes-test-parse-feature-step "py-string-all-good.feature"))
@@ -24,7 +29,8 @@
          (split (split-string arg "\n")))
     (should (equal "Given this text:" (ecukes-step-name step)))
     (should (equal "Lorem ipsum dolor sit amet." (nth 0 split)))
-    (should (equal "Curabitur pellentesque iaculis eros." (nth 1 split)))))
+    (should (equal "Curabitur pellentesque iaculis eros." (nth 1 split)))
+    (should-be-py-string-step step)))
 
 (ert-deftest parse-step-py-string-whitespace ()
   (let* ((step (ecukes-test-parse-feature-step "py-string-whitespace.feature"))
@@ -33,7 +39,8 @@
     (should (equal "Given this text:" (ecukes-step-name step)))
     (should (equal "Lorem ipsum dolor sit amet." (nth 0 split)))
     (should (equal "" (nth 1 split)))
-    (should (equal "In congue. Curabitur pellentesque iaculis eros." (nth 2 split)))))
+    (should (equal "In congue. Curabitur pellentesque iaculis eros." (nth 2 split)))
+    (should-be-py-string-step step)))
 
 (ert-deftest parse-step-py-string-wrong-indentation ()
   (let* ((step (ecukes-test-parse-feature-step "py-string-wrong-indentation.feature"))
@@ -41,7 +48,8 @@
          (split (split-string arg "\n")))
     (should (equal "Given this text:" (ecukes-step-name step)))
     (should (equal "Lorem ipsum dolor sit amet." (nth 0 split)))
-    (should (equal "       Curabitur pellentesque iaculis eros." (nth 1 split)))))
+    (should (equal "       Curabitur pellentesque iaculis eros." (nth 1 split)))
+    (should-be-py-string-step step)))
 
 (ert-deftest parse-step-table-all-good ()
   (let* ((step (ecukes-test-parse-feature-step "table-all-good.feature"))
@@ -52,7 +60,8 @@
       (should (equal "Hamburger" (nth 0 hamburger)))
       (should (equal "$4.50" (nth 1 hamburger)))
       (should (equal "Pizza" (nth 0 pizza)))
-      (should (equal "$5.30" (nth 1 pizza))))))
+      (should (equal "$5.30" (nth 1 pizza)))
+      (should-be-table-step step))))
 
 (ert-deftest parse-step-table-wrong-indentation ()
   (let* ((step (ecukes-test-parse-feature-step "table-wrong-indentation.feature"))
@@ -63,4 +72,18 @@
       (should (equal "Hamburger" (nth 0 hamburger)))
       (should (equal "$4.50" (nth 1 hamburger)))
       (should (equal "Pizza" (nth 0 pizza)))
-      (should (equal "$5.30" (nth 1 pizza))))))
+      (should (equal "$5.30" (nth 1 pizza)))
+      (should-be-table-step step))))
+
+
+(defun should-be-regular-step (step)
+  (should-be-type step 'regular))
+
+(defun should-be-py-string-step (step)
+  (should-be-type step 'py-string))
+
+(defun should-be-table-step (step)
+  (should-be-type step 'table))
+
+(defun should-be-type (step type)
+  (should (equal type (ecukes-step-type step))))
