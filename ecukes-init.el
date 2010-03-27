@@ -17,6 +17,10 @@ directory. If a directory, all .feature files in that directory are included."
             (add-to-list 'feature-files (expand-file-name feature)))))
     feature-files))
 
+(defun ecukes-init-features-root (dir)
+  "Returns features root."
+  (expand-file-name "features" (ecukes-init-project-root dir)))
+
 (defun ecukes-init-project-root (dir)
   "Returns project root."
   (if (file-regular-p dir)
