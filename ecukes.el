@@ -46,6 +46,9 @@
 (require 'ecukes-parse)
 (require 'ecukes-run)
 
+;; Load project
+(ecukes-init-load-project argv)
+
 (defvar ecukes-feature-files (ecukes-init-feature-files argv)
   "List of all feature files.")
 
