@@ -17,6 +17,15 @@ directory. If a directory, all .feature files in that directory are included."
             (add-to-list 'feature-files (expand-file-name feature)))))
     feature-files))
 
+(defun ecukes-init-load-project (argv)
+  "Loads all files in project."
+  (let ((features-root (ecukes-init-features-root (car argv))))
+    (cond (features-root
+           (load (expand-file-name "support.el" features-root))
+           (dolist (step (directory-files (expand-file-name "step-definitions" features-root) t "-steps\\.el$"))
+             (load step)))
+          (t (error "fuck you ant suck")))))
+
 (defun ecukes-init-features-root (dir)
   "Returns features root."
   (let ((project-root (ecukes-init-project-root dir)))
