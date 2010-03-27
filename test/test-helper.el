@@ -49,6 +49,12 @@
          (add-to-list 'steps step t)))
       steps)))
 
+(defun mock-intro ()
+  (make-ecukes-intro :header "Addition"
+                     :description '("In order to avoid silly mistakes"
+                                    "As a match idiot"
+                                    "I want to be told the sum of two numbers")))
+
 (defun mock-scenario ()
   (make-ecukes-scenario :name "Addition" :steps (list (mock-step))))
 
