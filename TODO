@@ -1,0 +1,14 @@
+-*- mode: Org -*-
+
+* Tests
+** TODO Common [0/2]
+   - [ ] Refactor out common code
+** TODO Output [0/1]
+   - [ ] Stub/Mock message to get rid of output
+** TODO Init [0/3]
+  - [ ] Test ecukes-init-load-project
+  - [ ] Test ecukes-init-features-root
+  - [ ] Test ecukes-init-project-root
+* Ecukes
+** TODO Main [0/1]
+   - [ ] Go through all steps and make each have a step definition
