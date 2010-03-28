@@ -61,20 +61,18 @@
   (let* ((feature (ecukes-parse-feature feature-file))
          (background (ecukes-feature-background feature)))
 
-    ;; TODO: Make sure intro exists
     (let ((intro (ecukes-feature-intro feature)))
-      (ecukes-output-intro intro))
+      (if intro (ecukes-output-intro intro)))
 
-    ;; TODO: Make sure background exists
-    (ecukes-output-background
-     (ecukes-run-background
-      background
-      (lambda (step success)
-        (ecukes-output-step step success))))
+    (if background
+        (ecukes-output-background
+         (ecukes-run-background
+          background
+          (lambda (step success)
+            (ecukes-output-step step success)))))
 
     (dolist (scenario (ecukes-feature-scenarios feature))
-      ;; TODO: Make sure background exists
-      (ecukes-run-background background)
+      (if background (ecukes-run-background background))
 
       (ecukes-output-scenario
        scenario
