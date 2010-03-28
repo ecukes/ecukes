@@ -23,7 +23,7 @@ directory. If a directory, all .feature files in that directory are included."
            (load (expand-file-name "support.el" features-root))
            (dolist (step (directory-files (expand-file-name "step-definitions" features-root) t "-steps\\.el$"))
              (load step)))
-          (t (error "fuck you ant suck")))))
+          (t (error "Could not find any feature root")))))
 
 (defun ecukes-init-features-root (dir)
   "Returns project features root directory."
