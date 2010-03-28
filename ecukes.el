@@ -66,24 +66,21 @@
       (ecukes-output-intro intro))
 
     ;; TODO: Make sure background exists
-    (ecukes-output-background background)
-    (ecukes-run-background
-     background
-     (lambda (step success)
-       (ecukes-output-step step success)))
+    (ecukes-output-background
+     (ecukes-run-background
+      background
+      (lambda (step success)
+        (ecukes-output-step step success))))
 
     (dolist (scenario (ecukes-feature-scenarios feature))
       ;; TODO: Make sure background exists
       (ecukes-run-background background)
 
-      (ecukes-output-scenario scenario)
-      (ecukes-run-scenario
+      (ecukes-output-scenario
        scenario
-       (lambda (step success)
-         (ecukes-output-step step success)))
-
-      )
-    )
-  )
+       (ecukes-run-scenario
+        scenario
+        (lambda (step success)
+          (ecukes-output-step step success)))))))
 
 ;;; ecukes.el ends here
