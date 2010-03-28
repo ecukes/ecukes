@@ -1,4 +1,4 @@
-;;; ecukes-run.el --- Run stuff
+;;; ecukes-run.el --- Run functions
 
 (defun ecukes-run-scenario (scenario fn)
   "Runs all steps in SCENARIO, yielding each step and success flag."
@@ -13,7 +13,10 @@
       (if fn (funcall fn step success)))))
 
 (defun ecukes-run-step (step)
-  "Runs STEP."
+  "Runs STEP.
+If running step was not a success, the err field in the step is
+updated with the error message. This function returns t if the step
+was successful, nil otherwise."
   (condition-case err
       (progn
         (let* ((arg (ecukes-step-arg step))
