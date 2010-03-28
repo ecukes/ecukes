@@ -16,7 +16,7 @@
 (defconst ecukes-table-re "^[[:blank:]]*|.+|"
   "Regular expression matching a table step.")
 
-(defconst ecukes-step-re "^[[:blank:]]*\\(Given\\|When\\|Then\\|And\\|But\\)"
+(defconst ecukes-step-re "^[[:blank:]]*\\(?:Given\\|When\\|Then\\|And\\|But\\)[[:blank:]]*\\(.+\\)[[:blank:]]*"
   "Regular expression matching a step.")
 
 (defun ecukes-parse-feature (feature-file)
