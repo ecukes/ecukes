@@ -13,7 +13,6 @@
    - [ ] Refactor common code in Before and After method.
 * Ecukes
 ** TODO Other [0/3]
-   - [ ] Create before/after hooks
    - [ ] Create script that creates Ecukes file structure
    - [ ] Show some statistics on number of features that passed/failed
    - [ ] Tell what step definitions are missing
@@ -25,3 +24,5 @@
    - [ ] Add support for tags
 ** TODO Step definitions [0/1]
    - [ ] Make it possible to run steps from other steps
+** TODO Hooks [1/1]
+   - [X] Create before/after hooks
