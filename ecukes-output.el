@@ -39,12 +39,15 @@
      (ecukes-output-newline)))
 
 (defun ecukes-output-step (step success)
-  "Output STEP."
+  "Output STEP including error if not SUCCESS."
   (let ((name (ecukes-step-name step))
         (output-fn (if success 'ecukes-output-green 'ecukes-output-red)))
     (funcall output-fn name)
+
+    (unless success
+      (ecukes-output-red (ecukes-step-err step)))
+
     ;; TODO: Output step arg if any.
-    ;; TODO: Output step err if any.
     ))
 
 (defun ecukes-output-newline ()
