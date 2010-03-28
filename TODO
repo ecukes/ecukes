@@ -6,15 +6,16 @@
 ** TODO Output [0/1]
    - [ ] Stub/Mock message to get rid of output
 ** TODO Init [0/3]
-  - [ ] Test ecukes-init-load-project
-  - [ ] Test ecukes-init-features-root
-  - [ ] Test ecukes-init-project-root
+   - [ ] Test ecukes-init-load-project
+   - [ ] Test ecukes-init-features-root
+   - [ ] Test ecukes-init-project-root
+** TODO Hooks [0/1]
+   - [ ] Refactor common code in Before and After method.
 * Ecukes
 ** TODO Other [0/3]
+   - [ ] Create before/after hooks
    - [ ] Create script that creates Ecukes file structure
    - [ ] Show some statistics on number of features that passed/failed
-   - [ ] Create before/after hooks
-** TODO Main [0/1]
    - [ ] Tell what step definitions are missing
 ** TODO Debugging [0/1]
    - [ ] Include whole stacktrace in red color on fail
