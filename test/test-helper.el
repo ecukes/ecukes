@@ -61,5 +61,5 @@
 (defun mock-background ()
   (make-ecukes-background :steps (list (mock-step))))
 
-(defun mock-step ()
-  (make-ecukes-step :name "Given I have this or that"))
+(defun mock-step (&optional prefix)
+  (make-ecukes-step :name (or prefix "Given I have this or that")))

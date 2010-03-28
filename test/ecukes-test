@@ -14,6 +14,7 @@
 (require 'el-mock)
 
 ;; Require Ecukes packages.
+(require 'ecukes-steps)
 (require 'ecukes-init)
 (require 'ecukes-def)
 (require 'ecukes-output)
