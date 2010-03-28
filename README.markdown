@@ -17,14 +17,90 @@ If you don't know anything about Cucumber I suggest you read up a bit
 about it before continuing with Ecukes.
 
 ## Installation
+Start by download Ecukes. In the base dir of Ecukes, there's an
+executable file called **ecukes**. That's the script you use to run
+your features. Make sure that file is in your path:
+    $ export PATH="$PATH:/path/to/ecukes"
 
-## Examples
+You should now be able to run the **ecukes** command.
 
-### Features
+Ecukes is the program that runs the features. Each step in your
+features needs to be defined so that Ecukes knows what to do. You'll
+probably end up writing a lot of step definitions youself. But a good
+start is to use
+[Espuds](http://github.com/rejeep/espuds),
+which includes the most commonly used definitions.
+
+## Usage
+Lets say you have a project, lets call it **super-project**, that you
+want to test with Ecukes. Create a file structure looking something
+like this:
+
+    super-project/
+    |-- README
+    |-- features
+    |   |-- step-definitions
+    |   |   `-- super-project-steps.el
+    |   |-- super-project.feature
+    |   `-- support.el
+    `-- super-project.el
+
+### features
+This folder should contain:
+
+* The file support.el
+* The folder step-definitions
+* All feature files
+
+### support.el
+Loaded once before features are runned. If you use **Espuds**, this is
+where you should load it.
+
+### step-definitions
+Project specific step definitions. All step files in this folder must
+end with **-steps.el**.
+
+
+## Example
+
+### Feature
+    Feature: Go to buffer
+      In order to use more than one buffer
+      As an Emacs user
+      I want to switch buffer
+      
+      Scenario: Go to the messages buffer
+        Given I am in "*scratch*" buffer
+         When I press "C-h e"
+         Then I should be in "*Messages*" buffer
         
 ### Step definitions
+The corresponding step definitons for the feature above would be
+something like this:
+
+    (Given "I am in \"\\(.+\\)\" buffer"
+           (lambda (buffer)
+             (switch-to-buffer (get-buffer-create buffer))))
+     
+    (When "I press \"\\(.+\\)\""
+         (lambda (key)
+           (execute-kbd-macro (edmacro-parse-keys key))))
+     
+    (Then "I should be in \"\\(.+\\)\" buffer"
+          (lambda (buffer)
+            (assert (equal buffer (buffer-name)))))
+    
 
 ## Running the features
+If you have the **ecukes** executable in you **PATH**, to run your
+features, you give them as arguments to the **ecukes** command:
+
+Run single feature:
+    $ ecukes super-project/features/super-project.feature
+    
+Run all features:
+    $ ecukes super-project/features
+
 
 ## Contributing
 All contributions are much welcome and appreciated!
