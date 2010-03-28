@@ -4,30 +4,29 @@
   "Hash table containing all step definitions.")
 
 (defun ecukes-step-define (description fn)
-  "Defines a step with DESCRIPTION and a function FN.
+  "Defines a step with DESCRIPTION and function FN.
  Do not use this function directly in step definitions. Use one of:
 `Given', `Then', `When', `And' or `But' instead."
   (puthash description fn ecukes-steps-definitions))
 
 (defalias 'Given 'ecukes-step-define
-  "Use this to put the system in a known state. So, given what you
-say, the system should know that this is the case.")
+  "Use this to put the system in a known state. Given what you say,
+the system should know that this is the case.")
 
 (defalias 'When 'ecukes-step-define
-  "The purpose of When is to describe the key action the user
-performs. So, when the user does something. Can be pressing a key,
-killing a buffer or selecting a region.")
+  "Describes the key action the user performs. When the user does
+something. Can be pressing a key, killing a buffer or selecting a region.")
 
 (defalias 'Then 'ecukes-step-define
-  "This is about observing the outcomes. So, given something, then
-something happens. Can be a buffer change or a font-size increasing.")
+  "Observing the outcomes. Given something, then something else
+happens. Can be a buffer change or a font-size increasing.")
 
 (defalias 'And 'ecukes-step-define
-  "If you have several givens, whens or thens. Then you can write use
+  "If you have multiple given, when or then in a row. Then you can use
 And to make the text read more fluently.")
 
 (defalias 'But 'ecukes-step-define
-  "If you have several givens, whens or thens. Then you can write use
+  "If you have multiple given, when or then in a row. Then you can use
 But to make the text read more fluently.")
 
 (defun ecukes-steps-find-definition (step)
