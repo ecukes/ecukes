@@ -76,6 +76,9 @@
             (ecukes-output-step step success)))))
 
     (dolist (scenario (ecukes-feature-scenarios feature))
+      ;; Run before hooks
+      (ecukes-hooks-run-before)
+      
       ;; Run background
       (if background (ecukes-run-background background))
 
@@ -85,6 +88,9 @@
        (ecukes-run-scenario
         scenario
         (lambda (step success)
-          (ecukes-output-step step success)))))))
+          (ecukes-output-step step success))))
+
+      ;; Run after hooks
+      (ecukes-hooks-run-after))))
 
 ;;; ecukes.el ends here
