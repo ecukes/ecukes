@@ -1,25 +1,26 @@
-;;; ecukes-parse.el --- Parser stuff
+;;; ecukes-parse.el --- Feature file parser
 
 (defconst ecukes-feature-re "Feature:[[:blank:]]*\\(.+[^ ]\\)[[:blank:]]*$"
   "Regular expression matching a feature header.")
 
 (defconst ecukes-background-re "Background:"
-  "Regular expression matching a background.")
+  "Regular expression matching a background header.")
 
 (defconst ecukes-scenario-re "Scenario:[[:blank:]]*\\(.+[^ ]\\)[[:blank:]]*$"
   "Regular expression matching a scenario header.")
 
 (defconst ecukes-py-string-re "^\\([[:blank:]]*\\)\"\"\""
   "Regular expression matching a py string step with grouping for
-  whitespace at the beginning.")
+whitespace at the beginning.")
 
 (defconst ecukes-table-re "^[[:blank:]]*|.+|"
   "Regular expression matching a table step.")
 
 (defconst ecukes-step-re "^[[:blank:]]*\\(?:Given\\|When\\|Then\\|And\\|But\\)[[:blank:]]*\\(.+\\)[[:blank:]]*"
-  "Regular expression matching a step.")
+  "Regular expression matching a step name.")
 
 (defun ecukes-parse-feature (feature-file)
+  "Parses FEATURE-FILE and returns an `ecukes-feature' object."
   (with-temp-buffer
     (insert-file-contents-literally feature-file)
     (let ((intro (ecukes-parse-intro))
@@ -28,7 +29,7 @@
       (make-ecukes-feature :intro intro :background background :scenarios scenarios))))
 
 (defun ecukes-parse-intro ()
-  "Parses the intro of a feature."
+  "Parses the feature intro."
   (goto-char (point-min))
   (when (re-search-forward ecukes-feature-re nil t)
     (let ((header (match-string-no-properties 1))
@@ -40,7 +41,7 @@
       (make-ecukes-intro :header header :description description))))
 
 (defun ecukes-parse-background ()
-  "Parses a feature background."
+  "Parses the feature background."
   (goto-char (point-min))
   (when (re-search-forward ecukes-background-re nil t)
     (forward-line 1)
@@ -51,7 +52,7 @@
       (make-ecukes-background :steps steps))))
 
 (defun ecukes-parse-scenarios ()
-  "Parses a feature scenario."
+  "Parses the feature scenario."
   (let ((scenarios (list)))
     (while (re-search-forward ecukes-scenario-re nil t)
       (let ((steps (list)) (name))
@@ -83,7 +84,7 @@
     (make-ecukes-step :name name :arg arg :type (or type 'regular))))
 
 (defun ecukes-parse-py-string ()
-  "Parses a py string step"
+  "Parses a py string step."
   (let ((peek (ecukes-line 1)) (lines) (offset))
     (string-match ecukes-py-string-re peek)
     (setq offset (length (match-string-no-properties 1 peek)))
@@ -95,7 +96,7 @@
     (mapconcat 'identity lines "\n")))
 
 (defun ecukes-parse-table ()
-  "Parses a table step"
+  "Parses a table step."
   (forward-line 2)
   (let ((rows (list)))
     (while (string-match-p ecukes-table-re (ecukes-line))
@@ -106,11 +107,14 @@
     rows))
 
 (defun ecukes-line (&optional n)
+  "Returns current line with offset N."
   (save-excursion
     (forward-line (or n 0))
     (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
 
 (defun ecukes-blank-line (&optional n)
+  "Returns current line with offset N, excluding whitespace at the
+beginning and end."
   (let ((line (ecukes-line n)))
     (replace-regexp-in-string "\\(^[[:blank:]]*\\|[[:blank:]]*$\\)" "" line)))
 
