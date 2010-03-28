@@ -5,7 +5,6 @@
 (defvar ecukes-steps-definitions (make-hash-table :test 'equal)
   "Hash table containing all step definitions.")
 
-;; TODO: fn should be optional
 (defun ecukes-step-define (description fn)
   "Defines a step with DESCRIPTION and a function FN.
  Do not use this function directly in step definitions. Use one of:

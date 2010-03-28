@@ -23,3 +23,5 @@
    - [ ] Catch up messages and prints to avoid messing up the Ecukes output
 ** TODO Features [0/1]
    - [ ] Add support for tags
+** TODO Step definitions [0/1]
+   - [ ] Make it possible to run steps from other steps
