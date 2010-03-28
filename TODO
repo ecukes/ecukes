@@ -12,3 +12,7 @@
 * Ecukes
 ** TODO Main [0/1]
    - [ ] Go through all steps and make each have a step definition
+** TODO Debugging [0/1]
+   - [ ] Include whole stacktrace in red on fail
+** TODO Output [0/1]
+   - [ ] Catch up messages and prints to avoid messing up the Ecukes output
