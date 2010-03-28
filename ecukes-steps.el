@@ -1,7 +1,5 @@
 ;;; ecukes-steps.el --- Step definition stuff
 
-;; TODO: Why do we in this file have access to ecukes-step-re?
-
 (defvar ecukes-steps-definitions (make-hash-table :test 'equal)
   "Hash table containing all step definitions.")
 
