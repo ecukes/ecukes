@@ -31,6 +31,8 @@
 
 ;;; Commentary:
 
+;; See README
+
 ;;; Code:
 
 (eval-when-compile
