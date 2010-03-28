@@ -1,17 +1,18 @@
 # Ecukes - Cucumber for Emacs
-There are plenty of unit and regression testing tools for Emacs out
-there, and even some for functional testing. What Emacs is missing
-though is a really good testing framework for integration
-testing. This is where [Ecukes](http://github.com/rejeep/ecukes) comes in.
+There are plenty of unit/regression testing tools for Emacs, and even
+some for functional testing. What Emacs is missing though is a really
+good testing framework for integration testing. This is where
+[Ecukes](http://github.com/rejeep/ecukes) comes in.
 
 [Cucumber](http://cukes.info/) is a great integration testing tool,
 used mostly for testing web applications. Ecukes is Cucumber for
-Emacs. No, it's **not** a major mode for editing feature files. It is
-a package that makes it possible to write Cucumber like tests for your
-Emacs packages. **Note** that Ecukes is **not** a complete clone of
-Cucumber, so there might be some functionality missing. If Ecukes is
-missing something that you feel really should be included, please make
-a bug report.
+Emacs. No, it's **not** a major mode to edit feature files. It is a
+package that makes it possible to write Cucumber like tests for your
+Emacs packages.
+
+Ecukes is not a complete clone of Cucumber and is not intended to
+be. If however Ecukes is missing something that you feel really should
+be included, please make a bug report.
 
 If you don't know anything about Cucumber I suggest you read up a bit
 about it before continuing with Ecukes.
@@ -22,14 +23,11 @@ executable file called **ecukes**. That's the script you use to run
 your features. Make sure that file is in your path:
     $ export PATH="$PATH:/path/to/ecukes"
 
-You should now be able to run the **ecukes** command.
-
-Ecukes is the program that runs the features. Each step in your
-features needs to be defined so that Ecukes knows what to do. You'll
-probably end up writing a lot of step definitions youself. But a good
-start is to use
-[Espuds](http://github.com/rejeep/espuds),
-which includes the most commonly used definitions.
+Each step in your features needs to be defined so that Ecukes knows
+what to do. You will probably end up writing a lot of step definitions
+yourself, but a good start is to use
+[Espuds](http://github.com/rejeep/espuds), which includes the most
+commonly used definitions.
 
 ## Usage
 Lets say you have a project, lets call it **super-project**, that you
@@ -46,22 +44,23 @@ like this:
     `-- super-project.el
 
 ### features
-This folder should contain:
+The features folder should contain:
 
-* The file support.el
-* The folder step-definitions
-* All feature files
+* The file **support.el**
+* The folder **step-definitions**
+* A bunch of feature files
 
 ### support.el
-Loaded once before features are runned. If you use **Espuds**, this is
-where you should load it.
+**support.el** is loaded once before any feature is runned. If you use
+**Espuds**, this is the place to load it.
 
 ### step-definitions
-Project specific step definitions. All step files in this folder must
-end with **-steps.el**.
+**step-definitions** should contain all project specific step
+definitions. All step files in this folder must end with **-steps.el**.
 
 
 ## Example
+A simple example of how to create a feature and corresponding step definitions.
 
 ### Feature
     Feature: Go to buffer
@@ -73,9 +72,11 @@ end with **-steps.el**.
         Given I am in "*scratch*" buffer
          When I press "C-h e"
          Then I should be in "*Messages*" buffer
+      
+      # More buffer scenarios ...
         
 ### Step definitions
-The corresponding step definitons for the feature above would be
+The corresponding step definitions for the feature above would look
 something like this:
 
     (Given "I am in \"\\(.+\\)\" buffer"
@@ -92,8 +93,8 @@ something like this:
     
 
 ## Running the features
-If you have the **ecukes** executable in you **PATH**, to run your
-features, you give them as arguments to the **ecukes** command:
+Make sure you have the **ecukes** executable in your **PATH**. Then
+run your features by giving them as arguments to the **ecukes** command:
 
 Run single feature:
     $ ecukes super-project/features/super-project.feature
