@@ -1,11 +1,10 @@
-;;; ecukes-init.el --- Initialization for Ecukes
+;;; ecukes-init.el --- Initialization functions
 
 (defconst ecukes-init-root-regex "\\(^[[:alpha:]]:/$\\|^/[^\/]+:\\|^/$\\)"
   "Regular expression matching a file system root.")
 
 (defun ecukes-init-feature-files (features)
   "Returns a list of feature files given user input.
-
 FEATURES is a list where an item can be either a .feature file or a
 directory. If a directory, all .feature files in that directory are included."
   (let ((feature-files '()))
@@ -18,7 +17,7 @@ directory. If a directory, all .feature files in that directory are included."
     feature-files))
 
 (defun ecukes-init-load-project (argv)
-  "Loads all files in project."
+  "Loads all project Ecukes files."
   (let ((features-root (ecukes-init-features-root (car argv))))
     (cond (features-root
            (load (expand-file-name "support.el" features-root))
@@ -27,13 +26,13 @@ directory. If a directory, all .feature files in that directory are included."
           (t (error "fuck you ant suck")))))
 
 (defun ecukes-init-features-root (dir)
-  "Returns features root."
+  "Returns project features root directory."
   (let ((project-root (ecukes-init-project-root dir)))
     (if project-root
         (expand-file-name "features" project-root))))
 
 (defun ecukes-init-project-root (dir)
-  "Returns project root."
+  "Returns project root directory."
   (if (file-regular-p dir)
       (ecukes-init-project-root (file-name-directory dir))
     (if (file-directory-p (expand-file-name "features" dir))
