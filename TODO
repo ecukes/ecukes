@@ -1,7 +1,7 @@
 -*- mode: Org -*-
 
 * Tests
-** TODO Common [0/1]
+** TODO Other [0/1]
    - [ ] Refactor out common code
 ** TODO Output [0/1]
    - [ ] Stub/Mock message to get rid of output
@@ -10,9 +10,16 @@
   - [ ] Test ecukes-init-features-root
   - [ ] Test ecukes-init-project-root
 * Ecukes
+** TODO Other [0/4]
+   - [ ] Create script that creates Ecukes file structure
+   - [ ] Tell what step definitions are missing
+   - [ ] Show some statistics on number of features that passed/failed
+   - [ ] Create before/after hooks
 ** TODO Main [0/1]
    - [ ] Go through all steps and make each have a step definition
 ** TODO Debugging [0/1]
    - [ ] Include whole stacktrace in red on fail
 ** TODO Output [0/1]
    - [ ] Catch up messages and prints to avoid messing up the Ecukes output
+** TODO Features [0/1]
+   - [ ] Add support for tags
