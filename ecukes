@@ -38,10 +38,9 @@
 (eval-when-compile
   (require 'cl))
 
-;; Add the current directory to the load path
+;; Add the current directory to load-path
 (add-to-list 'load-path (file-name-directory load-file-name))
 
-;; Require Ecukes packages
 (require 'ecukes-steps)
 (require 'ecukes-init)
 (require 'ecukes-def)
@@ -53,9 +52,9 @@
 (ecukes-init-load-project argv)
 
 (defvar ecukes-feature-files (ecukes-init-feature-files argv)
-  "List of all feature files.")
+  "List containing all feature files.")
 
-;; Make sure there are features passed in by the user
+;; Make there are feature files to run
 (unless ecukes-feature-files
   (error "You did not provide any features"))
 
@@ -63,9 +62,11 @@
   (let* ((feature (ecukes-parse-feature feature-file))
          (background (ecukes-feature-background feature)))
 
+    ;; Output intro
     (let ((intro (ecukes-feature-intro feature)))
       (if intro (ecukes-output-intro intro)))
 
+    ;; Run and output background
     (if background
         (ecukes-output-background
          (ecukes-run-background
@@ -74,8 +75,10 @@
             (ecukes-output-step step success)))))
 
     (dolist (scenario (ecukes-feature-scenarios feature))
+      ;; Run background
       (if background (ecukes-run-background background))
 
+      ;; Run and output scenario
       (ecukes-output-scenario
        scenario
        (ecukes-run-scenario
