@@ -3,9 +3,9 @@
 
 ;; Complete feature. Each feature file is described with this struct.
 ;;
-;;   intro             - Feature intro
-;;   ecukes-background - Feature background
-;;   scenarios         - All feature scenarios
+;;   intro      - Feature intro
+;;   background - Feature background
+;;   scenarios  - All feature scenarios
 (defstruct ecukes-feature intro background scenarios)
 
 ;; Feature intro. Intro is optional, but is conventionally included.
