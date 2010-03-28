@@ -1,4 +1,4 @@
-;;; ecukes-output.el --- Helpers for printing feature stuff
+;;; ecukes-output.el --- Helpers for printing
 
 (defvar ecukes-output-offset 0
   "Current offset (number of spaces).")
@@ -13,7 +13,7 @@
   "Green color code.")
 
 (defun ecukes-output-intro (intro)
-  "Outputs the feature intro"
+  "Outputs the feature INTRO."
   (setq ecukes-output-offset 0)
   (let ((header (ecukes-intro-header intro)))
     (ecukes-output-white (concat "Feature: " header)))
@@ -32,7 +32,7 @@
   `(ecukes-output-block "Background" ,@body))
 
 (defmacro ecukes-output-block (header &rest body)
-  "Output HEADER, execute BODY and output newline."
+  "Output HEADER, execute BODY and end with newline."
   `(let ((output (ecukes-output-white (concat ,header ":")))
          (ecukes-output-offset (+ ecukes-output-offset 2)))
      ,@body
