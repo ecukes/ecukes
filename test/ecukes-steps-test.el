@@ -29,7 +29,9 @@
          (definition (ecukes-steps-find-definition step))
          (fn (car definition))
          (args (car (cdr definition))))
-    (should (equal 2 (length args)))))
+    (should (equal 2 (length args)))
+    (should (equal "a car" (car args)))
+    (should (equal "kitchen" (car (cdr args))))))
 
 (ert-deftest steps-definition-does-not-exist ()
   (let* ((step (mock-step "Given this does not exist"))
