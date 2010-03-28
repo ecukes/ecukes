@@ -39,27 +39,27 @@
 (ert-deftest steps-find-given-definition ()
   (Given "^I have given$" (lambda () "given"))
   (let ((step (mock-step "Given I have given")))
-    (should-find-function step "given")))
+    (should-find-definition step "given")))
 
 (ert-deftest steps-find-when-definition ()
   (When "^I have when$" (lambda () "when"))
   (let ((step (mock-step "When I have when")))
-    (should-find-function step "when")))
+    (should-find-definition step "when")))
 
 (ert-deftest steps-find-then-definition ()
   (Then "^I have then$" (lambda () "then"))
   (let ((step (mock-step "Then I have then")))
-    (should-find-function step "then")))
+    (should-find-definition step "then")))
 
 (ert-deftest steps-find-and-definition ()
   (And "^I have and$" (lambda () "and"))
   (let ((step (mock-step "And I have and")))
-    (should-find-function step "and")))
+    (should-find-definition step "and")))
 
 (ert-deftest steps-find-but-definition ()
   (But "^I have but$" (lambda () "but"))
   (let ((step (mock-step "But I have but")))
-    (should-find-function step "but")))
+    (should-find-definition step "but")))
 
 
 (defun should-have-step-definition (key value)
@@ -67,5 +67,5 @@
     (should description)
     (should (equal (funcall description) value))))
 
-(defun should-find-function (step ret-val)
+(defun should-find-definition (step ret-val)
   (should (equal ret-val (funcall (car (ecukes-steps-find-definition step))))))
