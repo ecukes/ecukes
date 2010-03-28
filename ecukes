@@ -47,6 +47,7 @@
 (require 'ecukes-output)
 (require 'ecukes-parse)
 (require 'ecukes-run)
+(require 'ecukes-hooks)
 
 ;; Load project
 (ecukes-init-load-project argv)

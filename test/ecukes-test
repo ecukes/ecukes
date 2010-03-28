@@ -20,6 +20,7 @@
 (require 'ecukes-output)
 (require 'ecukes-parse)
 (require 'ecukes-run)
+(require 'ecukes-hooks)
 
 ;; Load the test helpers.
 (load-file (concat ecukes-test-path "test-helper.el"))
