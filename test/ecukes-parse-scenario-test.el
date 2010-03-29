@@ -86,3 +86,9 @@
          (should (equal "Given I have bazooka" (ecukes-step-name (nth 0 steps))))
          (should (equal "And some 60 cal" (ecukes-step-name (nth 1 steps))))
          (should (equal "Then I should get some meat" (ecukes-step-name (nth 2 steps)))))))))
+
+(ert-deftest parse-scenario-comment ()
+  (ecukes-test-parse-feature-scenario
+   "comment.feature"
+   (lambda (feature scenarios)
+     (should-not scenarios))))

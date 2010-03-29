@@ -84,3 +84,9 @@
      (should (equal "In order to aviod silly mistakes" (nth 0 description)))
      (should (equal "As a math idiot" (nth 1 description)))
      (should-not (nth 2 description)))))
+
+(ert-deftest parse-intro-all-good ()
+  (ecukes-test-parse-feature-intro
+   "comment.feature"
+   (lambda (feature intro header description)
+     (should-not intro))))

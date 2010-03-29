@@ -26,3 +26,7 @@
    - [ ] Make it possible to run steps from other steps
 ** TODO Hooks [1/1]
    - [X] Create before/after hooks
+** TODO Bugs [0/1]
+   - [ ] Can not call the same step more than once in feature?
+** TODO Parser [1/1]
+   - [X] Do not parse if comment

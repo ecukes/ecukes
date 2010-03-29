@@ -1,22 +1,25 @@
 ;;; ecukes-parse.el --- Feature file parser
 
-(defconst ecukes-feature-re "Feature:[[:blank:]]*\\(.+[^ ]\\)[[:blank:]]*$"
+(defconst ecukes-beg-re "^[[:blank:]]*"
+  "Regular expression matching beginning of a statement.")
+
+(defconst ecukes-feature-re (concat ecukes-beg-re "Feature:[[:blank:]]*\\(.+[^ ]\\)[[:blank:]]*$")
   "Regular expression matching a feature header.")
 
-(defconst ecukes-background-re "Background:"
+(defconst ecukes-background-re (concat ecukes-beg-re "Background:")
   "Regular expression matching a background header.")
 
-(defconst ecukes-scenario-re "Scenario:[[:blank:]]*\\(.+[^ ]\\)[[:blank:]]*$"
+(defconst ecukes-scenario-re (concat ecukes-beg-re "Scenario:[[:blank:]]*\\(.+[^ ]\\)[[:blank:]]*$")
   "Regular expression matching a scenario header.")
 
 (defconst ecukes-py-string-re "^\\([[:blank:]]*\\)\"\"\""
   "Regular expression matching a py string step with grouping for
 whitespace at the beginning.")
 
-(defconst ecukes-table-re "^[[:blank:]]*|.+|"
+(defconst ecukes-table-re (concat ecukes-beg-re "|.+|")
   "Regular expression matching a table step.")
 
-(defconst ecukes-step-re "^[[:blank:]]*\\(?:Given\\|When\\|Then\\|And\\|But\\)[[:blank:]]*\\(.+\\)[[:blank:]]*"
+(defconst ecukes-step-re (concat ecukes-beg-re "\\(?:Given\\|When\\|Then\\|And\\|But\\)[[:blank:]]*\\(.+\\)[[:blank:]]*")
   "Regular expression matching a step name.")
 
 (defun ecukes-parse-feature (feature-file)
