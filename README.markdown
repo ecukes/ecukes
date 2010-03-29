@@ -59,6 +59,112 @@ The features folder should contain:
 definitions. All step files in this folder must end with **-steps.el**.
 
 
+## How to define steps
+There are three different kind of steps: **regular**, **py-string** and **table**.
+
+You define a step definition by calling the function **Given**,
+**When**, **Then**, **And** or **But** passing two arguments (all
+functions are really the same and it does not matter which you
+choose). The first argument is the match string and the second is a function.
+
+### Regular step
+A regular step always only consumes one line. The most basic step
+looks like this:
+    Given something is true
+    
+The step definition would be:
+    (Given "something is true"
+           (lambda ()
+             ;; Do something
+             ))
+         
+The second argument could also have been the symbol of a function name:
+    (Given "something is true" 'do-something)
+       
+Steps can take arbitrary many arguments. The arguments sent to the
+step definition function are all regular expression match groupings
+from the matching of the step name and the match string.
+
+Send one argument:
+    Given I am in buffer "somebuffer"
+    
+The translation:
+    (Given "I am in buffer \"\\(.+\\)\""
+       (lambda (buffer)
+         ;; Do something with buffer
+         ))
+         
+Send more than one argument:
+    Given I am in buffer "somebuffer" with text "Some text"
+    
+The translation:
+    (Given "I am in buffer \"\\(.+\\)\" with text \"\\(.+\\)\""
+       (lambda (buffer text)
+         ;; Do something with buffer and text
+         ))
+
+### Py String
+A "Py String" step looks like this
+    Given the following text:
+      """
+      some text
+      """
+    
+The translation:
+    (Given "the following text:"
+           (lambda (text)
+             ;; Do something with text
+             ))
+
+It is also possible to send arguments to a py string step. The py
+string text will be the last argument.
+
+    Given the following text in buffer "some buffer":
+      """
+      some text
+      """
+    
+The translation:
+    (Given "the following text in buffer \"\\(.+\\)\":"
+           (lambda (buffer text)
+             ;; Do something with buffer and text
+             ))
+
+### Table
+A table step looks like this
+    Given these meals:
+      | meal      | price |
+      | Hamburger | $4.50 |
+      | Pizza     | $5.30 |
+    
+The translation:
+    (Given "the following meals:"
+           (lambda (meals)
+             ;; Do something with text
+             ))
+             
+The argument **meals** would in this case be this list (note that the
+header line is not included in the list):
+    (
+     ("Hamburger" "$4.50")
+     ("Pizza" "$5.30")
+     )
+
+It is also possible to send arguments to a table step. The table list
+will be the last argument.
+
+    Given these meals at "fast food":
+      | meal      | price |
+      | Hamburger | $4.50 |
+      | Pizza     | $5.30 |
+    
+The translation:
+    (Given "these meals at \"\\(.+\\)\":"
+           (lambda (restaurant meals)
+             ;; Do something with restaurant and meals
+             ))
+
+
 ## Example
 A simple example of how to create a feature and corresponding step definitions.
 
