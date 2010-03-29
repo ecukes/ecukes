@@ -24,16 +24,16 @@
 
 (defmacro ecukes-output-scenario (scenario &rest body)
   "Output SCENARIO header, then execute BODY."
-  `(let ((scenario-name (ecukes-scenario-name ,scenario)))
+  `(let ((scenario-name (concat "Scenario: " (ecukes-scenario-name ,scenario))))
      (ecukes-output-block scenario-name ,@body)))
 
 (defmacro ecukes-output-background (&rest body)
   "Output background header, then execute BODY."
-  `(ecukes-output-block "Background" ,@body))
+  `(ecukes-output-block "Background:" ,@body))
 
 (defmacro ecukes-output-block (header &rest body)
   "Output HEADER, execute BODY and end with newline."
-  `(let ((output (ecukes-output-white (concat ,header ":")))
+  `(let ((output (ecukes-output-white ,header))
          (ecukes-output-offset (+ ecukes-output-offset 2)))
      ,@body
      (ecukes-output-newline)))
