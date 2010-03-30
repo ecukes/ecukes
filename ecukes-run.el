@@ -21,8 +21,8 @@ was successful, nil otherwise."
       (progn
         (let* ((arg (ecukes-step-arg step))
                (definition (ecukes-steps-find-definition step))
-               (fn (car definition))
-               (args (car (cdr definition))))
+               (fn (ecukes-step-def-fn definition))
+               (args (ecukes-step-def-args definition)))
           (if arg (add-to-list 'args arg t))
           (apply fn args)))
     (error

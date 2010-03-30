@@ -46,6 +46,12 @@
 ;; rows   - A list of lists, where each inner list is a row in the table.
 (defstruct ecukes-table header rows)
 
+;; A step definition.
+;;
+;; fn   - The step definition function
+;; args - The argument from the match groupings
+(defstruct ecukes-step-def fn args)
+
 
 (provide 'ecukes-def)
 

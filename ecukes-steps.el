@@ -7,7 +7,12 @@
   "Defines a step with DESCRIPTION and function FN.
  Do not use this function directly in step definitions. Use one of:
 `Given', `Then', `When', `And' or `But' instead."
-  (puthash description fn ecukes-steps-definitions))
+  (if fn
+      (puthash description fn ecukes-steps-definitions)
+    (let ((step-def (ecukes-steps-find-definition-by-name description)))
+      (if step-def
+          (funcall (ecukes-step-def-fn step-def))
+        (error (concat "Step definition \"" description "\" not found"))))))
 
 (defalias 'Given 'ecukes-steps-define
   "Use this to put the system in a known state. Given what you say,
@@ -31,18 +36,22 @@ But to make the text read more fluently.")
 
 (defun ecukes-steps-find-definition (step)
   "Finds step definition associated to STEP."
-  (let* ((name (ecukes-step-name step)) args fn (count 1) part)
+  (let ((name (ecukes-step-name step)))
     (string-match ecukes-step-re name)
-    (setq part (match-string 1 name))
+    (ecukes-steps-find-definition-by-name (match-string 1 name))))
+
+(defun ecukes-steps-find-definition-by-name (name)
+  "Finds step definition associated to a steps NAME."
+  (let ((count 1) args fn)
     (maphash
      (lambda (key value)
-       (when (string-match key part)
+       (when (string-match key name)
          (setq fn value)
-         (while (match-string count part)
-           (add-to-list 'args (match-string count part) t)
+         (while (match-string count name)
+           (add-to-list 'args (match-string count name) t)
            (setq count (1+ count)))))
      ecukes-steps-definitions)
-    (if fn (values fn args))))
+    (if fn (make-ecukes-step-def :fn fn :args args))))
 
 (provide 'ecukes-steps)
 

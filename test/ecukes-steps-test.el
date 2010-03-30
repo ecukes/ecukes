@@ -27,8 +27,8 @@
   (Given "^I have \\(.+\\) in my \\(.+\\)$" (lambda (a b)))
   (let* ((step (mock-step "Given I have a car in my kitchen"))
          (definition (ecukes-steps-find-definition step))
-         (fn (car definition))
-         (args (car (cdr definition))))
+         (fn (ecukes-step-def-fn definition))
+         (args (ecukes-step-def-args definition)))
     (should (equal 2 (length args)))
     (should (equal "a car" (car args)))
     (should (equal "kitchen" (car (cdr args))))))
@@ -63,6 +63,17 @@
   (let ((step (mock-step "But I have but")))
     (should-find-definition step "but")))
 
+(ert-deftest steps-find-given-definition-by-name ()
+  (Given "^I have given$" (lambda () "given"))
+  (let ((name "I have given"))
+    (should-find-definition-by-name name "given")))
+
+(ert-deftest steps-call-other-step ()
+  (Given "^something$" (lambda () "something"))
+  (should (equal "something" (Given "something"))))
+
+(ert-deftest steps-call-non-existing-other-step ()
+  (should-error (Given "something non existing")))
 
 (defun should-have-step-definition (key value)
   (let ((description (gethash key ecukes-steps-definitions)))
@@ -70,4 +81,10 @@
     (should (equal (funcall description) value))))
 
 (defun should-find-definition (step ret-val)
-  (should (equal ret-val (funcall (car (ecukes-steps-find-definition step))))))
+  (should-be-correct-definition (ecukes-steps-find-definition step) ret-val))
+
+(defun should-find-definition-by-name (name ret-val)
+  (should-be-correct-definition (ecukes-steps-find-definition-by-name name) ret-val))
+
+(defun should-be-correct-definition (definition ret-val)
+  (should (equal ret-val (funcall (ecukes-step-def-fn definition)))))
