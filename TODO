@@ -12,9 +12,9 @@
 ** TODO Hooks [0/1]
    - [ ] Refactor common code in Before and After method.
 * Ecukes
-** TODO Other [0/3]
+** TODO Other [1/3]
    - [ ] Create script that creates Ecukes file structure
-   - [ ] Show some statistics on number of features that passed/failed
+   - [X] Show some statistics on number of features that passed/failed
    - [ ] Tell what step definitions are missing
 ** TODO Debugging [0/1]
    - [ ] Include whole stacktrace in red color on fail
