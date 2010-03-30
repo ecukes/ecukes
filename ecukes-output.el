@@ -3,15 +3,6 @@
 (defvar ecukes-output-offset 0
   "Current offset (number of spaces).")
 
-(defconst ecukes-output-color-white 37
-  "White color code.")
-
-(defconst ecukes-output-color-red 31
-  "Red color code.")
-
-(defconst ecukes-output-color-green 32
-  "Green color code.")
-
 (defun ecukes-output-intro (intro)
   "Outputs the feature INTRO."
   (setq ecukes-output-offset 0)
@@ -45,18 +36,21 @@
         (arg (ecukes-step-arg step))
         (output-fn (if success 'ecukes-output-green 'ecukes-output-red)))
 
-    (funcall output-fn name)
+    ;; Print the step name
+    (if success (ecukes-output-green name) (ecukes-output-red name))
 
-    (unless success
-      (ecukes-output-red (ecukes-step-err step)))
+    ;; Print error if any
+    (unless success (ecukes-output-red (ecukes-step-err step)))
 
+    ;; Print py-string or table
     (let ((ecukes-output-offset (+ ecukes-output-offset 2)))
       (cond ((equal type 'py-string)
-             (ecukes-output-py-string arg))
+             (ecukes-output-py-string arg output-fn))
             ((equal type 'table)
-             (ecukes-output-table arg))))))
+             (ecukes-output-table arg output-fn))))
+    ))
 
-(defun ecukes-output-py-string (py-string)
+(defun ecukes-output-py-string (py-string output-fn)
   "Outputs PY-STRING."
   (let ((py-string "\"\"\""))
     (funcall output-fn py-string)
@@ -64,7 +58,7 @@
       (funcall output-fn line))
     (funcall output-fn py-string)))
 
-(defun ecukes-output-table (table)
+(defun ecukes-output-table (table output-fn)
   "Outputs TABLE."
   (let ((widths)
         (header (ecukes-table-header table))
@@ -82,7 +76,6 @@
     (funcall output-fn (ecukes-output-table-row header widths))
     (dolist (row rows)
       (funcall output-fn (ecukes-output-table-row row widths)))
-
     ))
 
 (defun ecukes-output-table-row (row widths)
@@ -93,29 +86,29 @@
       (setq count (1+ count)))
     row-to-s))
 
-(defun ecukes-output-newline ()
-  "Outputs a newline."
-  (ecukes-output-text ""))
-
 (defun ecukes-output-white (text)
   "Outputs TEXT in white."
-  (ecukes-output-color text ecukes-output-color-white))
+  (ecukes-output-text (ecukes-color-white text)))
 
 (defun ecukes-output-red (text)
   "Outputs TEXT in red."
-  (ecukes-output-color text ecukes-output-color-red))
+  (ecukes-output-text (ecukes-color-red text)))
 
 (defun ecukes-output-green (text)
   "Outputs TEXT in green."
-  (ecukes-output-color text ecukes-output-color-green))
+  (ecukes-output-text (ecukes-color-green text)))
 
-(defun ecukes-output-color (text color)
-  "Outputs TEXT in COLOR."
-  (ecukes-output-text (concat "\e[" (number-to-string color) "m" text "\e[0m")))
+(defun ecukes-output-text (&rest body)
+  "Outputs TEXT according to `ecukes-output-offset'."
+  (message (apply 'concat (cons (make-string ecukes-output-offset 32) body))))
 
-(defun ecukes-output-text (text)
-  "Outputs TEXT."
-  (message (concat (make-string ecukes-output-offset 32) text)))
+(defun ecukes-output-no-indent (&rest body)
+  "Outputs TEXT, just as it is."
+  (message (apply 'concat body)))
+
+(defun ecukes-output-newline ()
+  "Outputs a newline."
+  (message " "))
 
 (provide 'ecukes-output)
 

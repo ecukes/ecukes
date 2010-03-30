@@ -48,6 +48,8 @@
 (require 'ecukes-parse)
 (require 'ecukes-run)
 (require 'ecukes-hooks)
+(require 'ecukes-color)
+(require 'ecukes-stats)
 
 ;; Load project
 (ecukes-init-load-project argv)
@@ -73,24 +75,32 @@
          (ecukes-run-background
           background
           (lambda (step success)
+            (ecukes-stats-update-steps success)
             (ecukes-output-step step success)))))
 
     (dolist (scenario (ecukes-feature-scenarios feature))
       ;; Run before hooks
       (ecukes-hooks-run-before)
-      
+
       ;; Run background
       (if background (ecukes-run-background background))
 
       ;; Run and output scenario
-      (ecukes-output-scenario
-       scenario
-       (ecukes-run-scenario
-        scenario
-        (lambda (step success)
-          (ecukes-output-step step success))))
+      (let ((success-scenario t))
+        (ecukes-output-scenario
+         scenario
+         (ecukes-run-scenario
+          scenario
+          (lambda (step success-step)
+            (unless success-step (setq success-scenario nil))
+            (ecukes-stats-update-steps success-step)
+            (ecukes-output-step step success-step))))
+        (ecukes-stats-update-scenarios success-scenario))
 
       ;; Run after hooks
-      (ecukes-hooks-run-after))))
+      (ecukes-hooks-run-after)
+      )))
+
+(ecukes-stats-print-summary)
 
 ;;; ecukes.el ends here

@@ -21,6 +21,8 @@
 (require 'ecukes-parse)
 (require 'ecukes-run)
 (require 'ecukes-hooks)
+(require 'ecukes-color)
+(require 'ecukes-stats)
 
 ;; Load the test helpers.
 (load-file (concat ecukes-test-path "test-helper.el"))
