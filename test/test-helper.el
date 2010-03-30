@@ -63,3 +63,16 @@
 
 (defun mock-step (&optional prefix)
   (make-ecukes-step :name (or prefix "Given I have this or that")))
+
+
+(defun should-be-regular-step (step)
+  (should-be-type step 'regular))
+
+(defun should-be-py-string-step (step)
+  (should-be-type step 'py-string))
+
+(defun should-be-table-step (step)
+  (should-be-type step 'table))
+
+(defun should-be-type (step type)
+  (should (equal type (ecukes-step-type step))))
