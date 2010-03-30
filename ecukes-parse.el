@@ -100,14 +100,18 @@ whitespace at the beginning.")
 
 (defun ecukes-parse-table ()
   "Parses a table step."
-  (forward-line 2)
-  (let ((rows (list)))
+  (forward-line 1)
+  (let ((header (ecukes-parse-table-row (ecukes-blank-line))) rows)
+    (forward-line 1)
     (while (string-match-p ecukes-table-re (ecukes-line))
-      (let ((cols (delete "" (split-string (ecukes-blank-line) "[[:blank:]]*|[[:blank:]]*"))))
-        (add-to-list 'rows cols t)
-        (forward-line 1)))
+      (add-to-list 'rows (ecukes-parse-table-row (ecukes-blank-line)) t)
+      (forward-line 1))
     (forward-line -1)
-    rows))
+    (make-ecukes-table :header header :rows rows)))
+
+(defun ecukes-parse-table-row (row)
+  "Parses the table ROW."
+  (delete "" (split-string row "[[:blank:]]*|[[:blank:]]*")))
 
 (defun ecukes-line (&optional n)
   "Returns current line with offset N."

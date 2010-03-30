@@ -40,6 +40,12 @@
 ;; err  - When running the step. If it fails, this contains the error message.
 (defstruct ecukes-step name arg type err)
 
+;; If step is a table step, its argument will be an ecukes-table.
+;;
+;; header - A list with the header
+;; rows   - A list of lists, where each inner list is a row in the table.
+(defstruct ecukes-table header rows)
+
 
 (provide 'ecukes-def)
 
