@@ -30,10 +30,14 @@
     (should (equal "And I see something else on the screen" (ecukes-step-name (nth 1 steps))))
 
     ;; Table
-    (let* ((table (nth 2 steps)) (arg (ecukes-step-arg table)))
-      (should (equal "h1" (car (nth 0 arg))))
-      (should (equal "p" (car (nth 1 arg))))
-      (should (equal "div" (car (nth 2 arg)))))
+    (let* ((table (nth 2 steps))
+           (table (ecukes-step-arg table))
+           (header (ecukes-table-header table))
+           (rows (ecukes-table-rows table)))
+      (should (equal "element" (car header)))
+      (should (equal "h1" (car (nth 0 rows))))
+      (should (equal "p" (car (nth 1 rows))))
+      (should (equal "div" (car (nth 2 rows)))))
 
     ;; Last regular step
     (should (equal "And I should be happy" (ecukes-step-name (nth 3 steps))))))
