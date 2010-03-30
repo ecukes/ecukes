@@ -3,10 +3,6 @@
     (ecukes-output-intro (mock-intro))
     (should (equal ecukes-output-offset 2))))
 
-;; (ert-deftest output-step ()
-;;   ;; TODO
-;;   )
-
 (ert-deftest output-newline ()
   (should (equal "" (ecukes-output-newline))))
 
@@ -24,3 +20,9 @@
 
 (ert-deftest output-text ()
   (should (equal "text" (ecukes-output-text "text"))))
+
+(ert-deftest output-table-row ()
+  (let ((cols '("first" "second" "third"))
+        (widths '(5 6 5))
+        (expected "| first | second | third | "))
+  (should (equal expected (ecukes-output-table-row cols widths)))))

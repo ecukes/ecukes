@@ -40,15 +40,58 @@
 
 (defun ecukes-output-step (step success)
   "Output STEP including error if not SUCCESS."
-  (let ((name (ecukes-step-name step))
+  (let ((type (ecukes-step-type step))
+        (name (ecukes-step-name step))
+        (arg (ecukes-step-arg step))
         (output-fn (if success 'ecukes-output-green 'ecukes-output-red)))
+
     (funcall output-fn name)
 
     (unless success
       (ecukes-output-red (ecukes-step-err step)))
 
-    ;; TODO: Output step arg if any.
+    (let ((ecukes-output-offset (+ ecukes-output-offset 2)))
+      (cond ((equal type 'py-string)
+             (ecukes-output-py-string arg))
+            ((equal type 'table)
+             (ecukes-output-table arg))))))
+
+(defun ecukes-output-py-string (py-string)
+  "Outputs PY-STRING."
+  (let ((py-string "\"\"\""))
+    (funcall output-fn py-string)
+    (dolist (line (split-string arg "\n"))
+      (funcall output-fn line))
+    (funcall output-fn py-string)))
+
+(defun ecukes-output-table (table)
+  "Outputs TABLE."
+  (let ((widths)
+        (header (ecukes-table-header table))
+        (rows (ecukes-table-rows table)))
+
+    ;; Calculate the maximum width for each column.
+    (let ((count-x (length header)))
+      (dotimes (i count-x)
+        (let ((max 0))
+          (dolist (row rows)
+            (setq max (max (length (nth i row)) max)))
+          (add-to-list 'widths max t))))
+
+    ;; Print the table.
+    (funcall output-fn (ecukes-output-table-row header widths))
+    (dolist (row rows)
+      (funcall output-fn (ecukes-output-table-row row widths)))
+
     ))
+
+(defun ecukes-output-table-row (row widths)
+  "Prints table ROW according to WIDTHS."
+  (let ((row-to-s "| ") (count 0))
+    (dolist (col row)
+      (setq row-to-s (concat row-to-s col (make-string (- (nth count widths) (length col)) 32) " | "))
+      (setq count (1+ count)))
+    row-to-s))
 
 (defun ecukes-output-newline ()
   "Outputs a newline."
