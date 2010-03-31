@@ -19,8 +19,8 @@
 ** TODO Debugging [0/2]
    - [ ] Include whole stacktrace in red color on fail
    - [ ] Possible to debug a scenario and all steps it goes through?
-** TODO Output [0/1]
-   - [ ] Catch up messages and prints to avoid messing up the Ecukes output
+** TODO Output [1/1]
+   - [X] Catch up messages and prints to avoid messing up the Ecukes output
 ** TODO Features [0/1]
    - [ ] Add support for tags
 ** TODO Step definitions [1/1]

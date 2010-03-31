@@ -51,6 +51,19 @@
 (require 'ecukes-color)
 (require 'ecukes-stats)
 
+
+(defvar ecukes-debug nil
+  "Controls if any debugging output should be produced.")
+
+(defvar ecukes-last-message nil
+  "Last message.")
+
+(when (not ecukes-debug)
+  (defadvice message (around message-around (format-string &rest args) activate)
+    (setq ecukes-last-message (apply 'format format-string args)))
+  (ad-activate 'message))
+
+
 ;; Load project
 (ecukes-init-load-project argv)
 

@@ -100,15 +100,21 @@
 
 (defun ecukes-output-text (&rest body)
   "Outputs TEXT according to `ecukes-output-offset'."
-  (message (apply 'concat (cons (make-string ecukes-output-offset 32) body))))
+  (ecukes-ouput-message (apply 'concat (cons (make-string ecukes-output-offset 32) body))))
 
 (defun ecukes-output-no-indent (&rest body)
   "Outputs TEXT, just as it is."
-  (message (apply 'concat body)))
+  (ecukes-ouput-message (apply 'concat body)))
 
 (defun ecukes-output-newline ()
   "Outputs a newline."
-  (message " "))
+  (ecukes-ouput-message " "))
+
+(defun ecukes-ouput-message (format-string &rest args)
+  "Exactly as `message' only that it uses `princ' for printing the message.
+This is used because message is advised to avoid clobbering the Ecukes
+output with output from stuff in the step definitions."
+  (princ (concat (apply 'format format-string args) "\n")))
 
 (provide 'ecukes-output)
 

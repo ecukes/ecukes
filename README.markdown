@@ -262,6 +262,19 @@ Run single feature:
 
 Run all features:
     $ ecukes super-project/features
+    
+
+## Gotchas
+
+### Messages
+Some of the functions you call in your step definitions produces
+output that clutters the Ecukes output. To avoid this, the message
+function has been adviced. Hence using message in your step
+definitions will not work. Use some other Elisp function to procuce
+output. For example: print, princ or prin1
+
+However, if a function produces a message, you can reach it through
+the variable **ecukes-last-message**, which holds the last message.
 
 
 ## Contributing

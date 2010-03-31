@@ -76,3 +76,8 @@
 
 (defun should-be-type (step type)
   (should (equal type (ecukes-step-type step))))
+
+;; Advising princ to avoid output in tests. See `ecukes-ouput-message'.
+(defadvice princ (around princ-around (format-string &rest args) activate)
+  (setq ad-return-value (apply 'format format-string args)))
+(ad-activate 'princ)
