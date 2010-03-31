@@ -3,7 +3,7 @@
    "no-scenarios.feature"
    (lambda (feature scenarios)
      (should-not scenarios))))
-  
+
 (ert-deftest parse-scenario-all-good ()
   (ecukes-test-parse-feature-scenario
    "all-good.feature"
@@ -76,7 +76,7 @@
    (lambda (feature scenarios)
      (let ((scenario1 (nth 0 scenarios))
            (scenario2 (nth 1 scenarios)))
-       (should (equal "Go fishing" (ecukes-scenario-name scenario1)))       
+       (should (equal "Go fishing" (ecukes-scenario-name scenario1)))
        (let ((steps (ecukes-scenario-steps scenario1)))
          (should (equal "Given I have a fishing pole" (ecukes-step-name (nth 0 steps))))
          (should (equal "And some bait" (ecukes-step-name (nth 1 steps))))
@@ -92,3 +92,36 @@
    "comment.feature"
    (lambda (feature scenarios)
      (should-not scenarios))))
+
+(ert-deftest parse-scenario-single-tag ()
+  (ecukes-test-parse-feature-scenario
+   "tags-single.feature"
+   (lambda (feature scenarios)
+     (let ((scenario (car scenarios)))
+       (should-have-tags scenario "debug")))))
+
+(ert-deftest parse-scenario-multiple-tags ()
+  (ecukes-test-parse-feature-scenario
+   "tags-multiple.feature"
+   (lambda (feature scenarios)
+     (let ((scenario (car scenarios)))
+       (should-have-tags scenario "debug" "verbose")))))
+
+(ert-deftest parse-scenario-tags-whitespace ()
+  (ecukes-test-parse-feature-scenario
+   "tags-whitespace.feature"
+   (lambda (feature scenarios)
+     (let ((scenario (car scenarios)))
+       (should-have-tags scenario "debug" "verbose")))))
+
+(ert-deftest parse-scenario-tags-comment ()
+  (ecukes-test-parse-feature-scenario
+   "tags-comment.feature"
+   (lambda (feature scenarios)
+     (let ((scenario (car scenarios)))
+       (should-have-tags scenario)))))
+
+(defun should-have-tags (scenario &rest tags)
+  (let ((actual-tags (ecukes-scenario-tags scenario))
+        (expected-tags tags))
+    (should (equal (sort actual-tags 'string<) (sort expected-tags 'string<)))))

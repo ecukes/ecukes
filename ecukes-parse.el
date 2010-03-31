@@ -12,6 +12,9 @@
 (defconst ecukes-scenario-re (concat ecukes-beg-re "Scenario:[[:blank:]]*\\(.+[^ ]\\)[[:blank:]]*$")
   "Regular expression matching a scenario header.")
 
+(defconst ecukes-tags-re (concat ecukes-beg-re "\\(?:@[^ \t]+\\)")
+  "Regular expression matching tags line.")
+
 (defconst ecukes-py-string-re "^\\([[:blank:]]*\\)\"\"\""
   "Regular expression matching a py string step with grouping for
 whitespace at the beginning.")
@@ -58,13 +61,15 @@ whitespace at the beginning.")
   "Parses the feature scenario."
   (let ((scenarios))
     (while (re-search-forward ecukes-scenario-re nil t)
-      (let ((steps) (name))
+      (let ((steps) (name) (tags-line (ecukes-blank-line -1)) (tags))
+        (if (string-match-p ecukes-tags-re tags-line)
+            (setq tags (split-string (replace-regexp-in-string "@" "" tags-line) "[[:blank:]]+")))
         (setq name (match-string-no-properties 1))
         (forward-line 1)
         (ecukes-parse-block
          (lambda (step)
            (add-to-list 'steps step t)))
-        (add-to-list 'scenarios (make-ecukes-scenario :name name :steps steps) t)))
+        (add-to-list 'scenarios (make-ecukes-scenario :name name :steps steps :tags tags) t)))
     scenarios))
 
 (defun ecukes-parse-block (fn)

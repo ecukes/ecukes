@@ -8,6 +8,7 @@
 ;;   scenarios  - All feature scenarios
 (defstruct ecukes-feature intro background scenarios)
 
+
 ;; Feature intro. Intro is optional, but is conventionally included.
 ;;
 ;; header      - One line description of feature
@@ -20,16 +21,20 @@
 ;;                 A ... wants ...
 (defstruct ecukes-intro header description)
 
+
 ;; Feature background.
 ;;
 ;; steps - All steps in background
 (defstruct ecukes-background steps)
 
+
 ;; A feature scenario. Each feature has many scenarios.
 ;;
 ;; name  - The name of the scenario. For example: Switch to *Messages* buffer
 ;; steps - All steps for the scenario.
-(defstruct ecukes-scenario name steps)
+;; tags  - List of all scenario tags
+(defstruct ecukes-scenario name steps tags)
+
 
 ;; A step.
 ;;
@@ -40,11 +45,13 @@
 ;; err  - When running the step. If it fails, this contains the error message.
 (defstruct ecukes-step name arg type err)
 
+
 ;; If step is a table step, its argument will be an ecukes-table.
 ;;
 ;; header - A list with the header
 ;; rows   - A list of lists, where each inner list is a row in the table.
 (defstruct ecukes-table header rows)
+
 
 ;; A step definition.
 ;;

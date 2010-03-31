@@ -21,8 +21,8 @@
    - [ ] Possible to debug a scenario and all steps it goes through?
 ** TODO Output [1/1]
    - [X] Catch up messages and prints to avoid messing up the Ecukes output
-** TODO Features [0/1]
-   - [ ] Add support for tags
+** TODO Features [1/1]
+   - [X] Add support for tags
 ** TODO Step definitions [1/1]
    - [X] Make it possible to run steps from other steps
 ** TODO Hooks [1/1]
@@ -31,3 +31,8 @@
    - [ ] Can not call the same step more than once in feature?
 ** TODO Parser [1/1]
    - [X] Do not parse if comment
+** TODO Getopt [0/2]
+   - [ ] Create basic getopt parsing
+   - [ ] Parse tags flag
+** TODO Tags [0/1]
+   - [ ] Show message output if scenario have debug tag
