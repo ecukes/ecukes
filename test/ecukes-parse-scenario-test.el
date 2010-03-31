@@ -87,6 +87,23 @@
          (should (equal "And some 60 cal" (ecukes-step-name (nth 1 steps))))
          (should (equal "Then I should get some meat" (ecukes-step-name (nth 2 steps)))))))))
 
+(ert-deftest parse-scenario-multiple-scenarios ()
+  (ecukes-test-parse-feature-scenario
+   "multiple-scenarios-exactly-same.feature"
+   (lambda (feature scenarios)
+     (let ((scenario1 (nth 0 scenarios))
+           (scenario2 (nth 1 scenarios)))
+       (let ((fishing-validator))
+         (setq fishing-validator
+               (lambda (scenario)
+                 (should (equal "Go fishing" (ecukes-scenario-name scenario1)))
+                 (let ((steps (ecukes-scenario-steps scenario)))
+                   (should (equal "Given I have a fishing pole" (ecukes-step-name (nth 0 steps))))
+                   (should (equal "And some bait" (ecukes-step-name (nth 1 steps))))
+                   (should (equal "Then I should get some fish" (ecukes-step-name (nth 2 steps)))))))
+         (funcall fishing-validator scenario1)
+         (funcall fishing-validator scenario2))))))
+
 (ert-deftest parse-scenario-comment ()
   (ecukes-test-parse-feature-scenario
    "comment.feature"
@@ -120,6 +137,16 @@
    (lambda (feature scenarios)
      (let ((scenario (car scenarios)))
        (should-have-tags scenario)))))
+
+(ert-deftest parse-same-name ()
+  (ecukes-test-parse-feature-scenario
+   "same-name.feature"
+   (lambda (feature scenarios)
+     (let* ((scenario (car scenarios))
+            (steps (ecukes-scenario-steps scenario)))
+       (should (equal 2 (length steps)))
+       (should (equal "Given something" (ecukes-step-name (car steps))))
+       (should (equal "Given something" (ecukes-step-name (car (cdr steps)))))))))
 
 (defun should-have-tags (scenario &rest tags)
   (let ((actual-tags (ecukes-scenario-tags scenario))

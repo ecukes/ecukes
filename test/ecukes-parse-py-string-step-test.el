@@ -25,3 +25,12 @@
     (should (equal "Lorem ipsum dolor sit amet." (nth 0 split)))
     (should (equal "       Curabitur pellentesque iaculis eros." (nth 1 split)))
     (should-be-py-string-step step)))
+
+(ert-deftest parse-py-string-same-line ()
+  (let* ((step (ecukes-test-parse-feature-step "py-string-same-line.feature"))
+         (arg (ecukes-step-arg step))
+         (split (split-string arg "\n")))
+    (should (equal "Given this text:" (ecukes-step-name step)))
+    (should (equal "line" (nth 0 split)))
+    (should (equal "line" (nth 1 split)))
+    (should-be-py-string-step step)))
