@@ -50,25 +50,14 @@
 (require 'ecukes-hooks)
 (require 'ecukes-color)
 (require 'ecukes-stats)
+(require 'ecukes-misc)
 
-
-(defvar ecukes-debug nil
-  "Controls if any debugging output should be produced.")
-
-(defvar ecukes-last-message nil
-  "Last message.")
-
-(when (not ecukes-debug)
-  (defadvice message (around message-around (format-string &rest args) activate)
-    (setq ecukes-last-message (apply 'format format-string args)))
-  (ad-activate 'message))
+(defvar ecukes-feature-files (ecukes-init-feature-files argv)
+  "List containing all feature files.")
 
 
 ;; Load project
 (ecukes-init-load-project argv)
-
-(defvar ecukes-feature-files (ecukes-init-feature-files argv)
-  "List containing all feature files.")
 
 ;; Make sure there are feature files to run
 (unless ecukes-feature-files
@@ -94,7 +83,11 @@
     (dolist (scenario (ecukes-feature-scenarios feature))
       ;; Run before hooks
       (ecukes-hooks-run-before)
-
+      
+      ;; Turn on/off debug.
+      (let ((debug (member "debug" (ecukes-scenario-tags scenario))))
+        (ecukes-message-advice (not debug)))
+      
       ;; Run background
       (if background (ecukes-run-background background))
 
@@ -109,6 +102,9 @@
             (ecukes-stats-update-steps success-step)
             (ecukes-output-step step success-step))))
         (ecukes-stats-update-scenarios success-scenario))
+      
+      ;; Clear the list of messages
+      (setq ecukes-messages '())
 
       ;; Run after hooks
       (ecukes-hooks-run-after)
