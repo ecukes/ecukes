@@ -31,8 +31,8 @@
    - [ ] Can not call the same step more than once in feature?
 ** TODO Parser [1/1]
    - [X] Do not parse if comment
-** TODO Getopt [0/2]
+** TODO Getopt [0/1]
    - [ ] Create basic getopt parsing
-   - [ ] Parse tags flag
-** TODO Tags [0/1]
+** TODO Tags [0/2]
    - [ ] Show message output if scenario have debug tag
+   - [ ] Make it possible to run scenarios with tags: ecukes --tags @a,@b
