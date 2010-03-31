@@ -182,7 +182,7 @@ The translation:
              ;; Do something with restaurant and meals
              ))
 
-### Calling features
+### Calling steps from steps
 To keep you steps DRY you can call steps from other steps like this:
     (Given "I go to a"
            (lambda ()
