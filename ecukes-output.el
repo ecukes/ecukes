@@ -98,6 +98,10 @@
   "Outputs TEXT in green."
   (ecukes-output-text (ecukes-color-green text)))
 
+(defun ecukes-output-yellow (text)
+  "Outputs TEXT in yellow."
+  (ecukes-output-text (ecukes-color-yellow text)))
+
 (defun ecukes-output-text (&rest body)
   "Outputs TEXT according to `ecukes-output-offset'."
   (ecukes-ouput-message (apply 'concat (cons (make-string ecukes-output-offset 32) body))))

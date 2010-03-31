@@ -9,6 +9,9 @@
 (defconst ecukes-color-green 32
   "Green color code.")
 
+(defconst ecukes-color-yellow 33
+  "Yellow color code.")
+
 
 (defmacro ecukes-color-white (&rest body)
   "Returns BODY as a concatenated string in white."
@@ -21,6 +24,10 @@
 (defmacro ecukes-color-red (&rest body)
   "Returns BODY as a concatenated string in red."
   `(ecukes-color-apply ecukes-color-red ,@body))
+
+(defmacro ecukes-color-yellow (&rest body)
+  "Returns BODY as a concatenated string in yellow."
+  `(ecukes-color-apply ecukes-color-yellow ,@body))
 
 (defun ecukes-color-apply (color &rest body)
   "Returns BODY as a concatenated string in COLOR."
