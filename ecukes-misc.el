@@ -14,6 +14,7 @@
 (ad-activate 'message)
 
 (defun ecukes-message-advice (should-advice)
+  "Advise `message' to/not produce any ouput."
   (if should-advice
       (ad-enable-advice 'message 'around 'message-around)
     (ad-disable-advice 'message 'around 'message-around))
