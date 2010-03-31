@@ -19,6 +19,7 @@
       (ad-enable-advice 'message 'around 'message-around)
     (ad-disable-advice 'message 'around 'message-around))
   (ad-update 'message))
+(ecukes-message-advice nil)
 
 
 (provide 'ecukes-misc)
