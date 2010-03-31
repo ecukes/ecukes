@@ -53,6 +53,25 @@ But to make the text read more fluently.")
      ecukes-steps-definitions)
     (if fn (make-ecukes-step-def :fn fn :args args))))
 
+(defun ecukes-steps-missing (features)
+  "Goes through all FEATURES steps and returns a list of the once that
+are missing a step definition."
+  (let ((missing))
+    (dolist (feature features)
+      (let ((background (ecukes-feature-background feature))
+            (scenarios (ecukes-feature-scenarios feature)))
+        ;; Background steps
+        (dolist (step (ecukes-background-steps background))
+          (unless (ecukes-steps-find-definition step)
+            (add-to-list 'missing step t 'eq)))
+        ;; Scenario steps
+        (dolist (scenario scenarios)
+          (dolist (step (ecukes-scenario-steps scenario))
+            (unless (ecukes-steps-find-definition step)
+              (add-to-list 'missing step t 'eq))))))
+    missing))
+
+
 (provide 'ecukes-steps)
 
 ;;; ecukes-steps.el ends here

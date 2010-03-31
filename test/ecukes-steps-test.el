@@ -75,6 +75,15 @@
 (ert-deftest steps-call-non-existing-other-step ()
   (should-error (Given "something non existing")))
 
+(ert-deftest missing-steps ()
+  (ecukes-test-parse-feature-scenario
+   "missing-steps.feature"
+   (lambda (feature scenarios)
+     (let ((missing (ecukes-steps-missing (list feature))))
+       (should (equal 2 (length missing)))
+       (should (equal "Given a step without definition" (ecukes-step-name (car missing))))
+       (should (equal "Given a step that does not have a definition" (ecukes-step-name (car (cdr missing)))))))))
+
 (defun should-have-step-definition (key value)
   (let ((description (gethash key ecukes-steps-definitions)))
     (should description)

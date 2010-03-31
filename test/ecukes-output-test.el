@@ -31,3 +31,24 @@
         (widths '(5 6 5))
         (expected "| first | second | third | "))
     (should (equal expected (ecukes-output-table-row cols widths)))))
+
+(ert-deftest missing-step-simple ()
+  (let ((step (make-ecukes-step :name "Given something" :type 'regular)))
+    (should
+     (equal
+      (ecukes-output-missing-step step)
+      "(Given \"something\"\n       (lambda ()\n\n         ))\n"))))
+
+(ert-deftest missing-step-single-argument ()
+  (let ((step (make-ecukes-step :name "Given this \"argument\"" :type 'regular)))
+    (should
+     (equal
+      (ecukes-output-missing-step step)
+      "(Given \"this \\\"\\\\(.+\\\\)\\\"\"\n       (lambda ()\n\n         ))\n"))))
+
+(ert-deftest missing-step-multiple-arguments ()
+  (let ((step (make-ecukes-step :name "Given arguments \"argument1\" and \"argument2\"" :type 'regular)))
+    (should
+     (equal
+      (ecukes-output-missing-step step)
+      "(Given \"arguments \\\"\\\\(.+\\\\)\\\" and \\\"\\\\(.+\\\\)\\\"\"\n       (lambda ()\n\n         ))\n"))))

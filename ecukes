@@ -55,7 +55,6 @@
 (defvar ecukes-feature-files (ecukes-init-feature-files argv)
   "List containing all feature files.")
 
-
 ;; Load project
 (ecukes-init-load-project argv)
 
@@ -63,53 +62,16 @@
 (unless ecukes-feature-files
   (error "You did not provide any features"))
 
-(dolist (feature-file ecukes-feature-files)
-  (let* ((feature (ecukes-parse-feature feature-file))
-         (background (ecukes-feature-background feature)))
+(setq debug-on-error t)
+(setq debug-on-entry t)
 
-    ;; Output intro
-    (let ((intro (ecukes-feature-intro feature)))
-      (if intro (ecukes-output-intro intro)))
-
-    ;; Run and output background
-    (if background
-        (ecukes-output-background
-         (ecukes-run-background
-          background
-          (lambda (step success)
-            (ecukes-stats-update-steps success)
-            (ecukes-output-step step success)))))
-
-    (dolist (scenario (ecukes-feature-scenarios feature))
-      ;; Run before hooks
-      (ecukes-hooks-run-before)
-      
-      ;; Turn on/off debug.
-      (let ((debug (member "debug" (ecukes-scenario-tags scenario))))
-        (ecukes-message-advice (not debug)))
-      
-      ;; Run background
-      (if background (ecukes-run-background background))
-
-      ;; Run and output scenario
-      (let ((success-scenario t))
-        (ecukes-output-scenario
-         scenario
-         (ecukes-run-scenario
-          scenario
-          (lambda (step success-step)
-            (unless success-step (setq success-scenario nil))
-            (ecukes-stats-update-steps success-step)
-            (ecukes-output-step step success-step))))
-        (ecukes-stats-update-scenarios success-scenario))
-      
-      ;; Clear the list of messages
-      (setq ecukes-messages '())
-
-      ;; Run after hooks
-      (ecukes-hooks-run-after)
-      )))
-
-(ecukes-stats-print-summary)
+(let ((features))
+  (dolist (feature-file ecukes-feature-files)
+    (let ((feature (ecukes-parse-feature feature-file)))
+      (add-to-list 'features feature t 'eq))
+    (let ((missing (ecukes-steps-missing features)))
+      (if missing
+          (ecukes-output-missing-steps missing)
+        (ecukes-run-features features)))))
 
 ;;; ecukes.el ends here

@@ -86,6 +86,25 @@
       (setq count (1+ count)))
     row-to-s))
 
+(defun ecukes-output-missing-steps (steps)
+  "Prints all missing steps."
+  (ecukes-output-yellow
+   "Some steps does not have a matching definition. Please implement
+   the following step definitions:")
+  (ecukes-output-newline)
+  (dolist (step steps)
+    (ecukes-output-yellow
+     (ecukes-output-missing-step step))))
+
+(defun ecukes-output-missing-step (step)
+  "Return a string for how to define missing STEP."
+  (let ((name (ecukes-step-name step)))
+    (string-match ecukes-step-re name)
+    (let* ((match (match-string-no-properties 2 name))
+           (prefix (match-string-no-properties 1 name))
+           (suffix (replace-regexp-in-string "\"[^\"]+\"" "\\\\\"\\\\\\\\(.+\\\\\\\\)\\\\\"" match)))
+      (concat "(" prefix " \"" suffix "\"\n       (lambda ()\n\n         ))\n"))))
+
 (defun ecukes-output-white (text)
   "Outputs TEXT in white."
   (ecukes-output-text (ecukes-color-white text)))
