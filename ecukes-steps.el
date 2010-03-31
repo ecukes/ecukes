@@ -38,7 +38,7 @@ But to make the text read more fluently.")
   "Finds step definition associated to STEP."
   (let ((name (ecukes-step-name step)))
     (string-match ecukes-step-re name)
-    (ecukes-steps-find-definition-by-name (match-string 1 name))))
+    (ecukes-steps-find-definition-by-name (match-string 2 name))))
 
 (defun ecukes-steps-find-definition-by-name (name)
   "Finds step definition associated to a steps NAME."

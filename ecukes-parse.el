@@ -22,7 +22,7 @@ whitespace at the beginning.")
 (defconst ecukes-table-re (concat ecukes-beg-re "|.+|")
   "Regular expression matching a table step.")
 
-(defconst ecukes-step-re (concat ecukes-beg-re "\\(?:Given\\|When\\|Then\\|And\\|But\\)[[:blank:]]*\\(.+\\)[[:blank:]]*")
+(defconst ecukes-step-re (concat ecukes-beg-re "\\(Given\\|When\\|Then\\|And\\|But\\)[[:blank:]]*\\(.+\\)[[:blank:]]*")
   "Regular expression matching a step name.")
 
 (defun ecukes-parse-feature (feature-file)
