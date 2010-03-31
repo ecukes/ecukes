@@ -16,8 +16,9 @@
    - [ ] Create script that creates Ecukes file structure
    - [X] Show some statistics on number of features that passed/failed
    - [ ] Tell what step definitions are missing
-** TODO Debugging [0/1]
+** TODO Debugging [0/2]
    - [ ] Include whole stacktrace in red color on fail
+   - [ ] Possible to debug a scenario and all steps it goes through?
 ** TODO Output [0/1]
    - [ ] Catch up messages and prints to avoid messing up the Ecukes output
 ** TODO Features [0/1]
