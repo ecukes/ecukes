@@ -6,6 +6,7 @@
 (defvar ecukes-after-hooks '()
   "List of after hooks.")
 
+
 (defmacro Before (&rest body)
   "Adds BODY to be executed before each scenario."
   `(add-to-list 'ecukes-before-hooks (lambda () ,@body) t))
@@ -26,6 +27,7 @@
   "Runs all HOOKS."
   (dolist (hook hooks)
     (funcall hook)))
+
 
 (provide 'ecukes-hooks)
 
