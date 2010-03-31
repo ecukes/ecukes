@@ -116,6 +116,7 @@ This is used because message is advised to avoid clobbering the Ecukes
 output with output from stuff in the step definitions."
   (princ (concat (apply 'format format-string args) "\n")))
 
+
 (provide 'ecukes-output)
 
 ;;; ecukes-output.el ends here
