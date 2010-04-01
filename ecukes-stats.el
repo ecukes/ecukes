@@ -57,6 +57,7 @@
    (ecukes-color-green (number-to-string ecukes-stats-num-steps-passed) " passed")
    (ecukes-color-white ")\n")))
 
+
 (provide 'ecukes-stats)
 
 ;;; ecukes-stats.el ends here
