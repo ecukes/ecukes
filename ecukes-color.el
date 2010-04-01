@@ -1,4 +1,4 @@
-;;; ecukes-color.el --- Colors for printing
+;;; ecukes-color.el --- Helpers for adding colors to text
 
 (defconst ecukes-color-white 37
   "White color code.")
