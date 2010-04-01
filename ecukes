@@ -64,10 +64,10 @@
   (let ((features))
     (dolist (feature-file feature-files)
       (let ((feature (ecukes-parse-feature feature-file)))
-        (add-to-list 'features feature t 'eq))
-      (let ((missing (ecukes-steps-missing features)))
-        (if missing
-            (ecukes-output-missing-steps missing)
-          (ecukes-run-features features))))))
+        (add-to-list 'features feature t 'eq)))
+    (let ((missing (ecukes-steps-missing features)))
+      (if missing
+          (ecukes-output-missing-steps missing)
+        (ecukes-run-features features)))))
 
 ;;; ecukes.el ends here
