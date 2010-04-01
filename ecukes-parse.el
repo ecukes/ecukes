@@ -1,4 +1,4 @@
-;;; ecukes-parse.el --- Feature file parser
+;;; ecukes-parse.el --- Parser for feature files
 
 (defconst ecukes-beg-re "^[[:blank:]]*"
   "Regular expression matching beginning of a statement.")
@@ -24,6 +24,7 @@ whitespace at the beginning.")
 
 (defconst ecukes-step-re (concat ecukes-beg-re "\\(Given\\|When\\|Then\\|And\\|But\\)[[:blank:]]*\\(.+\\)[[:blank:]]*")
   "Regular expression matching a step name.")
+
 
 (defun ecukes-parse-feature (feature-file)
   "Parses FEATURE-FILE and returns an `ecukes-feature' object."
@@ -129,6 +130,7 @@ whitespace at the beginning.")
 beginning and end."
   (let ((line (ecukes-line n)))
     (replace-regexp-in-string "\\(^[[:blank:]]*\\|[[:blank:]]*$\\)" "" line)))
+
 
 (provide 'ecukes-parse)
 
