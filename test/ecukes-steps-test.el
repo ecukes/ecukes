@@ -75,7 +75,7 @@
 (ert-deftest steps-call-non-existing-other-step ()
   (should-error (Given "something non existing")))
 
-(ert-deftest missing-steps ()
+(ert-deftest steps-find-missing-steps ()
   (ecukes-test-parse-feature-scenario
    "missing-steps.feature"
    (lambda (feature scenarios)
