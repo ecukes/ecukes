@@ -19,6 +19,7 @@
   (let ((line (ecukes-test-parse-line "next-line.feature" 1)))
     (should (equal line "text"))))
 
+
 ;; Testing ecukes-blank-line
 (ert-deftest parse-blank-line-with-text ()
   (let ((line (ecukes-test-parse-blank-line "with-text.feature")))
