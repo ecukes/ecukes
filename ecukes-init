@@ -3,17 +3,17 @@
 ;;; ecukes-init --- Initialization script for Ecukes
 
 ;; Creates Ecukes file structure for current directory.
-;; 
-;; Files creates:
+;;
+;; Usage:
+;;   $ cd /path/to/my/project
+;;   $ ecukes-init
+;;
+;; Will create:
 ;;   - features
 ;;     - step-definitions
 ;;       - project-steps.el
 ;;     - support.el
 ;;     - project.feature
-;; 
-;; Usage:
-;;   $ cd /path/to/my/project
-;;   $ ecukes-init
 
 (let* ((features (expand-file-name "features"))
        (project-name (file-name-nondirectory (expand-file-name "."))))
