@@ -30,8 +30,7 @@ definitions yourself, but a good start is to use
 [Espuds](http://github.com/rejeep/espuds), which includes the most
 commonly used definitions.
 
-
-## Usage
+### File Structure
 Lets say you have a project, lets call it **super-project**, that you
 want to test with Ecukes. Create a file structure looking like this:
 
@@ -43,7 +42,7 @@ want to test with Ecukes. Create a file structure looking like this:
     |   |-- super-project.feature
     |   `-- support.el
     `-- super-project.el
-    
+
 You can also use a script that comes with Ecukes to create the
 files. Go to your project root dir and enter:
     $ cd /path/to/super-project
@@ -66,196 +65,10 @@ The features folder should contain:
 
     (add-to-list 'load-path "/path/to/espuds")
     (require 'espuds)
-
-### step-definitions
-The **step-definitions** dir should contain all project specific step
-definitions. All step files in this folder must end with **-steps.el**.
-
-
-## How to define steps
-There are three different kind of steps: **regular**, **py-string** and **table**.
-
-You define a step definition by calling the function **Given**,
-**When**, **Then**, **And** or **But** passing two arguments (all
-functions are really the same and it does not matter which you
-choose). The first argument is the match string and the second is a function.
-
-### Regular step
-A regular step always only consumes one line. The most basic step
-looks like this:
-    Given something is true
-
-The step definition would be:
-    (Given "something is true"
-           (lambda ()
-             ;; Do something
-             ))
-
-The second argument could also have been the symbol of a function name:
-    (Given "something is true" 'do-something)
-
-Steps can take arbitrary many arguments. The arguments sent to the
-step definition function are all regular expression match groupings
-from the matching of the step name and the match string.
-
-Send one argument:
-    Given I am in buffer "somebuffer"
-
-The translation:
-    (Given "I am in buffer \"\\(.+\\)\""
-       (lambda (buffer)
-         ;; Do something with buffer
-         ))
-
-Send more than one argument:
-    Given I am in buffer "somebuffer" with text "Some text"
-
-The translation:
-    (Given "I am in buffer \"\\(.+\\)\" with text \"\\(.+\\)\""
-       (lambda (buffer text)
-         ;; Do something with buffer and text
-         ))
-
-### Py String
-A "Py String" step looks like this
-    Given the following text:
-      """
-      some text
-      """
-
-The translation:
-    (Given "the following text:"
-           (lambda (text)
-             ;; Do something with text
-             ))
-
-It is also possible to send arguments to a py string step. The py
-string text will be the last argument.
-    Given the following text in buffer "some buffer":
-      """
-      some text
-      """
-
-The translation:
-    (Given "the following text in buffer \"\\(.+\\)\":"
-           (lambda (buffer text)
-             ;; Do something with buffer and text
-             ))
-
-### Table
-A table step looks like this
-    Given these meals:
-      | meal      | price |
-      | Hamburger | $4.50 |
-      | Pizza     | $5.30 |
-
-The translation:
-    (Given "the following meals:"
-           (lambda (meals)
-             ;; Do something with text
-             ))
-
-The argument **meals** is a **ecukes-table** struct with two
-attributes **header** and **rows**.
-
-The header would in the above case be:
-    ("meal" "price")
-
-And the rows would be:
-    (
-     ("Hamburger" "$4.50")
-     ("Pizza" "$5.30")
-     )
-     
-To pick out the header and rows attribute from a table you do:
-    (let* ((table ...)
-           (header (ecukes-table-header table))
-           (rows (ecukes-table-rows table)))
-      ;; Do something with header and rows
-      )
-     
-It is also possible to send arguments to a table step. The table list
-will be the last argument.
-    Given these meals at "fast food":
-      | meal      | price |
-      | Hamburger | $4.50 |
-      | Pizza     | $5.30 |
-
-The translation:
-    (Given "these meals at \"\\(.+\\)\":"
-           (lambda (restaurant meals)
-             ;; Do something with restaurant and meals
-             ))
-
-### Calling steps from steps
-To keep you steps DRY you can call steps from other steps like this:
-    (Given "I go to a"
-           (lambda ()
-             ;; Go to a
-             ))
-     
-    (Given "I go to b"
-           (lambda ()
-             ;; Go to b
-             ))
-     
-    (Given "I go from a to b"
-           (lambda ()
-             (Given "I go to a")
-             (Given "I go to b")))
-
-
-## Hooks
-There are two hooks you can use: **before** and **after**. The before
-hook is executed before each scenario and after is executed after each scenario.
-
-Hooks are useful if you test your program and change the state. Since
-all scenarios execute in the same environment, the state change will
-affect all scenarios after. You can solve that by resetting the state
-in a before or after hook.
-
-    (Before
-     ;; Everything in here will be executed before each scenario
-     )
-     
-    (After
-     ;; Everything in here will be executed after each scenario
-     )
-     
-Hooks are best placed in your projects **features/support.el** file.
-
-
-## Example
-A simple example of how to create a feature and corresponding step definitions.
-
-### Feature
-    Feature: Go to buffer
-      In order to use more than one buffer
-      As an Emacs user
-      I want to switch buffer
-
-      Scenario: Go to the messages buffer
-        Given I am in "*scratch*" buffer
-         When I press "C-h e"
-         Then I should be in "*Messages*" buffer
-
-      # More buffer scenarios ...
-
-### Step definitions
-The corresponding step definitions for the feature above would look
-something like this:
-
-    (Given "I am in \"\\(.+\\)\" buffer"
-           (lambda (buffer)
-             (switch-to-buffer (get-buffer-create buffer))))
-
-    (When "I press \"\\(.+\\)\""
-         (lambda (key)
-           (execute-kbd-macro (edmacro-parse-keys key))))
-
-    (Then "I should be in \"\\(.+\\)\" buffer"
-          (lambda (buffer)
-            (assert (equal buffer (buffer-name)))))
+    
+    
+## Usage
+See [Wiki](http://github.com/rejeep/ecukes/wikis)
 
 
 ## Running the features
@@ -267,7 +80,7 @@ Run single feature:
 
 Run all features:
     $ ecukes super-project/features
-    
+
 
 ## Gotchas
 
