@@ -53,19 +53,19 @@
   (require 'ecukes-stats)
   (require 'ecukes-misc))
 
-(ecukes-init-load-project argv)
-
 (let ((feature-files (ecukes-init-feature-files argv)))
-  (unless feature-files
-    (error "You did not provide any features to run"))
+  (cond (feature-files
+         (ecukes-init-load-project argv)
 
-  (let ((features))
-    (dolist (feature-file feature-files)
-      (let ((feature (ecukes-parse-feature feature-file)))
-        (add-to-list 'features feature t 'eq)))
-    (let ((missing (ecukes-steps-missing features)))
-      (if missing
-          (ecukes-output-missing-steps missing)
-        (ecukes-run-features features)))))
+         (let ((features))
+           (dolist (feature-file feature-files)
+             (let ((feature (ecukes-parse-feature feature-file)))
+               (add-to-list 'features feature t 'eq)))
+
+           (let ((missing (ecukes-steps-missing features)))
+             (if missing
+                 (ecukes-output-missing-steps missing)
+               (ecukes-run-features features)))))
+        (t (ecukes-output-red "You did not provide any features to run"))))
 
 ;;; ecukes.el ends here
