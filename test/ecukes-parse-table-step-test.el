@@ -1,5 +1,5 @@
 (ert-deftest parse-table-step-all-good ()
-  (let* ((step (ecukes-test-parse-feature-step "table-all-good.feature"))
+  (let* ((step (ecukes-test-parse-step "table-all-good.feature"))
          (table (ecukes-step-arg step))
          (header (ecukes-table-header table))
          (rows (ecukes-table-rows table)))
@@ -15,7 +15,7 @@
       (should-be-table-step step))))
 
 (ert-deftest parse-table-step-wrong-indentation ()
-  (let* ((step (ecukes-test-parse-feature-step "table-wrong-indentation.feature"))
+  (let* ((step (ecukes-test-parse-step "table-wrong-indentation.feature"))
          (table (ecukes-step-arg step))
          (header (ecukes-table-header table))
          (rows (ecukes-table-rows table)))
@@ -31,7 +31,7 @@
       (should-be-table-step step))))
 
 (ert-deftest parse-table-same-row ()
-  (let* ((step (ecukes-test-parse-feature-step "table-same-row.feature"))
+  (let* ((step (ecukes-test-parse-step "table-same-row.feature"))
          (table (ecukes-step-arg step))
          (header (ecukes-table-header table))
          (rows (ecukes-table-rows table)))

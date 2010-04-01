@@ -1,5 +1,5 @@
 (ert-deftest parse-py-string-step-all-good ()
-  (let* ((step (ecukes-test-parse-feature-step "py-string-all-good.feature"))
+  (let* ((step (ecukes-test-parse-step "py-string-all-good.feature"))
          (arg (ecukes-step-arg step))
          (split (split-string arg "\n")))
     (should (equal "Given this text:" (ecukes-step-name step)))
@@ -8,7 +8,7 @@
     (should-be-py-string-step step)))
 
 (ert-deftest parse-py-string-step-whitespace ()
-  (let* ((step (ecukes-test-parse-feature-step "py-string-whitespace.feature"))
+  (let* ((step (ecukes-test-parse-step "py-string-whitespace.feature"))
         (arg (ecukes-step-arg step))
         (split (split-string arg "\n")))
     (should (equal "Given this text:" (ecukes-step-name step)))
@@ -18,7 +18,7 @@
     (should-be-py-string-step step)))
 
 (ert-deftest parse-py-string-step-wrong-indentation ()
-  (let* ((step (ecukes-test-parse-feature-step "py-string-wrong-indentation.feature"))
+  (let* ((step (ecukes-test-parse-step "py-string-wrong-indentation.feature"))
          (arg (ecukes-step-arg step))
          (split (split-string arg "\n")))
     (should (equal "Given this text:" (ecukes-step-name step)))
@@ -27,7 +27,7 @@
     (should-be-py-string-step step)))
 
 (ert-deftest parse-py-string-same-line ()
-  (let* ((step (ecukes-test-parse-feature-step "py-string-same-line.feature"))
+  (let* ((step (ecukes-test-parse-step "py-string-same-line.feature"))
          (arg (ecukes-step-arg step))
          (split (split-string arg "\n")))
     (should (equal "Given this text:" (ecukes-step-name step)))

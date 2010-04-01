@@ -147,8 +147,3 @@
        (should (equal 2 (length steps)))
        (should (equal "Given something" (ecukes-step-name (car steps))))
        (should (equal "Given something" (ecukes-step-name (car (cdr steps)))))))))
-
-(defun should-have-tags (scenario &rest tags)
-  (let ((actual-tags (ecukes-scenario-tags scenario))
-        (expected-tags tags))
-    (should (equal (sort actual-tags 'string<) (sort expected-tags 'string<)))))

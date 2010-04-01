@@ -105,11 +105,3 @@
        "\e[0m"
        )
       (ecukes-stats-scenarios-summary)))))
-
-(defun reset-stats ()
-  (setq ecukes-stats-num-steps 0)
-  (setq ecukes-stats-num-steps-failed 0)
-  (setq ecukes-stats-num-steps-passed 0)
-  (setq ecukes-stats-num-scenarios 0)
-  (setq ecukes-stats-num-scenarios-failed 0)
-  (setq ecukes-stats-num-scenarios-passed 0))

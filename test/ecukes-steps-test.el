@@ -83,17 +83,3 @@
        (should (equal 2 (length missing)))
        (should (equal "Given a step without definition" (ecukes-step-name (car missing))))
        (should (equal "Given a step that does not have a definition" (ecukes-step-name (car (cdr missing)))))))))
-
-(defun should-have-step-definition (key value)
-  (let ((description (gethash key ecukes-steps-definitions)))
-    (should description)
-    (should (equal (funcall description) value))))
-
-(defun should-find-definition (step ret-val)
-  (should-be-correct-definition (ecukes-steps-find-definition step) ret-val))
-
-(defun should-find-definition-by-name (name ret-val)
-  (should-be-correct-definition (ecukes-steps-find-definition-by-name name) ret-val))
-
-(defun should-be-correct-definition (definition ret-val)
-  (should (equal ret-val (funcall (ecukes-step-def-fn definition)))))
