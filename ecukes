@@ -55,23 +55,19 @@
 (require 'ecukes-stats)
 (require 'ecukes-misc)
 
-(defvar ecukes-feature-files (ecukes-init-feature-files argv)
-  "List containing all feature files.")
-
-;; Load project
 (ecukes-init-load-project argv)
 
-;; Make sure there are feature files to run
-(unless ecukes-feature-files
-  (error "You did not provide any features"))
+(let ((feature-files (ecukes-init-feature-files argv)))
+  (unless feature-files
+    (error "You did not provide any features"))
 
-(let ((features))
-  (dolist (feature-file ecukes-feature-files)
-    (let ((feature (ecukes-parse-feature feature-file)))
-      (add-to-list 'features feature t 'eq))
-    (let ((missing (ecukes-steps-missing features)))
-      (if missing
-          (ecukes-output-missing-steps missing)
-        (ecukes-run-features features)))))
+  (let ((features))
+    (dolist (feature-file feature-files)
+      (let ((feature (ecukes-parse-feature feature-file)))
+        (add-to-list 'features feature t 'eq))
+      (let ((missing (ecukes-steps-missing features)))
+        (if missing
+            (ecukes-output-missing-steps missing)
+          (ecukes-run-features features))))))
 
 ;;; ecukes.el ends here
