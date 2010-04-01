@@ -51,7 +51,7 @@
   (require 'ecukes-hooks)
   (require 'ecukes-color)
   (require 'ecukes-stats)
-  (require 'ecukes-misc))
+  (require 'ecukes-message))
 
 (let ((feature-files (ecukes-init-feature-files argv)))
   (cond (feature-files

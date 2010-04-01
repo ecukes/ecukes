@@ -1,4 +1,4 @@
-;;; ecukes-misc.el --- Miscellaneous helpers
+;;; ecukes-message.el --- Advising for message function
 
 (defvar ecukes-messages '()
   "List of messages that has been produced during the current scenario.")
@@ -22,6 +22,6 @@
 (ecukes-message-advice nil)
 
 
-(provide 'ecukes-misc)
+(provide 'ecukes-message)
 
-;;; ecukes-misc.el ends here
+;;; ecukes-message.el ends here
