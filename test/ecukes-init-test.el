@@ -1,3 +1,9 @@
+(ert-deftest init-root-regex-unix ()
+  (should (string-match-p ecukes-init-root-regex "/")))
+
+(ert-deftest init-root-regex-win ()
+  (should (string-match-p ecukes-init-root-regex "c:/")))
+
 (ert-deftest init-pass-no-feature-file ()
   (let ((feature-files (ecukes-init-feature-files (list))))
     (should-not feature-files)))

@@ -1,7 +1,8 @@
 ;;; ecukes-init.el --- Initialization functions
 
-(defconst ecukes-init-root-regex "\\(^[[:alpha:]]:/$\\|^/[^\/]+:\\|^/$\\)"
+(defconst ecukes-init-root-regex "\\(^[[:alpha:]]:/$\\|^/$\\)"
   "Regular expression matching a file system root.")
+
 
 (defun ecukes-init-feature-files (features)
   "Returns a list of feature files given user input.
@@ -40,6 +41,7 @@ directory. If a directory, all .feature files in that directory are included."
       (let ((new-dir (expand-file-name (file-name-as-directory "..") dir)))
         (unless (string-match-p ecukes-init-root-regex dir)
           (ecukes-init-project-root new-dir))))))
+
 
 (provide 'ecukes-init)
 
