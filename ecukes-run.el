@@ -1,4 +1,5 @@
-;;; ecukes-run.el --- Run functions
+;;; ecukes-run.el --- Functions for running stuff
+
 
 (defun ecukes-run-features (features)
   "Runs all FEATURES."
@@ -77,6 +78,7 @@ was successful, nil otherwise."
     (error
      (setf (ecukes-step-err step) (error-message-string err))))
   (not (ecukes-step-err step)))
+
 
 (provide 'ecukes-run)
 
