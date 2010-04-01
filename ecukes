@@ -41,7 +41,6 @@
 (eval-when-compile
   (require 'cl))
 
-;; Add the current directory to load-path
 (add-to-list 'load-path (file-name-directory load-file-name))
 
 (require 'ecukes-steps)
