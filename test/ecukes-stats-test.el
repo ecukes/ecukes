@@ -1,4 +1,4 @@
-(ert-deftest update-steps-success ()
+(ert-deftest stats-update-steps-success ()
     (reset-stats)
     (ecukes-stats-update-steps t)
     (should (equal 1 ecukes-stats-num-steps))
@@ -8,7 +8,7 @@
     (should (equal 0 ecukes-stats-num-scenarios-failed))
     (should (equal 0 ecukes-stats-num-scenarios-passed)))
 
-(ert-deftest update-steps-failure ()
+(ert-deftest stats-update-steps-failure ()
     (reset-stats)
     (ecukes-stats-update-steps nil)
     (should (equal 1 ecukes-stats-num-steps))
@@ -18,7 +18,7 @@
     (should (equal 0 ecukes-stats-num-scenarios-failed))
     (should (equal 0 ecukes-stats-num-scenarios-passed)))
 
-(ert-deftest update-scenario-success ()
+(ert-deftest stats-update-scenario-success ()
     (reset-stats)
     (ecukes-stats-update-scenarios t)
     (should (equal 0 ecukes-stats-num-steps))
@@ -28,7 +28,7 @@
     (should (equal 0 ecukes-stats-num-scenarios-failed))
     (should (equal 1 ecukes-stats-num-scenarios-passed)))
 
-(ert-deftest update-scenario-failure ()
+(ert-deftest stats-update-scenario-failure ()
     (reset-stats)
     (ecukes-stats-update-scenarios nil)
     (should (equal 0 ecukes-stats-num-steps))
@@ -38,7 +38,7 @@
     (should (equal 1 ecukes-stats-num-scenarios-failed))
     (should (equal 0 ecukes-stats-num-scenarios-passed)))
 
-(ert-deftest steps-summary ()
+(ert-deftest stats-steps-summary ()
   (let ((ecukes-stats-num-steps 3)
         (ecukes-stats-num-steps-failed 2)
         (ecukes-stats-num-steps-passed 1))
@@ -72,7 +72,7 @@
        )
       (ecukes-stats-steps-summary)))))
 
-(ert-deftest scenarios-summary ()
+(ert-deftest stats-scenarios-summary ()
   (let ((ecukes-stats-num-scenarios 3)
         (ecukes-stats-num-scenarios-failed 2)
         (ecukes-stats-num-scenarios-passed 1))
