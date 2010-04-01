@@ -1,7 +1,8 @@
-;;; ecukes-output.el --- Helpers for printing
+;;; ecukes-output.el --- Helpers for outputting stuff
 
 (defvar ecukes-output-offset 0
   "Current offset (number of spaces).")
+
 
 (defun ecukes-output-intro (intro)
   "Outputs the feature INTRO."
