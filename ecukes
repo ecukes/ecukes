@@ -38,21 +38,20 @@
 (setq debug-on-error t)
 (setq debug-on-entry t)
 
-(eval-when-compile
-  (require 'cl))
-
 (add-to-list 'load-path (file-name-directory load-file-name))
 
-(require 'ecukes-steps)
-(require 'ecukes-init)
-(require 'ecukes-def)
-(require 'ecukes-output)
-(require 'ecukes-parse)
-(require 'ecukes-run)
-(require 'ecukes-hooks)
-(require 'ecukes-color)
-(require 'ecukes-stats)
-(require 'ecukes-misc)
+(eval-when-compile
+  (require 'cl)
+  (require 'ecukes-steps)
+  (require 'ecukes-init)
+  (require 'ecukes-def)
+  (require 'ecukes-output)
+  (require 'ecukes-parse)
+  (require 'ecukes-run)
+  (require 'ecukes-hooks)
+  (require 'ecukes-color)
+  (require 'ecukes-stats)
+  (require 'ecukes-misc))
 
 (ecukes-init-load-project argv)
 
