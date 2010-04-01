@@ -1,4 +1,4 @@
-;;; ecukes-hooks.el --- Before and after hooks
+;;; ecukes-hooks.el --- Before and After hooks
 
 (defvar ecukes-before-hooks '()
   "List of before hooks.")
@@ -16,15 +16,15 @@
   `(add-to-list 'ecukes-after-hooks (lambda () ,@body) t))
 
 (defun ecukes-hooks-run-before ()
-  "Runs all before hooks."
+  "Executes all before hooks."
   (ecukes-hooks-run ecukes-before-hooks))
 
 (defun ecukes-hooks-run-after ()
-  "Runs all after hooks."
+  "Executes all after hooks."
   (ecukes-hooks-run ecukes-after-hooks))
 
 (defun ecukes-hooks-run (hooks)
-  "Runs all HOOKS."
+  "Executes all HOOKS."
   (dolist (hook hooks)
     (funcall hook)))
 
