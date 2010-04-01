@@ -35,6 +35,9 @@
 
 ;;; Code:
 
+(setq debug-on-error t)
+(setq debug-on-entry t)
+
 (eval-when-compile
   (require 'cl))
 
@@ -61,9 +64,6 @@
 ;; Make sure there are feature files to run
 (unless ecukes-feature-files
   (error "You did not provide any features"))
-
-(setq debug-on-error t)
-(setq debug-on-entry t)
 
 (let ((features))
   (dolist (feature-file ecukes-feature-files)
