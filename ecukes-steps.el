@@ -3,8 +3,10 @@
 (defvar ecukes-steps-definitions (make-hash-table :test 'equal)
   "Hash table containing all step definitions.")
 
+
 (defun ecukes-steps-define (description &optional fn)
-  "Defines a step with DESCRIPTION and function FN.
+  "With the FN argument, define a step with DESCRIPTION and function
+  FN and without call the step definitions function with DESCRIPTION.
  Do not use this function directly in step definitions. Use one of:
 `Given', `Then', `When', `And' or `But' instead."
   (if fn
