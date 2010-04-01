@@ -43,6 +43,11 @@ want to test with Ecukes. Create a file structure looking like this:
     |   |-- super-project.feature
     |   `-- support.el
     `-- super-project.el
+    
+You can also use a script that comes with Ecukes to create the
+files. Go to your project root dir and enter:
+    $ cd /path/to/super-project
+    $ ecukes-init
 
 ### features
 The features folder should contain:
