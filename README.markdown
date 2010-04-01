@@ -19,3 +19,9 @@ about it before continuing with Ecukes.
 
 
 See [Wiki](http://github.com/rejeep/ecukes/wikis) for more information!
+
+
+## Projects Using Ecukes
+
+* Drag Stuff - http://github.com/rejeep/drag-stuff
+* Wrap Region - http://github.com/rejeep/wrap-region
