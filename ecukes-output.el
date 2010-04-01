@@ -102,8 +102,24 @@
     (string-match ecukes-step-re name)
     (let* ((match (match-string-no-properties 2 name))
            (prefix (match-string-no-properties 1 name))
-           (suffix (replace-regexp-in-string "\"[^\"]+\"" "\\\\\"\\\\\\\\(.+\\\\\\\\)\\\\\"" match)))
-      (concat "(" prefix " \"" suffix "\"\n       (lambda ()\n\n         ))\n"))))
+           (suffix (replace-regexp-in-string "\"[^\"]+\"" "\\\\\"\\\\\\\\(.+\\\\\\\\)\\\\\"" match))
+           (args (ecukes-output-missing-step-args step)))
+      (concat "(" prefix " \"" suffix "\"\n       (lambda (" args ")\n\n         ))\n"))))
+
+(defun ecukes-output-missing-step-args (step)
+  "For missing STEP, return a string with it's step definition arguments."
+  (let ((count 0))
+    ;; TODO: Find a better way to find out the number of inline strings.
+    (setq count (length (loop for sub on (cdr (split-string match "\"")) by (function cddr) collect (car sub))))
+    (if (member (ecukes-step-type step) '(py-string table))
+        (setq count (1+ count)))
+    (cond ((= count 0) "")
+          ((= count 1) "arg")
+          ((> count 1)
+           (let ((result))
+             (dotimes (i count)
+               (add-to-list 'result (concat "arg" (number-to-string (1+ i))) t))
+             (mapconcat 'identity result " "))))))
 
 (defun ecukes-output-white (text)
   "Outputs TEXT in white."
