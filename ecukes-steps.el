@@ -66,12 +66,12 @@ are missing a step definition."
         (when background
           (dolist (step (ecukes-background-steps background))
             (unless (ecukes-steps-find-definition step)
-              (add-to-list 'missing step t 'eq))))
+              (add-to-list 'missing step t))))
         ;; Scenario steps
         (dolist (scenario scenarios)
           (dolist (step (ecukes-scenario-steps scenario))
             (unless (ecukes-steps-find-definition step)
-              (add-to-list 'missing step t 'eq))))))
+              (add-to-list 'missing step t))))))
     missing))
 
 
