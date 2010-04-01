@@ -90,8 +90,7 @@
 (defun ecukes-output-missing-steps (steps)
   "Prints all missing steps."
   (ecukes-output-yellow
-   "Some steps does not have a matching definition. Please implement
-   the following step definitions:")
+   "Some steps does not have a matching definition. Please implement the following step definitions:")
   (ecukes-output-newline)
   (dolist (step steps)
     (ecukes-output-yellow
