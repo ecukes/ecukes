@@ -57,7 +57,7 @@
 
 (let ((feature-files (ecukes-init-feature-files argv)))
   (unless feature-files
-    (error "You did not provide any features"))
+    (error "You did not provide any features to run"))
 
   (let ((features))
     (dolist (feature-file feature-files)
