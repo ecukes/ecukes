@@ -36,7 +36,7 @@
         (name (ecukes-step-name step))
         (arg (ecukes-step-arg step))
         (output-fn (if success 'ecukes-output-green 'ecukes-output-red)))
-
+    
     ;; Print the step name
     (if success (ecukes-output-green name) (ecukes-output-red name))
 
@@ -48,8 +48,7 @@
       (cond ((equal type 'py-string)
              (ecukes-output-py-string arg output-fn))
             ((equal type 'table)
-             (ecukes-output-table arg output-fn))))
-    ))
+             (ecukes-output-table arg output-fn))))))
 
 (defun ecukes-output-py-string (py-string output-fn)
   "Outputs PY-STRING."
@@ -76,8 +75,7 @@
     ;; Print the table.
     (funcall output-fn (ecukes-output-table-row header widths))
     (dolist (row rows)
-      (funcall output-fn (ecukes-output-table-row row widths)))
-    ))
+      (funcall output-fn (ecukes-output-table-row row widths)))))
 
 (defun ecukes-output-table-row (row widths)
   "Prints table ROW according to WIDTHS."
