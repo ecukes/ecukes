@@ -1,4 +1,4 @@
-;;; ecukes-message.el --- Advicing for message function
+;;; ecukes-message.el --- Advice for message function
 
 (defvar ecukes-message-history '()
   "List of messages that has been produced during the current scenario.")
