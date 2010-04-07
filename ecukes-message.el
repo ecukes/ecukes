@@ -10,6 +10,16 @@
 (ad-activate 'message)
 
 
+(defmacro ecukes-message-no-history (&rest body)
+  "Turns off the history advice, evaluates BODY and then turns it back on.
+Useful to print a message without storing it to the history."
+  `(progn
+     (ad-disable-advice 'message 'after 'message-add-history)
+     (ad-update 'message)
+     ,@body
+     (ad-enable-advice 'message 'after 'message-add-history)
+     (ad-update 'message)))
+
 (defun ecukes-message-clear ()
   "Clears the message history list."
   (setq ecukes-message-history '()))
