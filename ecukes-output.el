@@ -68,7 +68,7 @@
     (let ((count-x (length header)))
       (dotimes (i count-x)
         (let ((max 0))
-          (dolist (row rows)
+          (dolist (row (cons header rows))
             (setq max (max (length (nth i row)) max)))
           (add-to-list 'widths max t))))
 
