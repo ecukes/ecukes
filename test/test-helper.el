@@ -149,19 +149,31 @@ certain return value."
 
 ;; Helpers to avoid messages cluttering down the test output.
 ;;
-;; Usage:
+;; To fake print a message:
 ;;
 ;;   (quiet-message
-;;     (message "..."))
+;;    (message "..."))
+;;
+;;
+;; To track messages:
+;;   (track-output
+;;    (message "...")
+;;    ;; Check out `message-output'
+;;    )
 
-(defadvice message (around message-around (format-string &rest args) activate))
+(defvar message-output '()
+  "List of tracked output messages.")
+
+(defadvice message (around no-message (format-string &rest args) activate))
+(defadvice message (after track-output (format-string &rest args) activate)
+  (add-to-list 'message-output (apply 'format format-string args) t 'eq))
 (ad-activate 'message)
 
 (defun ecukes-advice-message (advice)
   "Advice `message' to not print anything if ADVICE is t, reset otherwise."
   (if advice
-      (ad-enable-advice 'message 'around 'message-around)
-    (ad-disable-advice 'message 'around 'message-around))
+      (ad-enable-advice 'message 'around 'no-message)
+    (ad-disable-advice 'message 'around 'no-message))
   (ad-update 'message))
 (ecukes-advice-message nil)
 
@@ -175,3 +187,14 @@ certain return value."
         (ecukes-advice-message nil)
         (error err)))
      (ecukes-advice-message nil)))
+
+(defmacro track-output (&rest body)
+  "Track all output from messages.
+All messages will be place in `message-output'."
+  (setq message-output '())
+  `(progn
+     (ad-enable-advice 'message 'after 'track-output)
+     (ad-update 'message)
+     ,@body
+     (ad-disable-advice 'message 'after 'track-output)
+     (ad-update 'message)))
