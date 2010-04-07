@@ -139,17 +139,17 @@
 
 (defun ecukes-output-text (&rest body)
   "Outputs TEXT according to `ecukes-output-offset'."
-  (ecukes-ouput-message (apply 'concat (cons (make-string ecukes-output-offset 32) body))))
+  (ecukes-output-message (apply 'concat (cons (make-string ecukes-output-offset 32) body))))
 
 (defun ecukes-output-no-indent (&rest body)
   "Outputs TEXT, just as it is."
-  (ecukes-ouput-message (apply 'concat body)))
+  (ecukes-output-message (apply 'concat body)))
 
 (defun ecukes-output-newline ()
   "Outputs a newline."
-  (ecukes-ouput-message " "))
+  (ecukes-output-message " "))
 
-(defun ecukes-ouput-message (format-string &rest args)
+(defun ecukes-output-message (format-string &rest args)
   "Exactly like the message function `message'."
   (message format-string args))
 
