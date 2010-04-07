@@ -2,6 +2,11 @@
   (let ((ecukes-output-offset 0))
     (ecukes-output-intro (mock-intro))
     (should (equal ecukes-output-offset 2))))
+(ert-deftest output-dont-save-in-history ()
+  (ecukes-message-clear)
+  (quiet-message
+   (ecukes-output-message "some text..."))
+  (should-not ecukes-message-history))
 
 (ert-deftest output-newline ()
   (should (equal " \n" (ecukes-output-newline))))

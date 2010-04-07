@@ -151,7 +151,8 @@
 
 (defun ecukes-output-message (format-string &rest args)
   "Exactly like the message function `message'."
-  (message format-string args))
+  (ecukes-message-no-history
+   (message format-string args)))
 
 
 (provide 'ecukes-output)
