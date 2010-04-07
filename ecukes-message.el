@@ -10,6 +10,11 @@
 (ad-activate 'message)
 
 
+(defun ecukes-message-clear ()
+  "Clears the message history list."
+  (setq ecukes-message-history '()))
+
+
 (provide 'ecukes-message)
 
 ;;; ecukes-message.el ends here
