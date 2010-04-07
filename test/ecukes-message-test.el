@@ -1,12 +1,12 @@
 (ert-deftest message-add-to-history ()
-  (let ((mess "mess..."))
+  (let ((mess "add to history"))
     (quiet-message
-     (ecukes-output-message mess))
+     (message mess))
     (should (member mess ecukes-message-history))))
 
 (ert-deftest message-clear ()
   (quiet-message
-   (ecukes-output-message "some mess..."))
+   (message "clear me out"))
   (should ecukes-message-history)
   (ecukes-message-clear)  
   (should-not ecukes-message-history))
