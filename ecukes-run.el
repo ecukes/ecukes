@@ -2,6 +2,7 @@
 
 (defun ecukes-run-features (features)
   "Runs all FEATURES."
+  (ecukes-hooks-run-setup)
   (let ((background-run))
     (dolist (feature features)
       (let ((background (ecukes-feature-background feature))
@@ -18,8 +19,9 @@
                 (setq background-run t))))
           (ecukes-run-and-print-scenario scenario)
           (ecukes-message-clear)
-          (ecukes-hooks-run-after))))
-    (ecukes-stats-print-summary)))
+          (ecukes-hooks-run-after)))))
+  (ecukes-hooks-run-teardown)
+  (ecukes-stats-print-summary))
 
 (defun ecukes-run-scenario (scenario fn)
   "Runs all steps in SCENARIO, yielding each step and success flag."
