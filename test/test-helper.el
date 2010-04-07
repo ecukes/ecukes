@@ -147,7 +147,3 @@ certain return value."
   (should (equal ret-val (funcall (ecukes-step-def-fn definition)))))
 
 
-;; Advising princ to avoid output in tests. See `ecukes-ouput-message'.
-(defadvice princ (around princ-around (format-string &rest args) activate)
-  (setq ad-return-value (apply 'format format-string args)))
-(ad-activate 'princ)
