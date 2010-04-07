@@ -5,7 +5,7 @@
 
 
 ;; Print the message as usual, except add the message to the list `ecukes-messages'.
-(defadvice message (after message-after (format-string &rest args) activate)
+(defadvice message (after message-add-history (format-string &rest args) activate)
   (add-to-list 'ecukes-message-history (apply 'format format-string args) t))
 (ad-activate 'message)
 
