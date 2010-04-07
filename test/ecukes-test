@@ -23,6 +23,7 @@
 (require 'ecukes-hooks)
 (require 'ecukes-color)
 (require 'ecukes-stats)
+(require 'ecukes-message)
 
 ;; Load the test helpers.
 (load-file (concat ecukes-test-path "test-helper.el"))
