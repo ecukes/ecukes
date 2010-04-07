@@ -148,7 +148,8 @@
   (ecukes-output-message " "))
 
 (defun ecukes-output-message (format-string &rest args)
-  "Exactly like the message function `message'."
+  "Exactly like the message function `message', except that it does
+not store messages in history."
   (ecukes-message-no-history
    (message format-string args)))
 
