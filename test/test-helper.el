@@ -147,3 +147,31 @@ certain return value."
   (should (equal ret-val (funcall (ecukes-step-def-fn definition)))))
 
 
+;; Helpers to avoid messages cluttering down the test output.
+;;
+;; Usage:
+;;
+;;   (quiet-message
+;;     (message "..."))
+
+(defadvice message (around message-around (format-string &rest args) activate))
+(ad-activate 'message)
+
+(defun ecukes-advice-message (advice)
+  "Advice `message' to not print anything if ADVICE is t, reset otherwise."
+  (if advice
+      (ad-enable-advice 'message 'around 'message-around)
+    (ad-disable-advice 'message 'around 'message-around))
+  (ad-update 'message))
+(ecukes-advice-message nil)
+
+(defmacro quiet-message (&rest body)
+  "Advice `message' to not print anything while evaluating BODY."
+  `(progn
+     (ecukes-advice-message t)
+     (condition-case err
+         ,@body
+       (error
+        (ecukes-advice-message nil)
+        (error err)))
+     (ecukes-advice-message nil)))
