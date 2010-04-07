@@ -150,10 +150,8 @@
   (ecukes-ouput-message " "))
 
 (defun ecukes-ouput-message (format-string &rest args)
-  "Exactly as `message' only that it uses `princ' for printing the message.
-This is used because message is advised to avoid clobbering the Ecukes
-output with output from stuff in the step definitions."
-  (princ (concat (apply 'format format-string args) "\n")))
+  "Exactly like the message function `message'."
+  (message format-string args))
 
 
 (provide 'ecukes-output)
