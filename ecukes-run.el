@@ -1,6 +1,5 @@
 ;;; ecukes-run.el --- Functions for running stuff
 
-
 (defun ecukes-run-features (features)
   "Runs all FEATURES."
   (dolist (feature features)

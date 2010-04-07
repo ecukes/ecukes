@@ -1,6 +1,5 @@
 ;;; ecukes-def.el --- Data structure definitions
 
-
 ;; A feature, which is the top level structure for a feature file.
 ;;
 ;;   intro      - The feature introduction if any.
