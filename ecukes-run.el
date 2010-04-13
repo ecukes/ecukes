@@ -18,7 +18,7 @@
                 (ecukes-run-and-print-background background)
                 (setq background-run t))))
           (ecukes-run-and-print-scenario scenario)
-          (ecukes-message-clear)
+          (ecukes-clear-messages)
           (ecukes-hooks-run-after)))))
   (ecukes-hooks-run-teardown)
   (ecukes-stats-print-summary))

@@ -1,9 +1,3 @@
-(ert-deftest output-dont-save-in-history ()
-  (ecukes-message-clear)
-  (quiet-message
-   (ecukes-output-message "some text..."))
-  (should-not ecukes-message-history))
-
 (ert-deftest output-newline ()
   (track-output
    (quiet-message
