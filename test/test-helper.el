@@ -195,6 +195,7 @@ All messages will be place in `message-output'."
   `(progn
      (ad-enable-advice 'message 'after 'track-output)
      (ad-update 'message)
+     (ad-activate 'message)
      ,@body
      (ad-disable-advice 'message 'after 'track-output)
      (ad-update 'message)))
