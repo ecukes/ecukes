@@ -59,28 +59,28 @@
     (should
      (equal
       (ecukes-output-missing-step step)
-      "(Given \"something\"\n       (lambda ()\n\n         ))\n"))))
+      "(Given \"^something$\"\n       (lambda ()\n\n         ))\n"))))
 
 (ert-deftest output-missing-step-single-argument ()
   (let ((step (make-ecukes-step :name "Given this \"argument\"" :type 'regular)))
     (should
      (equal
       (ecukes-output-missing-step step)
-      "(Given \"this \\\"\\\\(.+\\\\)\\\"\"\n       (lambda (arg)\n\n         ))\n"))))
+      "(Given \"^this \\\"\\\\(.+\\\\)\\\"$\"\n       (lambda (arg)\n\n         ))\n"))))
 
 (ert-deftest output-missing-step-multiple-arguments ()
   (let ((step (make-ecukes-step :name "Given arguments \"argument1\" and \"argument2\"" :type 'regular)))
     (should
      (equal
       (ecukes-output-missing-step step)
-      "(Given \"arguments \\\"\\\\(.+\\\\)\\\" and \\\"\\\\(.+\\\\)\\\"\"\n       (lambda (arg1 arg2)\n\n         ))\n"))))
+      "(Given \"^arguments \\\"\\\\(.+\\\\)\\\" and \\\"\\\\(.+\\\\)\\\"$\"\n       (lambda (arg1 arg2)\n\n         ))\n"))))
 
 (ert-deftest output-missing-step-non-regular ()
   (let ((step (make-ecukes-step :name "Given arguments \"argument1\" and \"argument2\"" :type 'table)))
     (should
      (equal
       (ecukes-output-missing-step step)
-      "(Given \"arguments \\\"\\\\(.+\\\\)\\\" and \\\"\\\\(.+\\\\)\\\"\"\n       (lambda (arg1 arg2 arg3)\n\n         ))\n"))))
+      "(Given \"^arguments \\\"\\\\(.+\\\\)\\\" and \\\"\\\\(.+\\\\)\\\"$\"\n       (lambda (arg1 arg2 arg3)\n\n         ))\n"))))
 
 (ert-deftest output-intro ()
   (track-output

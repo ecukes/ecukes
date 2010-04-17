@@ -102,7 +102,7 @@
            (prefix (match-string-no-properties 1 name))
            (suffix (replace-regexp-in-string "\"[^\"]+\"" "\\\\\"\\\\\\\\(.+\\\\\\\\)\\\\\"" match))
            (args (ecukes-output-missing-step-args step)))
-      (concat "(" prefix " \"" suffix "\"\n       (lambda (" args ")\n\n         ))\n"))))
+      (concat "(" prefix " \"^" suffix "$\"\n       (lambda (" args ")\n\n         ))\n"))))
 
 (defun ecukes-output-missing-step-args (step)
   "For missing STEP, return a string with it's step definition arguments."
