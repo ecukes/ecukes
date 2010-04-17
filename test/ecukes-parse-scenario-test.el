@@ -146,4 +146,4 @@
             (steps (ecukes-scenario-steps scenario)))
        (should (equal 2 (length steps)))
        (should (equal "Given something" (ecukes-step-name (car steps))))
-       (should (equal "Given something" (ecukes-step-name (car (cdr steps)))))))))
+       (should (equal "Given something" (ecukes-step-name (cadr steps))))))))

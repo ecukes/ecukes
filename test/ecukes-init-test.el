@@ -24,4 +24,4 @@
     (stub directory-files => (list "test1.feature" "test2.feature"))
     (let ((feature-files (ecukes-init-feature-files (list "features"))))
       (should (string-match-p "test2\\.feature$" (car feature-files)))
-      (should (string-match-p "test1\\.feature$" (car (cdr feature-files)))))))
+      (should (string-match-p "test1\\.feature$" (cadr feature-files))))))

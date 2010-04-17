@@ -82,4 +82,4 @@
      (let ((missing (ecukes-steps-missing (list feature))))
        (should (equal 2 (length missing)))
        (should (equal "Given a step without definition" (ecukes-step-name (car missing))))
-       (should (equal "Given a step that does not have a definition" (ecukes-step-name (car (cdr missing)))))))))
+       (should (equal "Given a step that does not have a definition" (ecukes-step-name (cadr missing))))))))
