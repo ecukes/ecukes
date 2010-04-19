@@ -32,8 +32,8 @@
     ;; Table
     (let* ((table (nth 2 steps))
            (table (ecukes-step-arg table))
-           (header (ecukes-table-header table))
-           (rows (ecukes-table-rows table)))
+           (header (car table))
+           (rows (cdr table)))
       (should (equal "element" (car header)))
       (should (equal "h1" (car (nth 0 rows))))
       (should (equal "p" (car (nth 1 rows))))

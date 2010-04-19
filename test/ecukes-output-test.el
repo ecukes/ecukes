@@ -160,9 +160,9 @@
             :name "Given something"
             :type 'table
             :arg
-            (make-ecukes-table
-             :header '("name" "age")
-             :rows '(("Peter" "12") ("Clint" "37"))))))
+            (cons
+             '("name" "age")
+             '(("Peter" "12") ("Clint" "37"))))))
       (ecukes-output-step step t)
       (should (equal (concat "  " (ecukes-color-green "Given something")) (nth 0 message-output)))
       (should (equal (concat "    " (ecukes-color-green "| name  | age | ")) (nth 1 message-output)))

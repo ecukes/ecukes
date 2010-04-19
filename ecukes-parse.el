@@ -120,7 +120,7 @@ whitespace at the beginning.")
       (add-to-list 'rows (ecukes-parse-table-row (ecukes-blank-line)) t 'eq)
       (forward-line 1))
     (forward-line -1)
-    (make-ecukes-table :header header :rows rows)))
+    (cons header rows)))
 
 (defun ecukes-parse-table-row (row)
   "Parses the table ROW."

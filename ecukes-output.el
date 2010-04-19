@@ -60,15 +60,13 @@
 
 (defun ecukes-output-table (table output-fn)
   "Outputs TABLE."
-  (let ((widths)
-        (header (ecukes-table-header table))
-        (rows (ecukes-table-rows table)))
+  (let ((widths) (header (car table)) (rows (cdr table)))
 
     ;; Calculate the maximum width for each column.
     (let ((count-x (length header)))
       (dotimes (i count-x)
         (let ((max 0))
-          (dolist (row (cons header rows))
+          (dolist (row table)
             (setq max (max (length (nth i row)) max)))
           (add-to-list 'widths max t))))
 

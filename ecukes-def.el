@@ -47,13 +47,6 @@
 (defstruct ecukes-step name arg type err)
 
 
-;; If step is a table step, its argument will be an ecukes-table.
-;;
-;; header - A list with the table header.
-;; rows   - A list of lists, where each inner list is a row in the table.
-(defstruct ecukes-table header rows)
-
-
 ;; A step definition.
 ;;
 ;; fn   - The step definition function. Can be either a lambda or a symbol.
