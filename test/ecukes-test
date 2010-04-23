@@ -25,6 +25,7 @@
 (require 'ecukes-hooks)
 (require 'ecukes-color)
 (require 'ecukes-stats)
+(require 'ecukes-template)
 (require 'ecukes-misc)
 
 ;; Load the test helpers.
