@@ -1,6 +1,7 @@
 #!/usr/bin/emacs --script
 
-;; Set the path to the test directory.
+;; Set some paths
+(setq ecukes-path "/path/to/ecukes")
 (setq ecukes-test-path (file-name-directory load-file-name))
 
 ;; Add some directories to load-path.
