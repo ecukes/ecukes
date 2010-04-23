@@ -59,9 +59,9 @@
 (add-to-list 'command-switch-alist '("--init" . ecukes-init-handler))
 
 (unless (ecukes-options-p)
-  (let ((feature-files (ecukes-init-feature-files argv)))
+  (let ((feature-files (ecukes-feature-files argv)))
     (cond (feature-files
-           (ecukes-init-load-project argv)
+           (ecukes-load-project argv)
 
            (let ((features))
              (dolist (feature-file feature-files)
