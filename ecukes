@@ -43,6 +43,7 @@
 (eval-when-compile
   (require 'cl)
   (require 'ecukes-steps)
+  (require 'ecukes-startup)
   (require 'ecukes-init)
   (require 'ecukes-def)
   (require 'ecukes-output)

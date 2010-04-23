@@ -16,6 +16,7 @@
 ;; Require Ecukes packages.
 (require 'ecukes-steps)
 (require 'ecukes-init)
+(require 'ecukes-startup)
 (require 'ecukes-def)
 (require 'ecukes-output)
 (require 'ecukes-parse)
