@@ -71,7 +71,8 @@ was successful, nil otherwise."
           (if arg (add-to-list 'args arg t))
           (apply fn args)))
     (error
-     (setf (ecukes-step-err step) (error-message-string err))))
+     (setf (ecukes-step-err step) (error-message-string err)))
+    (quit))
   (not (ecukes-step-err step)))
 
 
