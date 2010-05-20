@@ -38,7 +38,7 @@ directory, all .feature files in that directory will be included."
 (defun ecukes-project-root (file)
   "Returns the project root directory from FILE in project."
   (if (file-regular-p file)
-      (ecukes-project-root (file-name-directory dir))
+      (ecukes-project-root (file-name-directory file))
     (if (file-directory-p (expand-file-name "features" file))
         file
       (let ((new-dir (expand-file-name (file-name-as-directory "..") file)))
