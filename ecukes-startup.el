@@ -23,9 +23,12 @@ directory, all .feature files in that directory will be included."
 (defun ecukes-load-project (arguments)
   "Loads all Ecukes files in project."
   (let* ((project-file (car arguments))
-         (features-root (ecukes-features-root project-file)))
+         (features-root (ecukes-features-root project-file))
+	 (support-dir (expand-file-name "support" features-root)))
     (cond (features-root
-           (load (expand-file-name "support.el" features-root))
+           (load (expand-file-name "support.el" support-dir))
+	   (dolist (helper (directory-files support-dir nil "[^support.el]\\.*.el"))
+	     (load helper))
            (dolist (step (directory-files (expand-file-name "step-definitions" features-root) t "-steps\\.el$"))
              (load step)))
           (t (ecukes-output-red "Could not find features root")))))
