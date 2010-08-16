@@ -26,8 +26,8 @@ directory, all .feature files in that directory will be included."
          (features-root (ecukes-features-root project-file))
 	 (support-dir (expand-file-name "support" features-root)))
     (cond (features-root
-           (load (expand-file-name "support.el" support-dir))
-	   (dolist (helper (directory-files support-dir nil "[^support.el]\\.*.el"))
+           (load (expand-file-name "env.el" support-dir))
+	   (dolist (helper (directory-files support-dir nil "[^env.el]\\.*.el"))
 	     (load helper))
            (dolist (step (directory-files (expand-file-name "step-definitions" features-root) t "-steps\\.el$"))
              (load step)))
