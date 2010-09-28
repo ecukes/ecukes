@@ -69,12 +69,15 @@
       (insert (ecukes-template-get "feature")))))
 
 (defun ecukes-init-create-support ()
-  "Creates support.el including basic setup."
-  (let ((support-file-path
-         (expand-file-name "support.el" ecukes-init-features-path)))
-    (with-temp-file support-file-path
-      (let ((replacements `(("PROJECT-NAME" . ,ecukes-init-project-name))))
-        (insert (ecukes-template-get "support" replacements))))))
+  "Creates env.el including basic setup."
+  (let* ((support-dir-path
+	  (expand-file-name "support" ecukes-init-features-path))
+	 (support-file-path
+	  (expand-file-name "env.el" support-dir-path)))
+      (make-directory support-dir-path)
+      (with-temp-file support-file-path
+	(let ((replacements `(("PROJECT-NAME" . ,ecukes-init-project-name))))
+	  (insert (ecukes-template-get "env" replacements))))))
 
 
 (provide 'ecukes-init)
