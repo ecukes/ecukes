@@ -1,22 +1,20 @@
-#!/usr/bin/emacs --script
+#!/usr/bin/env emacs --script
 
-;; Set some paths
-(setq ecukes-path "/path/to/ecukes")
-(setq ecukes-test-path (file-name-directory load-file-name))
+(let ((current-directory (file-name-directory load-file-name)))
+  (setq ecukes-test-path (expand-file-name "." current-directory))
+  (setq ecukes-root-path (expand-file-name ".." current-directory))
+  (setq ecukes-util-path (expand-file-name "util" ecukes-test-path)))
 
-;; Add some directories to load-path.
+(add-to-list 'load-path ecukes-root-path)
 (add-to-list 'load-path ecukes-test-path)
-(add-to-list 'load-path (concat ecukes-test-path "ert"))
-(add-to-list 'load-path (concat ecukes-test-path "el-mock"))
-(add-to-list 'load-path (file-name-directory (directory-file-name ecukes-test-path)))
+(add-to-list 'load-path ecukes-util-path)
 
-;; Require testing libraries.
-(require 'ert)
-(require 'el-mock)
+(setq ecukes-path nil)
 
-;; Require Ecukes packages.
+(eval-when-compile
+  (require 'cl))
 (require 'ecukes-steps)
-(require 'ecukes-init)
+(require 'ecukes-new)
 (require 'ecukes-startup)
 (require 'ecukes-def)
 (require 'ecukes-output)
@@ -27,13 +25,11 @@
 (require 'ecukes-stats)
 (require 'ecukes-template)
 (require 'ecukes-misc)
+(require 'ert)
+(require 'el-mock)
 
-;; Load the test helpers.
-(load-file (concat ecukes-test-path "test-helper.el"))
+(load (expand-file-name "test-helper.el" ecukes-test-path) nil t)
+(dolist (test-file (or argv (directory-files ecukes-test-path t "-test.el$")))
+  (load test-file nil t))
 
-;; Load all files ending with "-test.el" in the test directory.
-(dolist (test-file (or argv (directory-files ecukes-test-path t "-test.el")))
-  (load-file test-file))
-
-;; Run all tests.
 (ert-run-tests-batch t)
