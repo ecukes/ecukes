@@ -4,7 +4,7 @@
 
 ;; Author: Johan Andersson <johan.rejeep@gmail.com>
 ;; Maintainer: Johan Andersson <johan.rejeep@gmail.com>
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; Keywords: color, ansi
 ;; URL: http://github.com/rejeep/ansi
 
@@ -67,11 +67,7 @@
 ;;
 ;;   (with-ansi
 ;;    (bold "foo")
-;;    (blink "bar")
-;;    ;; Note that reverse is not available within `with-ansi' because
-;;    ;; it conflicts with the builtin function for reversing a
-;;    ;; list. However, `ansi-reverse' is still available.
-;;    (contrary "foobar"))
+;;    (blink "bar"))
 ;;
 ;;
 ;; If you want to add multiple effects on a single string, you can use
@@ -83,6 +79,13 @@
 ;;   (with-ansi
 ;;    (bold
 ;;     (red "foo")))
+;;
+;;
+;; Before adding effects on strings, the ansi functions first passes
+;; their arguments to the `format' function. This means you can write
+;; like this:
+;;
+;;   (ansi-bold "%d passed, %d failed" passed failed)
 
 
 ;;; Code:
@@ -129,128 +132,69 @@
   "Ansi code for reset.")
 
 
+(defmacro ansi-defun (list effect)
+  "Creates an ansi function with EFFECT."
+  (let ((fn-name (intern (format "ansi-%s" (symbol-name effect)))))
+    `(defun ,fn-name (string &rest objects)
+       ,(format "Add %s ansi effect on STRING." effect)
+       (ansi-effect ,list ',effect string objects))))
+
 (defmacro with-ansi (&rest body)
   "Allows using shortcut names of coloring functions."
   `(flet
        ,(mapcar
          (lambda (alias)
-           (let ((fn (intern (concat "ansi-" (symbol-name alias)))))
-             `(,alias (string) (,fn string))))
+           (let ((fn (intern (format "ansi-%s" (symbol-name alias)))))
+             `(,alias (string &rest objects) (apply ',fn (cons string objects)))))
          (append
           (mapcar 'car ansi-colors)
           (mapcar 'car ansi-on-colors)
           (mapcar 'car ansi-styles)))
      ,(cons 'ansi-concat body)))
 
+
 (defun ansi-concat (&rest sequences)
   "Like `concat' but concats only the string values from SEQUENCES."
   (let ((strings (remove-if-not 'stringp sequences)))
     (apply 'concat strings)))
 
-(defun ansi-color (string color)
-  "Paint STRING with COLOR."
-  (ansi-effect ansi-colors string color))
-
-(defun ansi-on-color (string color)
-  "Paint STRING on COLOR."
-  (ansi-effect ansi-on-colors string color))
-
-(defun ansi-style (string style)
-  "Style STRING with STYLE."
-  (ansi-effect ansi-styles string style))
-
-(defun ansi-effect (list string effect)
+(defun ansi-effect (list effect string objects)
   "Add EFFECT to string."
-  (let ((code (cdr (assoc effect list))))
-    (format "\e[%sm%s\e[%sm" code string ansi-reset)))
+  (let ((code (cdr (assoc effect list)))
+        (formatted (apply 'format (cons string objects))))
+    (format "\e[%sm%s\e[%sm" code formatted ansi-reset)))
 
 
 ;; COLORS
-
-(defun ansi-black (string)
-  (ansi-color string 'black))
-
-(defun ansi-red (string)
-  (ansi-color string 'red))
-
-(defun ansi-green (string)
-  (ansi-color string 'green))
-
-(defun ansi-yellow (string)
-  (ansi-color string 'yellow))
-
-(defun ansi-blue (string)
-  (ansi-color string 'blue))
-
-(defun ansi-magenta (string)
-  (ansi-color string 'magenta))
-
-(defun ansi-cyan (string)
-  (ansi-color string 'cyan))
-
-(defun ansi-white (string)
-  (ansi-color string 'white))
-
+(ansi-defun ansi-colors black)
+(ansi-defun ansi-colors red)
+(ansi-defun ansi-colors green)
+(ansi-defun ansi-colors yellow)
+(ansi-defun ansi-colors blue)
+(ansi-defun ansi-colors magenta)
+(ansi-defun ansi-colors cyan)
+(ansi-defun ansi-colors white)
 
 ;; ON COLORS
-
-(defun ansi-on-black (string)
-  (ansi-on-color string 'on-black))
-
-(defun ansi-on-black (string)
-  (ansi-on-color string 'on-black))
-
-(defun ansi-on-red (string)
-  (ansi-on-color string 'on-red))
-
-(defun ansi-on-green (string)
-  (ansi-on-color string 'on-green))
-
-(defun ansi-on-yellow (string)
-  (ansi-on-color string 'on-yellow))
-
-(defun ansi-on-blue (string)
-  (ansi-on-color string 'on-blue))
-
-(defun ansi-on-magenta (string)
-  (ansi-on-color string 'on-magenta))
-
-(defun ansi-on-cyan (string)
-  (ansi-on-color string 'on-cyan))
-
-(defun ansi-on-white (string)
-  (ansi-on-color string 'on-white))
-
+(ansi-defun ansi-on-colors on-black)
+(ansi-defun ansi-on-colors on-red)
+(ansi-defun ansi-on-colors on-green)
+(ansi-defun ansi-on-colors on-yellow)
+(ansi-defun ansi-on-colors on-blue)
+(ansi-defun ansi-on-colors on-magenta)
+(ansi-defun ansi-on-colors on-cyan)
+(ansi-defun ansi-on-colors on-white)
 
 ;; STYLES
-
-(defun ansi-bold (string)
-  (ansi-style string 'bold))
-
-(defun ansi-dark (string)
-  (ansi-style string 'dark))
-
-(defun ansi-italic (string)
-  (ansi-style string 'italic))
-
-(defun ansi-underscore (string)
-  (ansi-style string 'underscore))
-
-(defun ansi-blink (string)
-  (ansi-style string 'blink))
-
-(defun ansi-rapid (string)
-  (ansi-style string 'rapid))
-
-(defun ansi-contrary (string)
-  (ansi-style string 'contrary))
-(defalias 'ansi-reverse 'ansi-contrary)
-
-(defun ansi-concealed (string)
-  (ansi-style string 'concealed))
-
-(defun ansi-strike (string)
-  (ansi-style string 'strike))
+(ansi-defun ansi-styles bold)
+(ansi-defun ansi-styles dark)
+(ansi-defun ansi-styles italic)
+(ansi-defun ansi-styles underscore)
+(ansi-defun ansi-styles blink)
+(ansi-defun ansi-styles rapid)
+(ansi-defun ansi-styles contrary)
+(ansi-defun ansi-styles concealed)
+(ansi-defun ansi-styles strike)
 
 
 (provide 'ansi)
