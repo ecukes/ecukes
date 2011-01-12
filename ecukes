@@ -63,7 +63,6 @@
 (require 'ecukes-hooks)
 (require 'ecukes-stats)
 (require 'ecukes-template)
-(require 'ecukes-misc)
 
 (add-to-list 'command-switch-alist '("--new" . ecukes-new-handler))
 

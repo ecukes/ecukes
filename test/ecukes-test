@@ -23,7 +23,6 @@
 (require 'ecukes-hooks)
 (require 'ecukes-stats)
 (require 'ecukes-template)
-(require 'ecukes-misc)
 (require 'ert)
 (require 'el-mock)
 
