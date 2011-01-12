@@ -1,6 +1,0 @@
-[submodule "test/ert"]
-	path = test/ert
-	url = git://github.com/nex3/ert.git
-[submodule "test/el-mock"]
-	path = test/el-mock
-	url = git://github.com/emacsmirror/el-mock.git
