@@ -52,7 +52,7 @@
   (let ((support (expand-file-name "support" ecukes-new-features-path)))
     (make-directory support)
     (let ((env (expand-file-name "env.el" support)))
-      (ecukes-template-write env 'env))))
+      (ecukes-template-write env 'env `(("project-name" . ,ecukes-new-project-name))))))
 
 (defun ecukes-new-create-feature ()
   "Create feature file."
