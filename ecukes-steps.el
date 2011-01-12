@@ -1,6 +1,7 @@
 ;;; ecukes-steps.el --- Step definition stuff
 
-(defvar ecukes-steps-definitions (make-hash-table :test 'equal)
+(defvar ecukes-steps-definitions
+  (make-hash-table :test 'equal)
   "Hash table containing all step definitions.")
 
 

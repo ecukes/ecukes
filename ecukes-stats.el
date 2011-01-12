@@ -1,61 +1,121 @@
-;;; ecukes-stats.el --- Statistics about the tests
+;;; ecukes-stats.el --- Statistics about the passed and failed scenarios and steps
 
-(defvar ecukes-stats-num-steps 0
-  "Number of steps that has runned.")
+(defvar ecukes-stats-steps 0
+  "Number of steps that have be runned.")
 
-(defvar ecukes-stats-num-steps-failed 0
-  "Number of steps that failed to run.")
+(defvar ecukes-stats-steps-passed 0
+  "Number of steps that have passed.")
 
-(defvar ecukes-stats-num-steps-passed 0
-  "Number of steps that passed to run.")
+(defvar ecukes-stats-steps-failed 0
+  "Number of steps that have failed.")
 
-(defvar ecukes-stats-num-scenarios 0
-  "Number of scenarios that has runned.")
+(defvar ecukes-stats-steps-skipped 0
+  "Number of steps that were skipped.")
 
-(defvar ecukes-stats-num-scenarios-failed 0
-  "Number of scenarios that failed to run.")
+(defvar ecukes-stats-scenarios 0
+  "Number of scenarios that have been runned.")
 
-(defvar ecukes-stats-num-scenarios-passed 0
-  "Number of scenarios that passed to run.")
+(defvar ecukes-stats-scenarios-passed 0
+  "Number of scenarios that have passed.")
+
+(defvar ecukes-stats-scenarios-failed 0
+  "Number of scenarios that have failed.")
 
 
-(defun ecukes-stats-update-steps (success)
-  "Updates the steps count according to SUCCESS."
-  (setq ecukes-stats-num-steps (1+ ecukes-stats-num-steps))
-  (if success
-      (setq ecukes-stats-num-steps-passed (1+ ecukes-stats-num-steps-passed))
-    (setq ecukes-stats-num-steps-failed (1+ ecukes-stats-num-steps-failed))))
+(defmacro ecukes-stats-step (&rest body)
+  `(progn
+     (setq ecukes-stats-steps (1+ ecukes-stats-steps))
+     ,@body))
 
-(defun ecukes-stats-update-scenarios (success)
-  "Updates the scenarios count according to SUCCESS."
-  (setq ecukes-stats-num-scenarios (1+ ecukes-stats-num-scenarios))
-  (if success
-      (setq ecukes-stats-num-scenarios-passed (1+ ecukes-stats-num-scenarios-passed))
-    (setq ecukes-stats-num-scenarios-failed (1+ ecukes-stats-num-scenarios-failed))))
+(defmacro ecukes-stats-scenario (&rest body)
+  `(progn
+     (setq ecukes-stats-scenarios (1+ ecukes-stats-scenarios))
+     ,@body))
+
+
+(defun ecukes-stats-step-pass ()
+  "Step passed."
+  (ecukes-stats-step
+   (setq ecukes-stats-steps-passed (1+ ecukes-stats-steps-passed))))
+
+(defun ecukes-stats-step-fail ()
+  "Step failed."
+  (ecukes-stats-step
+   (setq ecukes-stats-steps-failed (1+ ecukes-stats-steps-failed))))
+
+(defun ecukes-stats-step-skip ()
+  "Step skipped."
+  (ecukes-stats-step
+   (setq ecukes-stats-steps-skipped (1+ ecukes-stats-steps-skipped))))
+
+(defun ecukes-stats-scenario-pass ()
+  "Scenario passed."
+  (ecukes-stats-scenario
+   (setq ecukes-stats-scenarios-passed (1+ ecukes-stats-scenarios-passed))))
+
+(defun ecukes-stats-scenario-fail ()
+  "Scenario failed."
+  (ecukes-stats-scenario
+   (setq ecukes-stats-scenarios-failed (1+ ecukes-stats-scenarios-failed))))
+
+
+(defun ecukes-stats-steps-passed-p ()
+  (> ecukes-stats-steps-passed 0))
+
+(defun ecukes-stats-steps-failures-p ()
+  (> ecukes-stats-steps-failed 0))
+
+(defun ecukes-stats-steps-skipped-p ()
+  (> ecukes-stats-steps-skipped 0))
+
+(defun ecukes-stats-scenarios-passed-p ()
+  (> ecukes-stats-scenarios-passed 0))
+
+(defun ecukes-stats-scenarios-failures-p ()
+  (> ecukes-stats-scenarios-failed 0))
+
 
 (defun ecukes-stats-print-summary ()
-  "Prints a summary with the number of runned/passed/failed scenarios and steps."
-  (ecukes-output-no-indent
-   (ecukes-stats-scenarios-summary)
-   (ecukes-stats-steps-summary)))
+  "Print scenario and step summary."
+  (message
+   "%s\n%s"
+   (ecukes-stats-scenario-summary)
+   (ecukes-stats-step-summary)))
 
-(defun ecukes-stats-scenarios-summary ()
-  "Returns a summary with the number of runned/passed/failed scenarios."
-  (concat
-   (ecukes-color-white (number-to-string ecukes-stats-num-scenarios) " scenarios (")
-   (ecukes-color-red (number-to-string ecukes-stats-num-scenarios-failed) " failed")
-   (ecukes-color-white ", ")
-   (ecukes-color-green (number-to-string ecukes-stats-num-scenarios-passed) " passed")
-   (ecukes-color-white ")\n")))
+(defun ecukes-stats-scenario-summary ()
+  "Return scenario summary as a string."
+  (let ((scenarios (number-to-string ecukes-stats-scenarios))
+        (passed (number-to-string ecukes-stats-scenarios-passed))
+        (failed (number-to-string ecukes-stats-scenarios-failed)))
+    (with-ansi
+     (let* ((ansi-failed
+             (if (ecukes-stats-scenarios-failures-p) (red "%s failed" failed)))
+            (ansi-passed
+             (if (ecukes-stats-scenarios-passed-p) (green "%s passed" passed)))
+            (ansi-scenarios
+             (remove-if 'not (list ansi-failed ansi-passed))))
+       (if (> ecukes-stats-scenarios 0)
+           (format "%s scenarios (%s)" scenarios (mapconcat 'identity ansi-scenarios ", "))
+         "0 scenarios")))))
 
-(defun ecukes-stats-steps-summary ()
-  "Returns a summary with the number of runned/passed/failed steps."
-  (concat
-   (ecukes-color-white (number-to-string ecukes-stats-num-steps) " steps (")
-   (ecukes-color-red (number-to-string ecukes-stats-num-steps-failed) " failed")
-   (ecukes-color-white ", ")
-   (ecukes-color-green (number-to-string ecukes-stats-num-steps-passed) " passed")
-   (ecukes-color-white ")\n")))
+(defun ecukes-stats-step-summary ()
+  "Return step summary as a string."
+  (let ((steps (number-to-string ecukes-stats-steps))
+        (passed (number-to-string ecukes-stats-steps-passed))
+        (failed (number-to-string ecukes-stats-steps-failed))
+        (skipped (number-to-string ecukes-stats-steps-skipped)))
+    (with-ansi
+     (let* ((ansi-failed
+             (if (ecukes-stats-steps-failures-p) (red "%s failed" failed)))
+            (ansi-skipped
+             (if (ecukes-stats-steps-skipped-p) (cyan "%s skipped" skipped)))
+            (ansi-passed
+             (if (ecukes-stats-steps-passed-p) (green "%s passed" passed)))
+            (ansi-steps
+             (remove-if 'not (list ansi-failed ansi-skipped ansi-passed))))
+       (if (> ecukes-stats-steps 0)
+           (format "%s steps (%s)" steps (mapconcat 'identity ansi-steps ", "))
+         "0 steps")))))
 
 
 (provide 'ecukes-stats)

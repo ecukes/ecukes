@@ -3,16 +3,20 @@
 (let ((current-directory (file-name-directory load-file-name)))
   (setq ecukes-test-path (expand-file-name "." current-directory))
   (setq ecukes-root-path (expand-file-name ".." current-directory))
-  (setq ecukes-util-path (expand-file-name "util" ecukes-test-path)))
+  (setq ecukes-util-path (expand-file-name "util" ecukes-test-path))
+  (setq ecukes-vendor-path (expand-file-name "vendor" ecukes-root-path)))
 
 (add-to-list 'load-path ecukes-root-path)
 (add-to-list 'load-path ecukes-test-path)
 (add-to-list 'load-path ecukes-util-path)
+(add-to-list 'load-path ecukes-vendor-path)
 
 (setq ecukes-path nil)
 
 (eval-when-compile
   (require 'cl))
+
+(require 'ansi)
 (require 'ecukes-steps)
 (require 'ecukes-new)
 (require 'ecukes-startup)
