@@ -1,56 +1,57 @@
-;;; ecukes-hooks.el --- Before and After hooks
+;;; ecukes-hooks.el --- A number of hooks that allow us to run code at various points in the test cycle
 
-(defvar ecukes-hooks-before '()
+(defvar ecukes-hooks-before ()
   "List of before hooks.")
 
-(defvar ecukes-hooks-after '()
+(defvar ecukes-hooks-after ()
   "List of after hooks.")
 
-(defvar ecukes-hooks-setup '()
+(defvar ecukes-hooks-setup ()
   "List of setup hooks.")
 
-(defvar ecukes-hooks-teardown '()
+(defvar ecukes-hooks-teardown ()
   "List of teardown hooks.")
 
 
+(defmacro define-hook (list body)
+  `(add-to-list ,list (lambda () ,@body) t))
+
 (defmacro Before (&rest body)
-  "Adds BODY to be executed before each scenario."
-  `(add-to-list 'ecukes-hooks-before (lambda () ,@body) t))
+  "Run BODY in before hook."
+  `(define-hook 'ecukes-hooks-before ,body))
 
 (defmacro After (&rest body)
-  "Adds BODY to be executed after each scenario."
-  `(add-to-list 'ecukes-hooks-after (lambda () ,@body) t))
+  "Run BODY in after hook."
+  `(define-hook 'ecukes-hooks-after ,body))
 
 (defmacro Setup (&rest body)
-  "Adds BODY to be executed before all features."
-  `(add-to-list 'ecukes-hooks-setup (lambda () ,@body) t))
+  "Run BODY in setup hook."
+  `(define-hook 'ecukes-hooks-setup ,body))
 
 (defmacro Teardown (&rest body)
-  "Adds BODY to be executed after all features."
-  `(add-to-list 'ecukes-hooks-teardown (lambda () ,@body) t))
+  "Run BODY in teardown hook."
+  `(define-hook 'ecukes-hooks-teardown ,body))
 
 
 (defun ecukes-hooks-run-before ()
-  "Executes all before hooks."
+  "Run all before hooks."
   (ecukes-hooks-run ecukes-hooks-before))
 
 (defun ecukes-hooks-run-after ()
-  "Executes all after hooks."
+  "Run all after hooks."
   (ecukes-hooks-run ecukes-hooks-after))
 
 (defun ecukes-hooks-run-setup ()
-  "Executes all setup hooks."
+  "Run all setup hooks."
   (ecukes-hooks-run ecukes-hooks-setup))
 
 (defun ecukes-hooks-run-teardown ()
-  "Executes all teardown hooks."
+  "Run all teardown hooks."
   (ecukes-hooks-run ecukes-hooks-teardown))
 
-
 (defun ecukes-hooks-run (hooks)
-  "Executes all HOOKS."
-  (dolist (hook hooks)
-    (funcall hook)))
+  "Run HOOKS."
+  (mapc 'funcall hooks))
 
 
 (provide 'ecukes-hooks)
