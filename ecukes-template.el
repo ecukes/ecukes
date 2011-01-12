@@ -36,6 +36,11 @@ var1 and {key2} with the string value2."
   "Returns full path to template with NAME."
   (expand-file-name (concat name ".tpl") ecukes-template-path))
 
+(defun ecukes-template-write (write-to template &optional replacements)
+  (let ((contents (ecukes-template-get (symbol-name template) replacements)))
+    (with-temp-file write-to
+      (insert contents))))
+
 
 (provide 'ecukes-template)
 
