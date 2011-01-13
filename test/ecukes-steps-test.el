@@ -3,12 +3,35 @@
      ,@body))
 
 
-(ert-deftest steps-define-step ()
-  "Should define step."
+(ert-deftest steps-define-step-with-no-args ()
+  "Should define step with no args."
   (with-steps
    (let ((regex "a known state") (fn 'ignore))
      (ecukes-steps-step regex fn)
-     (should (equal (ecukes-steps-find regex) fn)))))
+     (should
+      (equal
+       (ecukes-steps-find "a known state")
+       (make-ecukes-step-def :fn fn :args nil))))))
+
+(ert-deftest steps-define-step-with-single-arg ()
+  "Should define step with single arg."
+  (with-steps
+   (let ((regex "a \\(.+\\) state") (fn 'ignore))
+     (ecukes-steps-step regex fn)
+     (should
+      (equal
+       (ecukes-steps-find "a known state")
+       (make-ecukes-step-def :fn fn :args '("known")))))))
+
+(ert-deftest steps-define-step-with-multiple-args ()
+  "Should define step with multiple args."
+  (with-steps
+   (let ((regex "state \\(.+\\) and \\(.+\\)") (fn 'ignore))
+     (ecukes-steps-step regex fn)
+     (should
+      (equal
+       (ecukes-steps-find "state known and unknown")
+       (make-ecukes-step-def :fn fn :args '("known" "unknown")))))))
 
 (ert-deftest steps-call-step-when-not-defined ()
   "Should call step when not defined."
