@@ -199,3 +199,13 @@ All messages will be place in `message-output'."
      ,@body
      (ad-disable-advice 'message 'after 'track-output)
      (ad-update 'message)))
+(defmacro with-hooks (&rest body)
+  `(let ((ecukes-hooks-before)
+         (ecukes-hooks-after)
+         (ecukes-hooks-setup)
+         (ecukes-hooks-teardown))
+     ,@body))
+
+(defmacro with-steps (&rest body)
+  `(let ((ecukes-steps-definitions))
+     ,@body))

@@ -1,8 +1,3 @@
-(defmacro with-steps (&rest body)
-  `(let ((ecukes-steps-definitions))
-     ,@body))
-
-
 (ert-deftest steps-define-step-with-no-args ()
   "Should define step with no args."
   (with-steps
@@ -54,8 +49,8 @@
   "Should call step with multiple arguments."
   (with-steps
    (Given "state \\(.+\\) and \\(.+\\)"
-          (lambda (state1 state2)
-            (format "%s-%s" state1 state2)))
+          (lambda (state-1 state-2)
+            (format "%s-%s" state-1 state-2)))
    (should (equal (Given "state %s and %s" "known" "unknown") "known-unknown"))))
 
 (ert-deftest steps-undefined-none-undefined ()

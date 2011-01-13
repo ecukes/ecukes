@@ -1,10 +1,3 @@
-(defmacro with-hooks (&rest body)
-  `(let ((ecukes-hooks-before)
-         (ecukes-hooks-after)
-         (ecukes-hooks-setup)
-         (ecukes-hooks-teardown))
-     ,@body))
-
 (ert-deftest hooks-before ()
   "Should run before hooks."
   (with-mock

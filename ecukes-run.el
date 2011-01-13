@@ -1,79 +1,61 @@
-;;; ecukes-run.el --- Functions for running stuff
+;;; ecukes-run.el --- Run features, scenarios, steps etc...
+
+
+(defvar ecukes-run-buffers ()
+  "List of buffers, which is a part of the init state.")
+
 
 (defun ecukes-run-features (features)
-  "Runs all FEATURES."
+  "Run FEATURES."
   (ecukes-hooks-run-setup)
-  (let ((background-run))
-    (dolist (feature features)
-      (let ((background (ecukes-feature-background feature))
-            (scenarios (ecukes-feature-scenarios feature))
-            (intro (ecukes-feature-intro feature)))
-        (if intro (ecukes-output-intro intro))
-        (dolist (scenario scenarios)
-          (ecukes-hooks-run-before)
-          (when background
-            (if background-run
-                (ecukes-run-background background)
-              (progn
-                (ecukes-run-and-print-background background)
-                (setq background-run t))))
-          (ecukes-run-and-print-scenario scenario)
-          (ecukes-clear-messages)
-          (ecukes-hooks-run-after)))))
-  (ecukes-hooks-run-teardown)
-  (ecukes-stats-print-summary))
+  (mapc 'ecukes-run-feature features)
+  (ecukes-hooks-run-teardown))
 
-(defun ecukes-run-scenario (scenario fn)
-  "Runs all steps in SCENARIO, yielding each step and success flag."
-  (dolist (step (ecukes-scenario-steps scenario))
-    (let ((success (ecukes-run-step step)))
-      (funcall fn step success))))
+(defun ecukes-run-feature (feature)
+  "Run FEATURE."
+  (let ((scenarios (ecukes-feature-scenarios feature)))
+    (mapc 'ecukes-run-scenario scenarios)))
 
-(defun ecukes-run-background (background &optional fn)
-  "Runs all steps in BACKGROUND, yielding each step and success flag if FN."
-  (dolist (step (ecukes-background-steps background))
-    (let ((success (ecukes-run-step step)))
-      (if fn (funcall fn step success)))))
+(defun ecukes-run-scenario (scenario)
+  "Run SCENARIO."
+  (ecukes-run-set-up)
+  (ecukes-hooks-run-before)
+  (let ((steps (ecukes-scenario-steps scenario)))
+    (mapc 'ecukes-run-step steps))
+  (ecukes-hooks-run-after)
+  (ecukes-run-clean-up))
 
-(defun ecukes-run-and-print-background (background)
-  "Prints a background header and then runs all BACKGROUND's steps."
-  (ecukes-output-background
-   (ecukes-run-background
-    background
-    (lambda (step success)
-      (ecukes-stats-update-steps success)
-      (ecukes-output-step step success)))))
-
-(defun ecukes-run-and-print-scenario (scenario)
-  "Prints SCENARIO's header and then runs all SCENARIO's steps."
-  (let ((success-scenario t))
-    (ecukes-output-scenario
-     scenario
-     (ecukes-run-scenario
-      scenario
-      (lambda (step success-step)
-        (unless success-step (setq success-scenario nil))
-        (ecukes-stats-update-steps success-step)
-        (ecukes-output-step step success-step))))
-    (ecukes-stats-update-scenarios success-scenario)))
+(defun ecukes-run-background (background)
+  "Run BACKGROUND."
+  (let ((steps (ecukes-background-steps background)))
+    (mapc 'ecukes-run-step steps)))
 
 (defun ecukes-run-step (step)
-  "Runs STEP.
-If running step was not a success, the err field in the step is
-updated with the error message. This function returns t if the step
-was successful, nil otherwise."
-  (condition-case err
-      (progn
-        (let* ((arg (ecukes-step-arg step))
-               (definition (ecukes-steps-find-definition step))
-               (fn (ecukes-step-def-fn definition))
-               (args (ecukes-step-def-args definition)))
-          (if arg (add-to-list 'args arg t))
-          (apply fn args)))
-    (error
-     (setf (ecukes-step-err step) (error-message-string err)))
-    (quit))
-  (not (ecukes-step-err step)))
+  "Run STEP. Return t if success and nil otherwise."
+  (let ((status))
+    (condition-case err
+        (progn
+          (let* ((name (ecukes-step-name step))
+                 (arg (ecukes-step-arg step))
+                 (def (ecukes-steps-find name))
+                 (fn (ecukes-step-def-fn def))
+                 (args (ecukes-step-def-args def))
+                 (args (if arg (cons arg args) args))) 
+            (apply fn args))
+          (setq status t))
+      (error
+       (setf (ecukes-step-err step) (error-message-string err)))
+      (quit))
+    status))
+
+(defun ecukes-run-set-up ()
+  "Set up the state that was before anything has been runned."
+  (setq ecukes-run-buffers (buffer-list)))
+
+(defun ecukes-run-clean-up ()
+  "Clean up to the set up state."
+  (mapc 'kill-buffer ecukes-run-buffers)
+  (setq ecukes-run-buffers nil))
 
 
 (provide 'ecukes-run)
