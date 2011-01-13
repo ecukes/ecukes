@@ -1,8 +1,7 @@
 ;;; ecukes-steps.el --- Function to define and call step definitions
 
 
-(defvar ecukes-steps-definitions
-  (make-hash-table :test 'equal)
+(defvar ecukes-steps-definitions ()
   "All defined step definitions.")
 
 
@@ -25,30 +24,27 @@
   "Define or call step."
   (let ((arg (car args)))
     (if (functionp arg)
-        (puthash regex arg ecukes-steps-definitions)
+        (add-to-list 'ecukes-steps-definitions `(,regex . ,arg))
       (let* ((query (apply 'format regex args))
              (fn (ecukes-steps-find query)))
         (if fn (apply fn args))))))
 
 (defun ecukes-steps-find (query)
   "Find step definition bound to query. Return its function."
-  (let ((result))
-    (maphash
-     (lambda (regex fn)
-       (if (string-match-p regex query)
-           (setq result fn)))
-     ecukes-steps-definitions)
-    result))
+  (cdr
+   (find-if
+    (lambda (regex)
+      (string-match-p (car regex) query))
+    ecukes-steps-definitions)))
 
-(defun ecukes-steps-missing-definition (steps)
-  "Remove all items that are defined in STEPS."
-  (let ((missing))
-    (mapc
-     (lambda (step)
-       (unless (ecukes-steps-find (ecukes-step-name step))
-         (add-to-list 'missing step)))
-     steps)
-    missing))
+(defun ecukes-steps-undefined (steps)
+  "Remove all items that are not defined in STEPS."
+  (delete-dups
+   (remove-if
+    (lambda (step)
+      (let ((name (ecukes-step-name step)))
+        (ecukes-steps-find name)))
+    steps)))
 
 
 (provide 'ecukes-steps)
