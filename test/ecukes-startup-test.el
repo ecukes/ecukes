@@ -1,49 +1,47 @@
-(ert-deftest startup-root-regex-unix ()
-  (should (string-match-p ecukes-root-regex "/")))
-
-(ert-deftest startup-root-regex-win ()
-  (should (string-match-p ecukes-root-regex "c:/"))
-  (should (string-match-p ecukes-root-regex "D:/")))
-
-(ert-deftest startup-feature-files-no-arguments ()
-  (let ((feature-files (ecukes-feature-files nil)))
-    (should-not feature-files)))
-
-(ert-deftest startup-feature-files-single-argument-does-not-exist ()
-  (let ((feature-files (ecukes-feature-files '("does-not.exist"))))
-    (should-not feature-files)))
-
-(ert-deftest startup-feature-files-multiple-arguments-does-not-exist ()
-  (let ((feature-files (ecukes-feature-files '("does-not.exist" "non-existing.file"))))
-    (should-not feature-files)))
-
-(ert-deftest startup-feature-files-valid-single-feature-file ()
+(ert-deftest startup-load-support ()
+  "Should load support files."
   (with-mock
-    (stub file-exists-p => t)
-    (stub file-directory-p => nil)
-    (let ((feature-files (ecukes-feature-files '("test.feature"))))
-      (should (string-match-p "test\\.feature$" (car feature-files))))))
+   (stub directory-files => '("env.el" "foo.el" "bar.el"))
+   (mock (load) :times 3)
+   (ecukes-startup-load-support)))
 
-(ert-deftest startup-feature-files-valid-multiple-feature-files ()
+(ert-deftest startup-load-step-definitions ()
+  "Should load step definition files."
   (with-mock
-    (stub file-exists-p => t)
-    (stub file-directory-p => nil)
-    (let ((feature-files (ecukes-feature-files '("test1.feature" "test2.feature"))))
-      (should (string-match-p "test1\\.feature$" (car feature-files)))
-      (should (string-match-p "test2\\.feature$" (cadr feature-files))))))
+   (stub directory-files => '("foo-steps.el" "bar-steps.el"))
+   (mock (load) :times 2)
+   (ecukes-startup-load-step-definitions)))
 
-(ert-deftest startup-pass-directory-of-features ()
+(ert-deftest startup-features-no-argument ()
+  "Should return all feature files in features directory."
   (with-mock
-    (stub file-directory-p => t)
-    (stub directory-files => (list "test1.feature" "test2.feature"))
-    (let ((feature-files (ecukes-feature-files '("features"))))
-      (should (string-match-p "test1\\.feature$" (car feature-files)))
-      (should (string-match-p "test2\\.feature$" (cadr feature-files))))))
+   (stub file-directory-p => t)
+   (let ((feature-files '("foo.feature" "bar.feature")))
+     (stub directory-files => feature-files)
+     (should (equal (ecukes-startup-features ()) feature-files)))))
 
-(ert-deftest startup-load-non-existing-project ()
+(ert-deftest startup-features-directory-as-argument ()
+  "Should return all feature files in given directory."
   (with-mock
-   (stub ecukes-features-root => nil)
-   (track-output
-    (quiet-message (ecukes-load-project nil))
-    (should
-     (member (ecukes-color-red "Could not find features root") message-output)))))
+   (stub file-directory-p => t)
+   (let ((feature-files '("foo.feature" "bar.feature")))
+     (stub directory-files => feature-files)
+     (should (equal (ecukes-startup-features '("features")) feature-files)))))
+
+(ert-deftest startup-features-files-as-argument ()
+  "Should return all given feature files."
+  (with-mock
+   (stub file-directory-p => nil)
+   (let ((feature-files '("foo.feature" "bar.feature")))
+     (stub directory-files => feature-files)
+     (should (equal (ecukes-startup-features feature-files) feature-files)))))
+
+(ert-deftest startup-run-dont-run-when-switch ()
+  "Should not run when valid switch."
+  (let ((command-switch-alist '(("--new" . ignore))) (argv '("--new")))
+    (should-not (ecukes-startup-run-p))))
+
+(ert-deftest startup-run-when-no-switch ()
+  "Should not when no switch."
+  (let ((command-switch-alist '(("--new" . ignore))))
+    (should (ecukes-startup-run-p))))

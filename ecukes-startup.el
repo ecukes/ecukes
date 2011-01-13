@@ -1,63 +1,66 @@
-;;; ecukes-startup.el --- TODO
+;;; ecukes-startup.el --- Helper functions when starting up Ecukes
 
 
-(defconst ecukes-root-regex "\\(?:^[[:alpha:]]:/$\\|^/$\\)"
-  "Regular expression matching a file system root.")
+(defvar ecukes-startup-project-path
+  (directory-file-name (expand-file-name default-directory))
+  "Path to the project.")
+
+(defvar ecukes-startup-project-name
+  (file-name-nondirectory ecukes-startup-project-path)
+  "Name of the project.")
+
+(defvar ecukes-startup-features-path
+  (expand-file-name "features" ecukes-startup-project-path)
+  "Path to the project features directory.")
+
+(defvar ecukes-startup-support-path
+  (expand-file-name "support" ecukes-startup-features-path)
+  "Path to the features support directory.")
+
+(defvar ecukes-startup-step-definitions-path
+  (expand-file-name "step-definitions" ecukes-startup-features-path)
+  "Path to the features step definitions directory.")
 
 
-(defun ecukes-feature-files (arguments)
-  "Given ecukes arguments, return a list of all feature files.
+(defun ecukes-startup-load ()
+  "Load project Ecukes files."
+  (ecukes-startup-load-support)
+  (ecukes-startup-load-step-definitions))
 
-ARGUMENTS can be either a list of .feature files or a directory. If a
-directory, all .feature files in that directory will be included."
-  (when arguments
-    (let ((feature-files))
-      (dolist (argument arguments)
-        (when (file-exists-p argument)
-          (if (file-directory-p argument)
-              (dolist (feature-file (directory-files argument t "\\.feature$"))
-                (add-to-list 'feature-files (expand-file-name feature-file) t))
-            (add-to-list 'feature-files (expand-file-name argument) t))))
-      feature-files)))
+(defun ecukes-startup-load-support ()
+  "Load project support files."
+  (load (expand-file-name "env.el" ecukes-startup-support-path) nil t)
+  (let ((support-files (remove "env.el" (directory-files ecukes-startup-support-path t "\\.el$"))))
+    (mapc
+     (lambda (support-file)
+       (load support-file nil t))
+     support-files)))
 
-(defun ecukes-load-project (arguments)
-  "Loads all Ecukes files in project."
-  (let* ((project-file (car arguments))
-         (features-root (ecukes-features-root project-file))
-         (support-dir (expand-file-name "support" features-root)))
-    (cond (features-root
-           (load (expand-file-name "env.el" support-dir))
-           (dolist (helper (directory-files support-dir nil "[^env.el]\\.*.el"))
-             (load (expand-file-name helper support-dir)))
-           (dolist (step (directory-files (expand-file-name "step-definitions" features-root) t "-steps\\.el$"))
-             (load step)))
-          (t (ecukes-output-red "Could not find features root")))))
+(defun ecukes-startup-load-step-definitions ()
+  "Load project step definition files."
+  (let ((step-definition-files (directory-files ecukes-startup-step-definitions-path t "-steps\\.el$")))
+    (mapc
+     (lambda (step-definition-file)
+       (load step-definition-file nil t))
+     step-definition-files)))
 
-(defun ecukes-features-root (file)
-  "Returns the project features directory from FILE in project."
-  (let ((project-root (ecukes-project-root file)))
-    (if project-root (expand-file-name "features" project-root))))
+(defun ecukes-startup-features (files)
+  "Returns a list of feature files to run."
+  (if files
+      (let ((file (car files)))
+        (if (file-directory-p file)
+            (directory-files file t "\\.feature$")
+          files))
+    (ecukes-startup-features (list ecukes-startup-features-path))))
 
-(defun ecukes-project-root (file)
-  "Returns the project root directory from FILE in project."
-  (if (file-regular-p file)
-      (ecukes-project-root (file-name-directory file))
-    (if (file-directory-p (expand-file-name "features" file))
-        file
-      (let ((new-dir (expand-file-name (file-name-as-directory "..") file)))
-        (unless (string-match-p ecukes-root-regex file)
-          (ecukes-project-root new-dir))))))
-
-(defun ecukes-options-p ()
-  "Returns t if any options was sent to ecukes, nil otherwise."
-  (let ((opts (mapcar (lambda (e) (car e)) command-switch-alist))
-        (match) (arguments (copy-sequence argv)))
-    (while (and (not match) arguments)
-      (setq arg (car arguments))
-      (if (member arg opts)
-          (setq match t))
-      (setq arguments (cdr arguments)))
-    match))
+(defun ecukes-startup-run-p ()
+  "Should we run feature or was there an option."
+  (let ((switches (mapcar 'car command-switch-alist)))
+    (not
+     (find-if
+      (lambda (switch)
+        (member switch argv))
+      switches))))
 
 
 (provide 'ecukes-startup)
