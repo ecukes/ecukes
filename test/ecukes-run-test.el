@@ -94,10 +94,11 @@
 (ert-deftest run-clean-up-should-kill-all-buffers ()
   "Should kill all buffers."
   (with-mock
-   (mock (kill-buffer) :times 2)
    (let ((ecukes-run-buffers '("foo" "bar")))
+     (mock (kill-buffer) :times 2)
+     (stub buffer-list => '("foo" "bar" "baz" "qux"))
      (ecukes-run-clean-up)
-     (should-not ecukes-run-buffers))))
+     (should (equal ecukes-run-buffers '("foo" "bar"))))))
 
 (ert-deftest run-step-no-arguments ()
   "Should run step with no arguments."

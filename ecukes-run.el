@@ -1,5 +1,6 @@
 ;;; ecukes-run.el --- Run features, scenarios, steps etc...
 
+;; TODO: Some of these functions might not be used anywhere
 
 (defvar ecukes-run-buffers ()
   "List of buffers, which is a part of the init state.")
@@ -40,7 +41,7 @@
                  (def (ecukes-steps-find name))
                  (fn (ecukes-step-def-fn def))
                  (args (ecukes-step-def-args def))
-                 (args (if arg (cons arg args) args))) 
+                 (args (if arg (cons arg args) args)))
             (apply fn args))
           (setq status t))
       (error
@@ -54,9 +55,8 @@
 
 (defun ecukes-run-clean-up ()
   "Clean up to the set up state."
-  (mapc 'kill-buffer ecukes-run-buffers)
-  (setq ecukes-run-buffers nil))
-
+  (let ((buffers (set-difference (buffer-list) ecukes-run-buffers :test 'equal)))
+    (mapc 'kill-buffer buffers)))
 
 (provide 'ecukes-run)
 
