@@ -1,6 +1,5 @@
 Feature: Addition of two numbers
   In order to aviod silly mistakes
   As a math idiot
-  And a programmer guru
+  And as an idiot in general
   I want to be told the sum of two numbers
-  In the morning

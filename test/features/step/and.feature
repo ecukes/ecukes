@@ -1,1 +1,2 @@
-And I see something else on the screen
+Scenario: Some scenario
+  And another key action

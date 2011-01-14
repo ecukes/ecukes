@@ -1,61 +1,31 @@
-(ert-deftest parse-table-step-all-good ()
-  (let* ((step (ecukes-test-parse-step "table-all-good.feature"))
-         (table (ecukes-step-arg step))
-         (header (car table))
-         (rows (cdr table)))
-    (should (equal "Given these meals:" (ecukes-step-name step)))
-    (let ((hamburger (nth 0 rows))
-          (pizza (nth 1 rows)))
-      (should (equal "meal" (nth 0 header)))
-      (should (equal "price" (nth 1 header)))
-      (should (equal "Hamburger" (nth 0 hamburger)))
-      (should (equal "$4.50" (nth 1 hamburger)))
-      (should (equal "Pizza" (nth 0 pizza)))
-      (should (equal "$5.30" (nth 1 pizza)))
-      (should-be-table-step step))))
+(ert-deftest parse-table-step-single-row ()
+  "Should parse table with single row."
+  (with-parse-step
+   "table-single-row"
+   (lambda (name type arg)
+     (should (eq type 'table))
+     (should (equal arg '(("meal" "price") ("Hamburger" "$4.50")))))))
+
+(ert-deftest parse-table-step-multiple-rows ()
+  "Should parse table with multiple rows."
+  (with-parse-step
+   "table-multiple-rows"
+   (lambda (name type arg)
+     (should (eq type 'table))
+     (should (equal arg '(("meal" "price") ("Hamburger" "$4.50") ("Pizza" "$5.30")))))))
 
 (ert-deftest parse-table-step-wrong-indentation ()
-  (let* ((step (ecukes-test-parse-step "table-wrong-indentation.feature"))
-         (table (ecukes-step-arg step))
-         (header (car table))
-         (rows (cdr table)))
-    (should (equal "Given these meals:" (ecukes-step-name step)))
-    (let ((hamburger (nth 0 rows))
-          (pizza (nth 1 rows)))
-      (should (equal "meal" (nth 0 header)))
-      (should (equal "price" (nth 1 header)))
-      (should (equal "Hamburger" (nth 0 hamburger)))
-      (should (equal "$4.50" (nth 1 hamburger)))
-      (should (equal "Pizza" (nth 0 pizza)))
-      (should (equal "$5.30" (nth 1 pizza)))
-      (should-be-table-step step))))
+  "Should parse table with wrong indentation."
+  (with-parse-step
+   "table-wrong-indentation"
+   (lambda (name type arg)
+     (should (eq type 'table))
+     (should (equal arg '(("meal" "price") ("Hamburger" "$4.50") ("Pizza" "$5.30")))))))
 
-(ert-deftest parse-table-same-row ()
-  (let* ((step (ecukes-test-parse-step "table-same-row.feature"))
-         (table (ecukes-step-arg step))
-         (header (car table))
-         (rows (cdr table)))
-    (should (equal "Given these meals:" (ecukes-step-name step)))
-    (let ((hamburger1 (nth 0 rows))
-          (hamburger2 (nth 1 rows)))
-      (should (equal "meal" (nth 0 header)))
-      (should (equal "price" (nth 1 header)))
-      (should (equal "Hamburger" (nth 0 hamburger1)))
-      (should (equal "$4.50" (nth 1 hamburger1)))
-      (should (equal "Hamburger" (nth 0 hamburger2)))
-      (should (equal "$4.50" (nth 1 hamburger2)))
-      (should-be-table-step step))))
-
-(ert-deftest parse-table-row-step-all-good ()
-  (let* ((row "| first | second | third |")
-         (list (ecukes-parse-table-row row)))
-    (should (equal "first" (nth 0 list)))
-    (should (equal "second" (nth 1 list)))
-    (should (equal "third" (nth 2 list)))))
-
-(ert-deftest parse-table-row-step-whitespace ()
-  (let* ((row "    |     first |    second     | third |    ")
-         (list (ecukes-parse-table-row row)))
-    (should (equal "first" (nth 0 list)))
-    (should (equal "second" (nth 1 list)))
-    (should (equal "third" (nth 2 list)))))
+(ert-deftest parse-table-step-same-row ()
+  "Should parse table with same row twice."
+  (with-parse-step
+   "table-same-row"
+   (lambda (name type arg)
+     (should (eq type 'table))
+     (should (equal arg '(("meal" "price") ("Hamburger" "$4.50")))))))

@@ -1,1 +1,2 @@
-When I see something on the screen
+Scenario: Some scenario
+  When the key action

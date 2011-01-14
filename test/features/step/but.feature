@@ -1,1 +1,2 @@
-But I dont see something on the screen
+Scenario: Some scenario
+  But observe outcomes

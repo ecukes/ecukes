@@ -1,3 +1,4 @@
 Background:
-  Given I cant fall asleep
-  And drugs cant help me
+  Given a known state
+   When the key action
+   Then observe outcomes

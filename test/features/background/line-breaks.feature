@@ -1,5 +1,6 @@
 Background:
-  Given I cant fall asleep
-  And drugs cant help me
+  Given a known state
 
-  And my girlfriend just wont hit my to sleep
+   When the key action
+
+   Then observe outcomes

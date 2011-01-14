@@ -1,3 +1,3 @@
-    @debug           @verbose        
-Scenario: Taggging
-  Given a tag
+  @debug   @verbose  
+Scenario: Some scenario
+  Given a known state

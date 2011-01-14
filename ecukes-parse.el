@@ -1,142 +1,181 @@
 ;;; ecukes-parse.el --- Parser for feature files
 
-(defconst ecukes-beg-re "^[[:blank:]]*"
-  "Regular expression matching beginning of a statement.")
+;; (defconst ecukes-table-re
+;;   (concat ecukes-beg-re "|.+|")
+;;   "Regular expression matching a table step.")
 
-(defconst ecukes-feature-re
-  (concat ecukes-beg-re "Feature:[[:blank:]]*\\(.+[^ ]\\)[[:blank:]]*$")
-  "Regular expression matching a feature header.")
+(defconst ecukes-parse-intro-re
+  "^\\s-*Feature:\\s-*\\(.+[^ ]\\)\\s-*$"
+  "Regexp matching feature header.")
 
-(defconst ecukes-background-re
-  (concat ecukes-beg-re "Background:")
-  "Regular expression matching a background header.")
+(defconst ecukes-parse-background-re
+  "^\\s-*Background:"
+  "Regexp matching background header.")
 
-(defconst ecukes-scenario-re
-  (concat ecukes-beg-re "Scenario:[[:blank:]]*\\(.+[^ ]\\)[[:blank:]]*$")
-  "Regular expression matching a scenario header.")
+(defconst ecukes-parse-scenario-re
+  "^\\s-*Scenario:\\s-*\\(.+[^ ]\\)\\s-*$"
+  "Regexp matching scenario header.")
 
-(defconst ecukes-tags-re
-  (concat ecukes-beg-re "\\(?:@[^ \t]+\\)")
-  "Regular expression matching tags line.")
+(defconst ecukes-parse-step-re
+  "^\\s-*\\(?:Given\\|When\\|Then\\|And\\|But\\)\\s-+\\(.+[^ ]\\)\\s-*$"
+  "Regexp matching step.")
 
-(defconst ecukes-py-string-re
-  "^\\([[:blank:]]*\\)\"\"\""
-  "Regular expression matching a py string step with grouping for
-whitespace at the beginning.")
+(defconst ecukes-parse-tags-re
+  "^\\s-*@"
+  "Regexp matching scenario tags.")
 
-(defconst ecukes-table-re
-  (concat ecukes-beg-re "|.+|")
-  "Regular expression matching a table step.")
+(defconst ecukes-parse-py-string-re
+  "^\\s-*\"\"\""
+  "Regexp matching py string.")
 
-(defconst ecukes-step-re
-  (concat ecukes-beg-re "\\(Given\\|When\\|Then\\|And\\|But\\)[[:blank:]]*\\(.+\\)[[:blank:]]*")
-  "Regular expression matching a step name.")
+(defconst ecukes-parse-table-re
+  "^\\s-*|.+|"
+  "")
 
 
-(defun ecukes-parse-feature (feature-file)
-  "Parses FEATURE-FILE and returns an `ecukes-feature' object."
+(defun ecukes-parse-feature (feature)
+  "Parse FEATURE."
   (with-temp-buffer
-    (insert-file-contents-literally feature-file)
+    (insert-file-contents-literally feature)
+    (goto-char (point-min))
     (let ((intro (ecukes-parse-intro))
           (background (ecukes-parse-background))
           (scenarios (ecukes-parse-scenarios)))
       (make-ecukes-feature :intro intro :background background :scenarios scenarios))))
 
 (defun ecukes-parse-intro ()
-  "Parses the feature intro."
-  (goto-char (point-min))
-  (when (re-search-forward ecukes-feature-re nil t)
-    (let ((header (match-string-no-properties 1))
-          (description))
-      (forward-line 1)
-      (while (not (string= (ecukes-blank-line) ""))
-        (add-to-list 'description (ecukes-blank-line) t)
-        (forward-line 1))
+  "Parse intro."
+  (when (re-search-forward ecukes-parse-intro-re nil t)
+    (let ((header (match-string 1)) (description))
+      (while (not (progn (forward-line 1) (ecukes-parse-new-section-p)))
+        (let ((line (ecukes-parse-line t)))
+          (if line (add-to-list 'description line t))))
       (make-ecukes-intro :header header :description description))))
 
 (defun ecukes-parse-background ()
-  "Parses the feature background."
-  (goto-char (point-min))
-  (when (re-search-forward ecukes-background-re nil t)
-    (forward-line 1)
-    (let ((steps))
-      (ecukes-parse-block
-       (lambda (step)
-         (add-to-list 'steps step t 'eq)))
+  "Parse background."
+  (when (re-search-forward ecukes-parse-background-re nil t)
+    (let ((steps (ecukes-parse-block-steps)))
       (make-ecukes-background :steps steps))))
 
 (defun ecukes-parse-scenarios ()
-  "Parses the feature scenario."
+  "Parse scenarios."
   (let ((scenarios))
-    (while (re-search-forward ecukes-scenario-re nil t)
-      (let ((steps) (name) (tags-line (ecukes-blank-line -1)) (tags))
-        (if (string-match-p ecukes-tags-re tags-line)
-            (setq tags (split-string (replace-regexp-in-string "@" "" tags-line) "[[:blank:]]+")))
-        (setq name (match-string-no-properties 1))
-        (forward-line 1)
-        (ecukes-parse-block
-         (lambda (step)
-           (add-to-list 'steps step t 'eq)))
-        (add-to-list 'scenarios (make-ecukes-scenario :name name :steps steps :tags tags) t 'eq)))
+    (while (re-search-forward ecukes-parse-scenario-re nil t)
+      (add-to-list 'scenarios (ecukes-parse-scenario) t))
     scenarios))
 
-(defun ecukes-parse-block (fn)
-  "Parses a block."
-  (while (not (string= (ecukes-blank-line) ""))
-    (if (string-match-p ecukes-step-re (ecukes-blank-line))
-        (let ((step (ecukes-parse-step)))
-          (funcall fn step)))
-    (forward-line 1)))
+(defun ecukes-parse-scenario ()
+  "Parse scenario."
+  (let ((name (ecukes-parse-scenario-name))
+        (tags (ecukes-parse-scenario-tags))
+        (steps (ecukes-parse-block-steps)))
+    (make-ecukes-scenario :name name :steps steps :tags tags)))
+
+(defun ecukes-parse-scenario-name ()
+  "Parse scenario name."
+  (save-excursion
+    (let ((line (ecukes-parse-line t)))
+      (string-match ecukes-parse-scenario-re line)
+      (match-string 1 line))))
+
+(defun ecukes-parse-scenario-tags ()
+  "Parse tags."
+  (save-excursion
+    (forward-line -1)
+    (let ((line (ecukes-parse-line t)))
+      (when (and line (string-match ecukes-parse-tags-re line))
+        (delete-dups
+         (mapcar
+          (lambda (tag)
+            (substring tag 1))
+          (split-string line "\\s-+")))))))
+
+(defun ecukes-parse-block-steps ()
+  "Parse steps in block."
+  (let ((steps))
+    (while (not (progn (forward-line 1) (ecukes-parse-new-section-p)))
+      (let ((line (ecukes-parse-line t)))
+        (if line (add-to-list 'steps (ecukes-parse-step) t))))
+    steps))
 
 (defun ecukes-parse-step ()
-  "Parses a step."
-  (let ((peek (ecukes-line 1)) (name (ecukes-blank-line)) arg type)
-    (cond ((string-match-p ecukes-py-string-re peek)
-           (setq arg (ecukes-parse-py-string))
-           (setq type 'py-string))
-          ((string-match-p ecukes-table-re peek)
-           (setq arg (ecukes-parse-table))
-           (setq type 'table)))
-    (make-ecukes-step :name name :arg arg :type (or type 'regular))))
+  "Parse step."
+  (let ((name) (arg) (type) (line (ecukes-parse-line t)))
+    (when (string-match-p ecukes-parse-step-re line)
+      (setq name line))
+    (cond
+     ((ecukes-parse-py-string-step-p)
+      (setq arg (ecukes-parse-py-string-step))
+      (setq type 'py-string))
+     ((ecukes-parse-table-step-p)
+      (setq arg (ecukes-parse-table-step))
+      (setq type 'table))
+     (t (setq type 'regular)))
+    (make-ecukes-step :name name :type type :arg arg)))
 
-(defun ecukes-parse-py-string ()
-  "Parses a py string step."
-  (let ((peek (ecukes-line 1)) (lines) (offset))
-    (string-match ecukes-py-string-re peek)
-    (setq offset (length (match-string-no-properties 1 peek)))
-    (forward-line 2)
-    (while (not (string-match-p ecukes-py-string-re (ecukes-line)))
-      (let ((line (replace-regexp-in-string (concat "^[[:blank:]]" "\\{" (number-to-string offset) "\\}") "" (ecukes-line))))
-        (add-to-list 'lines line t 'eq)
-        (forward-line 1)))
-    (mapconcat 'identity lines "\n")))
-
-(defun ecukes-parse-table ()
-  "Parses a table step."
-  (forward-line 1)
-  (let ((header (ecukes-parse-table-row (ecukes-blank-line))) rows)
+(defun ecukes-parse-table-step-p ()
+  "Check if step is a table step or not."
+  (save-excursion
     (forward-line 1)
-    (while (string-match-p ecukes-table-re (ecukes-line))
-      (add-to-list 'rows (ecukes-parse-table-row (ecukes-blank-line)) t 'eq)
+    (let ((line (ecukes-parse-line t)))
+      (and line (string-match-p ecukes-parse-table-re line)))))
+
+(defun ecukes-parse-table-step ()
+  "Parse table step."
+  (forward-line 1)
+  (let ((rows))
+    (while (string-match-p ecukes-parse-table-re (or (ecukes-parse-line t) ""))
+      (add-to-list 'rows (ecukes-parse-table-step-row) t)
       (forward-line 1))
     (forward-line -1)
-    (cons header rows)))
+    rows))
 
-(defun ecukes-parse-table-row (row)
-  "Parses the table ROW."
-  (delete "" (split-string row "[[:blank:]]*|[[:blank:]]*")))
+(defun ecukes-parse-table-step-row ()
+  "Parse row in table."
+  (let ((row (ecukes-parse-line t)))
+    (delete "" (split-string row "\\s-*|\\s-*"))))
 
-(defun ecukes-line (&optional n)
-  "Returns current line with offset N."
+(defun ecukes-parse-py-string-step-p ()
+  "Check if step is a py string step or not."
   (save-excursion
-    (forward-line (or n 0))
-    (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+    (forward-line 1)
+    (let ((line (ecukes-parse-line t)))
+      (and line (string-match-p ecukes-parse-py-string-re line)))))
 
-(defun ecukes-blank-line (&optional n)
-  "Returns current line with offset N, excluding whitespace at the
-beginning and end."
-  (let ((line (ecukes-line n)))
-    (replace-regexp-in-string "\\(^[[:blank:]]*\\|[[:blank:]]*$\\)" "" line)))
+(defun ecukes-parse-py-string-step ()
+  "Parse py string step"
+  (forward-line 1)
+  (let ((whites
+         (save-excursion
+           (back-to-indentation)
+           (current-column)))
+        (lines))
+    (forward-line 1)
+    (while (not (string-match-p ecukes-parse-py-string-re (or (ecukes-parse-line t) "")))
+      (let ((line (ecukes-parse-line)))
+        (if (<= whites (length line))
+            (add-to-list 'lines (substring line whites) t)
+          (add-to-list 'lines nil t)))
+      (forward-line 1))
+    (mapconcat 'identity lines "\n")))
+
+(defun ecukes-parse-line (&optional strip-whitespace)
+  "Parse current line."
+  (let* ((raw (buffer-substring (line-beginning-position) (line-end-position)))
+         (line
+          (if strip-whitespace
+              (replace-regexp-in-string "^\\s-*\\|\\s-*$" "" raw)
+            raw)))
+    (if (equal line "") nil line)))
+
+(defun ecukes-parse-new-section-p ()
+  "Checks if current line is the start of a new section."
+  (let ((line (or (ecukes-parse-line t) "")))
+    (or
+     (eobp)
+     (string-match-p ecukes-parse-background-re line)
+     (string-match-p ecukes-parse-scenario-re line))))
 
 
 (provide 'ecukes-parse)

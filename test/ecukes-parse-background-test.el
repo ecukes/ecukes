@@ -1,38 +1,41 @@
+(defun with-parse-background (name fn)
+  (let* ((feature-file (feature-file-path "background" name))
+         (feature (ecukes-parse-feature feature-file))
+         (background (ecukes-feature-background feature))
+         (steps (if background (ecukes-background-steps background) ())))
+    (funcall fn background (mapcar 'ecukes-step-name steps))))
+
+(defun should-parse-background (name)
+  "Parsing NAME feature should parse background correctly."
+  (with-parse-background
+   name
+   (lambda (background step-names)
+     (should
+      (equal
+       step-names
+       '("Given a known state"
+         "When the key action"
+         "Then observe outcomes"))))))
+
 (ert-deftest parse-background-all-good ()
-  (ecukes-test-parse-background
-   "all-good.feature"
-   (lambda (feature background steps)
-     (should (equal 2 (length steps)))
-     (should (equal "Given I cant fall asleep" (ecukes-step-name (nth 0 steps))))
-     (should (equal "And drugs cant help me" (ecukes-step-name (nth 1 steps)))))))
+  "Should parse background when all good."
+  (should-parse-background "all-good"))
 
 (ert-deftest parse-background-with-intro ()
-  (ecukes-test-parse-background
-   "with-intro.feature"
-   (lambda (feature background steps)
-     (should (equal 2 (length steps)))
-     (should (equal "Given I cant fall asleep" (ecukes-step-name (nth 0 steps))))
-     (should (equal "And drugs cant help me" (ecukes-step-name (nth 1 steps)))))))
+  "Should parse background when intro."
+  (should-parse-background "with-intro"))
 
 (ert-deftest parse-background-wrong-indentation ()
-  (ecukes-test-parse-background
-   "wrong-indentation.feature"
-   (lambda (feature background steps)
-     (should (equal 2 (length steps)))
-     (should (equal "Given I cant fall asleep" (ecukes-step-name (nth 0 steps))))
-     (should (equal "And drugs cant help me" (ecukes-step-name (nth 1 steps)))))))
+  "Should parse background when wrong indentation."
+  (should-parse-background "wrong-indentation"))
 
 (ert-deftest parse-background-line-breaks ()
-  (ecukes-test-parse-background
-   "line-breaks.feature"
-   (lambda (feature background steps)
-     (should (equal 2 (length steps)))
-     (should (equal "Given I cant fall asleep" (ecukes-step-name (nth 0 steps))))
-     (should (equal "And drugs cant help me" (ecukes-step-name (nth 1 steps))))
-     (should-not (nth 2 steps)))))
+  "Should parse background when line breaks."
+  (should-parse-background "line-breaks"))
 
-(ert-deftest parse-background-comment ()
-  (ecukes-test-parse-background
-   "comment.feature"
-   (lambda (feature background steps)
+(ert-deftest parse-background-comments ()
+  "Should not parse background when comments."
+  (with-parse-background
+   "comments"
+   (lambda (background step-names)
      (should-not background))))

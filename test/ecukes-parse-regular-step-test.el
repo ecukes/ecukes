@@ -1,24 +1,39 @@
 (ert-deftest parse-regular-step-given ()
-  (let ((step (ecukes-test-parse-step "given.feature")))
-    (should (equal "Given I see something on the screen" (ecukes-step-name step)))
-    (should-be-regular-step step)))
+  "Should parse given step."
+  (with-parse-step
+   "given"
+   (lambda (name type arg)
+     (should (eq type 'regular))
+     (should (equal name "Given a known state")))))
 
 (ert-deftest parse-regular-step-when ()
-  (let ((step (ecukes-test-parse-step "when.feature")))
-    (should (equal "When I see something on the screen" (ecukes-step-name step)))
-    (should-be-regular-step step)))
+  "Should parse when step."
+  (with-parse-step
+   "when"
+   (lambda (name type arg)
+     (should (eq type 'regular))
+     (should (equal name "When the key action")))))
 
 (ert-deftest parse-regular-step-then ()
-  (let ((step (ecukes-test-parse-step "then.feature")))
-    (should (equal "Then I should see something on the screen" (ecukes-step-name step)))
-    (should-be-regular-step step)))
+  "Should parse then step."
+  (with-parse-step
+   "then"
+   (lambda (name type arg)
+     (should (eq type 'regular))
+     (should (equal name "Then observe outcomes")))))
 
 (ert-deftest parse-regular-step-and ()
-  (let ((step (ecukes-test-parse-step "and.feature")))
-    (should (equal "And I see something else on the screen" (ecukes-step-name step)))
-    (should-be-regular-step step)))
+  "Should parse and step."
+  (with-parse-step
+   "and"
+   (lambda (name type arg)
+     (should (eq type 'regular))
+     (should (equal name "And another key action")))))
 
 (ert-deftest parse-regular-step-but ()
-  (let ((step (ecukes-test-parse-step "but.feature")))
-    (should (equal "But I dont see something on the screen" (ecukes-step-name step)))
-    (should-be-regular-step step)))
+  "Should parse but step."
+  (with-parse-step
+   "but"
+   (lambda (name type arg)
+     (should (eq type 'regular))
+     (should (equal name "But observe outcomes")))))

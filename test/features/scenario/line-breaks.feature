@@ -1,5 +1,8 @@
-Scenario: Go fishing
-  Given I have a fishing pole
-  And some bait
+Scenario: Add two numbers
+  Given I have entered 50 into the calculator
 
-  Then I should get some fish
+    And I have entered 70 into the calculator
+
+   When I press add
+
+   Then the result should be 120 on the screen

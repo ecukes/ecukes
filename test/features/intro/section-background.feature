@@ -3,7 +3,5 @@ Feature: Addition of two numbers
   As a math idiot
   I want to be told the sum of two numbers
 
-  Scenario: Go fishing
-    Given I have a fishing pole
-    And some bait
-    Then I should get some fish
+  Background:
+    Given a known state

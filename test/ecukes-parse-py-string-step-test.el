@@ -1,36 +1,23 @@
 (ert-deftest parse-py-string-step-all-good ()
-  (let* ((step (ecukes-test-parse-step "py-string-all-good.feature"))
-         (arg (ecukes-step-arg step))
-         (split (split-string arg "\n")))
-    (should (equal "Given this text:" (ecukes-step-name step)))
-    (should (equal "Lorem ipsum dolor sit amet." (nth 0 split)))
-    (should (equal "Curabitur pellentesque iaculis eros." (nth 1 split)))
-    (should-be-py-string-step step)))
+  "Should parse py string step when all good."
+  (with-parse-step
+   "py-string-all-good"
+   (lambda (name type arg)
+     (should (eq type 'py-string))
+     (should (equal arg "Lorem ipsum dolor sit amet.\nCurabitur pellentesque iaculis eros.")))))
 
-(ert-deftest parse-py-string-step-whitespace ()
-  (let* ((step (ecukes-test-parse-step "py-string-whitespace.feature"))
-        (arg (ecukes-step-arg step))
-        (split (split-string arg "\n")))
-    (should (equal "Given this text:" (ecukes-step-name step)))
-    (should (equal "Lorem ipsum dolor sit amet." (nth 0 split)))
-    (should (equal "" (nth 1 split)))
-    (should (equal "In congue. Curabitur pellentesque iaculis eros." (nth 2 split)))
-    (should-be-py-string-step step)))
+(ert-deftest parse-py-string-step-line-break ()
+  "Should parse py string step with line break."
+  (with-parse-step
+   "py-string-line-break"
+   (lambda (name type arg)
+     (should (eq type 'py-string))
+     (should (equal arg "Lorem ipsum dolor sit amet.\n\nCurabitur pellentesque iaculis eros.")))))
 
 (ert-deftest parse-py-string-step-wrong-indentation ()
-  (let* ((step (ecukes-test-parse-step "py-string-wrong-indentation.feature"))
-         (arg (ecukes-step-arg step))
-         (split (split-string arg "\n")))
-    (should (equal "Given this text:" (ecukes-step-name step)))
-    (should (equal "Lorem ipsum dolor sit amet." (nth 0 split)))
-    (should (equal "       Curabitur pellentesque iaculis eros." (nth 1 split)))
-    (should-be-py-string-step step)))
-
-(ert-deftest parse-py-string-same-line ()
-  (let* ((step (ecukes-test-parse-step "py-string-same-line.feature"))
-         (arg (ecukes-step-arg step))
-         (split (split-string arg "\n")))
-    (should (equal "Given this text:" (ecukes-step-name step)))
-    (should (equal "line" (nth 0 split)))
-    (should (equal "line" (nth 1 split)))
-    (should-be-py-string-step step)))
+  "Should parse py string when wrong indentation."
+  (with-parse-step
+   "py-string-wrong-indentation"
+   (lambda (name type arg)
+     (should (eq type 'py-string))
+     (should (equal arg "  Lorem ipsum dolor sit amet.\nrabitur pellentesque iaculis eros.")))))

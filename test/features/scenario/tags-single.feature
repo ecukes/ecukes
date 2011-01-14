@@ -1,3 +1,3 @@
 @debug
-Scenario: Taggging
-  Given a tag
+Scenario: Some scenario
+  Given a known state

@@ -1,92 +1,99 @@
+(defun with-parse-intro (name fn)
+  (let* ((feature-file (feature-file-path "intro" name))
+         (feature (ecukes-parse-feature feature-file))
+         (intro (ecukes-feature-intro feature))
+         (header) (description))
+    (condition-case err
+        (progn
+          (setq header (ecukes-intro-header intro))
+          (setq description (ecukes-intro-description intro)))
+      (error))
+    (funcall fn intro header description)))
+
+(defun should-parse-number-addition (name)
+  "Parsing NAME feature should parse number addition correctly."
+  (with-parse-intro
+   name
+   (lambda (intro header description)
+     (should (equal header "Addition of two numbers"))
+     (should
+      (equal
+       description
+       '("In order to aviod silly mistakes"
+         "As a math idiot"
+         "I want to be told the sum of two numbers"))))))
+
 (ert-deftest parse-intro-no-intro ()
-  (ecukes-test-parse-feature-intro
-   "no-intro.feature"
-   (lambda (feature intro header description)
+  "Should not parse intro none."
+  (with-parse-intro
+   "no-intro"
+   (lambda (intro header description)
      (should-not intro))))
 
-(ert-deftest parse-intro-all-good ()
-  (ecukes-test-parse-feature-intro
-   "all-good.feature"
-   (lambda (feature intro header description)
-     (should (equal "Addition of two numbers" header))
-     (should (equal "In order to aviod silly mistakes" (nth 0 description)))
-     (should (equal "As a math idiot" (nth 1 description)))
-     (should (equal "I want to be told the sum of two numbers" (nth 2 description))))))
+(ert-deftest parse-intro-comments ()
+  "Should not parse when comments."
+  (with-parse-intro
+   "comments"
+   (lambda (intro header description)
+     (should-not intro))))
+
+(ert-deftest parse-intro-all-good-new ()
+  "Should parse when all good."
+  (should-parse-number-addition "all-good"))
 
 (ert-deftest parse-intro-spaces-above ()
-  (ecukes-test-parse-feature-intro
-   "spaces-above.feature"
-   (lambda (feature intro header description)
-     (should (equal "Addition of two numbers" header))
-     (should (equal "In order to aviod silly mistakes" (nth 0 description)))
-     (should (equal "As a math idiot" (nth 1 description)))
-     (should (equal "I want to be told the sum of two numbers" (nth 2 description))))))
+  "Should parse when spaces above."
+  (should-parse-number-addition "spaces-above"))
 
 (ert-deftest parse-intro-comments-above ()
-  (ecukes-test-parse-feature-intro
-   "comments-above.feature"
-   (lambda (feature intro header description)
-     (should (equal "Addition of two numbers" header))
-     (should (equal "In order to aviod silly mistakes" (nth 0 description)))
-     (should (equal "As a math idiot" (nth 1 description)))
-     (should (equal "I want to be told the sum of two numbers" (nth 2 description))))))
+  "Should parse when commants above."
+  (should-parse-number-addition "comments-above"))
 
 (ert-deftest parse-intro-no-space-in-header ()
-  (ecukes-test-parse-feature-intro
-   "no-space-in-header.feature"
-   (lambda (feature intro header description)
-     (should (equal "Addition of two numbers" header))
-     (should (equal "In order to aviod silly mistakes" (nth 0 description)))
-     (should (equal "As a math idiot" (nth 1 description)))
-     (should (equal "I want to be told the sum of two numbers" (nth 2 description))))))
+  "Should parse when no space in header."
+  (should-parse-number-addition "no-space-in-header"))
 
 (ert-deftest parse-intro-extra-space-in-header ()
-  (ecukes-test-parse-feature-intro
-   "extra-space-in-header.feature"
-   (lambda (feature intro header description)
-     (should (equal "Addition of two numbers" header))
-     (should (equal "In order to aviod silly mistakes" (nth 0 description)))
-     (should (equal "As a math idiot" (nth 1 description)))
-     (should (equal "I want to be told the sum of two numbers" (nth 2 description))))))
+  "Should parse when extra space in header."
+  (should-parse-number-addition "extra-space-in-header"))
 
 (ert-deftest parse-intro-wrong-indentation ()
-  (ecukes-test-parse-feature-intro
-   "wrong-indentation.feature"
-   (lambda (feature intro header description)
-     (should (equal "Addition of two numbers" header))
-     (should (equal "In order to aviod silly mistakes" (nth 0 description)))
-     (should (equal "As a math idiot" (nth 1 description)))
-     (should (equal "I want to be told the sum of two numbers" (nth 2 description))))))
-
-(ert-deftest parse-intro-fewer-description-lines ()
-  (ecukes-test-parse-feature-intro
-   "fewer-description-lines.feature"
-   (lambda (feature intro header description)
-     (should (equal "Addition of two numbers" header))
-     (should (equal "As a math idiot I want to aviod silly mistakes and be told the sum of two numbers" (nth 0 description))))))
-
-(ert-deftest parse-intro-more-description-lines ()
-  (ecukes-test-parse-feature-intro
-   "more-description-lines.feature"
-   (lambda (feature intro header description)
-     (should (equal "Addition of two numbers" header))
-     (should (equal "In order to aviod silly mistakes" (nth 0 description)))
-     (should (equal "As a math idiot" (nth 1 description)))
-     (should (equal "And a programmer guru" (nth 2 description)))
-     (should (equal "I want to be told the sum of two numbers" (nth 3 description)))
-     (should (equal "In the morning" (nth 4 description))))))
+  "Should parse when wrong indentation."
+  (should-parse-number-addition "wrong-indentation"))
 
 (ert-deftest parse-intro-line-breaks ()
-  (ecukes-test-parse-feature-intro
-   "line-breaks.feature"
-   (lambda (feature intro header description)
-     (should (equal "Addition of two numbers" header))
-     (should (equal "In order to aviod silly mistakes" (nth 0 description)))
-     (should (equal "As a math idiot" (nth 1 description)))
-     (should-not (nth 2 description)))))
+  "Should parse when line breaks."
+  (should-parse-number-addition "line-breaks"))
 
-(ert-deftest parse-intro-all-good ()
-  (ecukes-test-parse-feature-intro
-   "comment.feature"
-   (lambda (feature intro header description)
-     (should-not intro))))
+(ert-deftest parse-intro-new-section-background ()
+  "Should stop when entering background."
+  (should-parse-number-addition "section-background"))
+
+(ert-deftest parse-intro-new-section-scenario ()
+  "Should stop when entering scenario."
+  (should-parse-number-addition "section-scenario"))
+
+(ert-deftest parse-intro-fewer-description-lines ()
+  "Should parse when fewer description lines."
+  (with-parse-intro
+   "fewer-description-lines"
+   (lambda (intro header description)
+     (should (equal header "Addition of two numbers"))
+     (should
+      (equal
+       description
+       '("As a math idiot I want to aviod silly mistakes and be told the sum of two numbers"))))))
+
+(ert-deftest parse-intro-more-description-lines ()
+  "Should parse when more description lines."
+  (with-parse-intro
+   "more-description-lines"
+   (lambda (intro header description)
+     (should (equal header "Addition of two numbers"))
+     (should
+      (equal
+       description
+       '("In order to aviod silly mistakes"
+         "As a math idiot"
+         "And as an idiot in general"
+         "I want to be told the sum of two numbers"))))))

@@ -1,1 +1,2 @@
-Given I see something on the screen
+Scenario: Some scenario
+  Given a known state
