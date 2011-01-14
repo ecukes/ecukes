@@ -14,7 +14,7 @@
   "Regexp matching scenario header.")
 
 (defconst ecukes-parse-step-re
-  "^\\s-*\\(?:Given\\|When\\|Then\\|And\\|But\\)\\s-+\\(.+[^ ]\\)\\s-*$"
+  "^\\s-*\\(Given\\|When\\|Then\\|And\\|But\\)\\s-+\\(.+[^ ]\\)\\s-*$"
   "Regexp matching step.")
 
 (defconst ecukes-parse-tags-re
