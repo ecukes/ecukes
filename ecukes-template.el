@@ -6,7 +6,17 @@
   "Path to templates directory.")
 
 
-(defun ecukes-template-substitute (string &optional substitutions)
+(defun ecukes-template-get (template &optional substitutions)
+  "Return TEMPLATE with SUBSTITUTIONS as a string."
+  (let ((template-file
+         (expand-file-name (format "%s.tpl" (symbol-name template)) ecukes-template-path)))
+    (if (file-exists-p template-file)
+        (with-temp-buffer
+          (insert-file-contents-literally template-file)
+          (ecukes-template-substitute (buffer-string) substitutions))
+      (error "Missing template file %s" template-file))))
+
+(defun ecukes-template-substitute (string substitutions)
   "Substitute all SUBSTITUTIONS in STRING."
   (let ((result string))
     (mapc
@@ -19,17 +29,9 @@
 
 (defun ecukes-template-write (write-to template &optional substitutions)
   "Write TEMPLATE to WRITE-TO with SUBSTITUTIONS."
-  (let ((template-file
-         (expand-file-name (format "%s.tpl" (symbol-name template)) ecukes-template-path)))
-    (if (file-exists-p template-file)
-        (let ((contents
-               (with-temp-buffer
-                 (insert-file-contents-literally template-file)
-                 (buffer-string))))
-          (with-temp-file write-to
-            (insert
-             (ecukes-template-substitute contents substitutions))))
-      (error "Missing template file %s" template-file))))
+  (let ((contents (ecukes-template-get template substitutions)))
+    (with-temp-file write-to
+      (insert contents))))
 
 
 (provide 'ecukes-template)

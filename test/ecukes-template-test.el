@@ -24,9 +24,4 @@
     (ecukes-template-substitute
      "do not replace anything"
      '(("foo" . "bar")))
-    "do not replace anything"))
-  (should
-   (equal
-    (ecukes-template-substitute
-     "do not replace anything")
     "do not replace anything")))
