@@ -1,4 +1,4 @@
-;;; ecukes-parse.el --- Parser for feature files
+;;; ecukes-parse.el --- Simple line by line parser for feature files
 
 
 (defconst ecukes-parse-intro-re
