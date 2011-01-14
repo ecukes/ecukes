@@ -1,8 +1,5 @@
 ;;; ecukes-parse.el --- Parser for feature files
 
-;; (defconst ecukes-table-re
-;;   (concat ecukes-beg-re "|.+|")
-;;   "Regular expression matching a table step.")
 
 (defconst ecukes-parse-intro-re
   "^\\s-*Feature:\\s-*\\(.+[^ ]\\)\\s-*$"
@@ -30,7 +27,7 @@
 
 (defconst ecukes-parse-table-re
   "^\\s-*|.+|"
-  "")
+  "Regexp matching table.")
 
 
 (defun ecukes-parse-feature (feature)
