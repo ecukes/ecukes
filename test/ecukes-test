@@ -17,17 +17,17 @@
 (eval-when-compile
   (require 'cl))
 
-(require 'ansi)
-(require 'ecukes-steps)
+(require 'ecukes-template)
 (require 'ecukes-new)
-(require 'ecukes-startup)
 (require 'ecukes-def)
-(require 'ecukes-output)
+(require 'ecukes-startup)
 (require 'ecukes-parse)
+(require 'ecukes-steps)
 (require 'ecukes-run)
+(require 'ecukes-print)
 (require 'ecukes-hooks)
 (require 'ecukes-stats)
-(require 'ecukes-template)
+(require 'ansi)
 (require 'ert)
 (require 'el-mock)
 
