@@ -91,7 +91,7 @@
 (defun ecukes-parse-block-steps ()
   "Parse steps in block."
   (let ((steps))
-    (while (not (progn (forward-line 1) (ecukes-parse-new-section-p)))
+    (while (not (progn (ecukes-forward-step) (ecukes-parse-new-section-p)))
       (let ((line (ecukes-parse-line t)))
         (if line (add-to-list 'steps (ecukes-parse-step) t))))
     steps))
@@ -120,13 +120,13 @@
 
 (defun ecukes-parse-table-step ()
   "Parse table step."
-  (forward-line 1)
-  (let ((rows))
-    (while (string-match-p ecukes-parse-table-re (or (ecukes-parse-line t) ""))
-      (add-to-list 'rows (ecukes-parse-table-step-row) t)
-      (forward-line 1))
-    (forward-line -1)
-    rows))
+  (save-excursion
+    (forward-line 1)
+    (let ((rows))
+      (while (string-match-p ecukes-parse-table-re (or (ecukes-parse-line t) ""))
+        (add-to-list 'rows (ecukes-parse-table-step-row) t)
+        (forward-line 1))
+      rows)))
 
 (defun ecukes-parse-table-step-row ()
   "Parse row in table."
@@ -142,20 +142,31 @@
 
 (defun ecukes-parse-py-string-step ()
   "Parse py string step"
-  (forward-line 1)
-  (let ((whites
-         (save-excursion
-           (back-to-indentation)
-           (current-column)))
-        (lines))
+  (save-excursion
     (forward-line 1)
-    (while (not (string-match-p ecukes-parse-py-string-re (or (ecukes-parse-line t) "")))
-      (let ((line (ecukes-parse-line)))
-        (if (<= whites (length line))
-            (add-to-list 'lines (substring line whites) t)
-          (add-to-list 'lines nil t)))
-      (forward-line 1))
-    (mapconcat 'identity lines "\n")))
+    (let ((whites
+           (save-excursion
+             (back-to-indentation)
+             (current-column)))
+          (lines))
+      (forward-line 1)
+      (while (not (string-match-p ecukes-parse-py-string-re (or (ecukes-parse-line t) "")))
+        (let ((line (ecukes-parse-line)))
+          (if (<= whites (length line))
+              (add-to-list 'lines (substring line whites) t)
+            (add-to-list 'lines nil t)))
+        (forward-line 1))
+      (mapconcat 'identity lines "\n"))))
+
+(defun ecukes-forward-step ()
+  "Goes one step forward within current section."
+  (forward-line 1)
+  (let ((line (ecukes-parse-line t)))
+    (and
+     line
+     (not (string-match-p ecukes-parse-step-re line))
+     (not (ecukes-parse-new-section-p))
+     (ecukes-forward-step))))
 
 (defun ecukes-parse-line (&optional strip-whitespace)
   "Parse current line."

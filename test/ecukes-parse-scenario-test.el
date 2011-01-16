@@ -32,6 +32,10 @@
   "Should parse when wrong indentation."
   (should-parse-scenario "wrong-indentation"))
 
+(ert-deftest parse-scenario-comment-breaks ()
+  "Should parse when comment breaks."
+  (should-parse-scenario "comment-breaks"))
+
 (ert-deftest parse-scenario-comments ()
   "Should not parse when comments."
   (with-parse-scenario
