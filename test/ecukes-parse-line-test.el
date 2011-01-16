@@ -3,20 +3,18 @@
     (stub buffer-substring => ,line)
     ,@body))
 
+(defun should-get-exact-line-when-no-strip (line)
+  "Parsing a line when no strip should return that line exactly as it is."
+  (with-line line (should (equal (ecukes-parse-line) line))))
+
 (ert-deftest parse-line-only-text ()
-  (with-line
-   "Given a known state"
-   (should (equal (ecukes-parse-line) "Given a known state"))))
+  (should-get-exact-line-when-no-strip "Given a known state"))
 
 (ert-deftest parse-line-empty ()
-  (with-line
-   ""
-   (should-not (ecukes-parse-line))))
+  (should-get-exact-line-when-no-strip ""))
 
 (ert-deftest parse-line-with-whitespace ()
-  (with-line
-   "  Given a known state  "
-   (should (equal (ecukes-parse-line) "  Given a known state  "))))
+  (should-get-exact-line-when-no-strip "  Given a known state  "))
 
 (ert-deftest parse-line-only-whitespace ()
   (with-line

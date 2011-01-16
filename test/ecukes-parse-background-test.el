@@ -33,6 +33,10 @@
   "Should parse background when line breaks."
   (should-parse-background "line-breaks"))
 
+(ert-deftest parse-background-comment-breaks ()
+  "Should parse background when comment breaks."
+  (should-parse-background "comment-breaks"))
+
 (ert-deftest parse-background-comments ()
   "Should not parse background when comments."
   (with-parse-background
