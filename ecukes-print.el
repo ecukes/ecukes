@@ -66,7 +66,44 @@
   "Print message taking offset into account."
   (let* ((ascii-space 32)
          (spaces (make-string ecukes-print-offset ascii-space)))
-    (message (concat spaces string) objects)))
+    (apply 'message (cons (concat spaces string) objects))))
+
+(defun ecukes-print-background-header ()
+  "Print background header."
+  (ecukes-print-message "Background:"))
+
+(defun ecukes-print-step-success (step)
+  "Print step as success."
+  (ecukes-print-step step 'ansi-green))
+
+(defun ecukes-print-step-failure (step)
+  "Print step as failure. Also print the error."
+  (ecukes-print-step step 'ansi-red)
+  (let ((err (ecukes-step-err step)))
+    (ecukes-print-error err)))
+
+(defun ecukes-print-step-pending (step)
+  "Print step as pending."
+  (ecukes-print-step step 'ansi-yellow))
+
+(defun ecukes-print-error (err)
+  "Print error messag ERR."
+  (setq ecukes-print-offset (+ ecukes-print-offset 4))
+  (ecukes-print-message (ansi-red err))
+  (setq ecukes-print-offset (- ecukes-print-offset 4)))
+
+(defun ecukes-print-step (step color)
+  "Print STEP in COLOR."
+  (setq ecukes-print-offset (+ ecukes-print-offset 2))
+  (let ((name (ecukes-step-name step)))
+    (ecukes-print-message (funcall color name)))
+  (setq ecukes-print-offset (- ecukes-print-offset 2)))
+
+(defun ecukes-print-scenario-header (scenario)
+  "Print SCENARIO header."
+  (let ((name (ecukes-scenario-name scenario)))
+    (ecukes-print-message "Scenario: %s" name)))
+
 
 (provide 'ecukes-print)
 

@@ -52,17 +52,17 @@
   (should
    (equal
     (ecukes-print-undefined-step-regex "a \"known\" state")
-    "a \"\\\\(.+\\\\)\" state")))
+    "a \"\\\\\\\\(.+\\\\\\\\)\" state")))
 
 (ert-deftest print-undefined-step-regex-multiple-arguments ()
   "Should print undefined step regex when multiple arguments."
   (should
    (equal
     (ecukes-print-undefined-step-regex "state \"known\" and \"unknown\"")
-    "state \"\\\\(.+\\\\)\" and \"\\\\(.+\\\\)\"")))
+    "state \"\\\\\\\\(.+\\\\\\\\)\" and \"\\\\\\\\(.+\\\\\\\\)\"")))
 
 (ert-deftest print-intro ()
-  ""
+  "Should print intro header and description."
   (with-mock
    (let ((intro
           (make-ecukes-intro
@@ -74,4 +74,55 @@
      (mock (ecukes-print-message) :times 5)
      (ecukes-print-intro intro))))
 
-;; TODO: Test newline
+(ert-deftest print-newline ()
+  "Should print newline."
+  (with-mock
+   (mock (ecukes-print-message " "))
+   (ecukes-print-newline)))
+
+(ert-deftest print-background-header ()
+  "Should print background header."
+  (with-mock
+   (mock (ecukes-print-message "Background:") :times 1)
+   (ecukes-print-background-header)))
+
+(ert-deftest print-step-success ()
+  "Should print step success."
+  (with-mock
+   (mock (ecukes-print-step) :times 1)
+   (ecukes-print-step-success nil)))
+
+(ert-deftest print-step-failure ()
+  "Should print step failure."
+  (with-mock
+   (stub ecukes-step-err => "err")
+   (mock (ecukes-print-step) :times 1)
+   (mock (ecukes-print-error) => "err")
+   (ecukes-print-step-failure nil)))
+
+(ert-deftest print-step-pending ()
+  "Should print step pending."
+  (with-mock
+   (mock (ecukes-print-step) :times 1)
+   (ecukes-print-step-pending nil)))
+
+(ert-deftest print-error ()
+  "Should print error."
+  (with-mock
+   (mock (ecukes-print-message) :times 1)
+   (mock (ansi-red) :times 1)
+   (ecukes-print-error "err")))
+
+(ert-deftest print-step ()
+  "Should print step."
+  (with-mock
+   (stub ecukes-step-name => "a known state")
+   (mock (ecukes-print-message) :times 1)
+   (ecukes-print-step nil 'ignore)))
+
+(ert-deftest print-sceario-header ()
+  "Should print header."
+  (with-mock
+   (stub ecukes-scenario-name => "Foo bar")
+   (mock (ecukes-print-message "Scenario: %s" "Foo bar"))
+   (ecukes-print-scenario-header nil)))
