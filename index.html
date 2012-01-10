@@ -380,6 +380,34 @@ And the rows would be:
   project <strong>features/support</strong> directory.
 </p>
 
+<h2>Contribution</h2>
+
+<p>All contributions are much welcome and appreciated!</p>
+
+<p>
+  Before submitting a patch, make sure to write a test for it (if
+  possible). Ecukes is tested with a testing framework called Ert (Emacs Lisp
+  Regression Testing).
+</p>
+
+<p>
+  To run the tests, you have to fetch two
+  packages: <strong>ert</strong> and <strong>el-mock</strong>.
+</p>
+
+<code>
+  $ cd /path/to/ecukes
+  $ git submodule init
+  $ git submodule update
+</code>
+
+<p>Then run the tests with:</p>
+
+<code>$ /path/to/ecukes/test/ecukes-test</code>
+
+<p>You can also run specific tests with:</p>
+
+<code>$ /path/to/ecukes/test/ecukes-test some-test.el ...</code>
 
 <h2>Issues/Bugs/Feature Requests</h2>
 <p>
