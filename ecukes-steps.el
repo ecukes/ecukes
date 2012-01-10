@@ -55,7 +55,8 @@
    (remove-if
     (lambda (step)
       (let ((name (ecukes-step-name step)))
-        (ecukes-steps-find name)))
+        (string-match ecukes-parse-step-re name)
+        (ecukes-steps-find (match-string 2 name))))
     steps)))
 
 
