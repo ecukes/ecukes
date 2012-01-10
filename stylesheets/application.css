@@ -33,10 +33,20 @@ h2 {
   color: #464646;
   font-size: 18px;
   margin-top: 30px;
+  padding-bottom: 6px;
+  border-bottom: 1px #d2d2d2 solid;
+}
+
+h3 {
+  color: #464646;
+  font-size: 14px;
+  margin-top: 20px;
+  font-weight: bold;
 }
 
 p {
   font-size: 14px;
+  line-height: 24px;
 }
 
 code {
@@ -110,4 +120,15 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+strong {
+  margin: 0 2px;
+  padding: 2px 5px;
+  white-space: nowrap;
+  border: 1px solid #CCC;
+  background-color: #F8F8F8;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }

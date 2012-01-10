@@ -8,6 +8,7 @@ title: Ecukes
   <span class="slogan">Cucumber for Emacs</span>
 </div>
 
+
 <h2>What is Ecukes?</h2>
 <p>
   Ecukes is a testing tool for Emacs based on Cucumber. With Ecukes
@@ -18,6 +19,7 @@ title: Ecukes
   Step definitions for Ecukes is separated to another package
   called <a href="http://github.com/rejeep/espuds">Espuds</a>.
 </p>
+
 
 <h2>Example</h2>
 <p>Example from feature in <a href="http://github.com/rejeep/drag-stuff">Drag Stuff</a>.</p>
@@ -94,29 +96,290 @@ title: Ecukes
   </div>
 </code>
 
+
 <h2>Projects using Ecukes</h2>
 <ul>
   <li><a href="http://github.com/rejeep/drag-stuff">Drag Stuff</a></li>
   <li><a href="http://github.com/rejeep/wrap-region">Wrap Region</a></li>
   <li><a href="http://github.com/rejeep/html-script-src">Html Script Src</a></li>
-  <li><a href="http://github.com/rejeep/rinari">Rinari (Work in progress)</a></li>
+  <li><a href="http://github.com/rejeep/enclose">Enclose</a></li>
+  <li><a href="http://github.com/rejeep/ruby-end">Ruby End</a></li>
 </ul>
 
-<h2>Download</h2>
-<p>The source for Ecukes is available on Github.</p>
+
+<h2>Get it!</h2>
+<p>The source for <a href="http://github.com/rejeep/ecukes">Ecukes</a> is available on Github.</p>
 <code>
   $ git clone git://github.com/rejeep/ecukes.git
 </code>
 
-<p>Aswell as the source for Espuds.</p>
+<p>Aswell as the source for <a href="http://github.com/rejeep/espuds">Espuds</a>.</p>
 <code>
   $ git clone git://github.com/rejeep/espuds.git
 </code>
 
-<h2>Installation/Usage</h2>
+
+<h2>Installation</h2>
+
 <p>
-  See the <a href="http://github.com/rejeep/ecukes/wikis">Ecukes Wiki at Github</a>.
+  Download Ecukes and put the files somewhere in your filesystem. In
+  Ecukes root directory, there are a few executables you need. Make sure
+  that Ecukes is in your <strong>PATH</strong>:
 </p>
+
+<code>
+  $ export PATH="$PATH:/path/to/ecukes"
+</code>
+
+
+<h2>Usage</h2>
+
+<p>
+  When you have the <strong>ecukes</strong> binary available, you can
+  create the Ecukes files for an Emacs project. Lets say you have a
+  project called <strong>super-duper</strong>, that you want to test with
+  Ecukes.
+</p>
+
+<code>
+  $ cd /path/to/your/emacs/project
+  $ ecukes --new
+</code>
+
+Ecukes creates the <strong>features</strong> directory with these files:
+
+<pre><code>super-duper/
+    |-- README
+    |-- features
+    |   |-- step-definitions
+    |   |   `-- super-duper-steps.el
+    |   |-- super-duper.feature
+    |   `-- support
+    |       `-- env.el
+    `-- super-duper.el</code></pre>
+
+<p>
+  Files in the <strong>support</strong> directory will be loaded
+  (<strong>env.el</strong> first, then the rest) each
+  time <strong>ecukes</strong> runs. All files
+  called <strong>-steps.el</strong> in
+  the <strong>step-definitions</strong> folder will be loaded as step
+  definitions.
+</p>
+
+<h2>Steps</h2>
+<p>
+  There are three different kind of
+  steps. <strong>Regular</strong>, <strong>table</strong>
+  and <strong>py-string</strong>.
+</p>
+
+<h3>Regular Step</h3>
+
+<p>
+  A regular step always only consumes one line. The most basic step
+  looks like this:
+</p>
+
+<code>Given a known state</code>
+
+<p>Corresponding step definition:</p>
+
+<pre><code>(Given "a known state"
+     (lambda ()
+       ;; Do something
+       ))</code></pre>
+
+<p>
+  The second argument could also have been the symbol of a function
+  name:
+</p>
+
+<pre><code>(Given "a known state" 'do-something)</code></pre>
+
+<p>
+  Steps can take arbitrary many arguments. The arguments sent to the
+  step definition function are all regular expression match groupings
+  from the matching of the step name and the match string.
+</p>
+
+<p>Single argument:</p>
+
+<pre><code>Given I am in buffer "buffer-name"</code></pre>
+
+<p>Corresponding step definition:</p>
+<pre><code>(Given "I am in buffer \"\\(.+\\)\""
+   (lambda (buffer-nane)
+     ;; Do something with buffer
+     ))</code></pre>
+
+<p>Multiple arguments:</p>
+
+<pre><code>Given I am in buffer "buffer-name" with text "Foo"</code></pre>
+
+<p>Corresponding step definition:</p>
+<pre><code>(Given "I am in buffer \"\\(.+\\)\" with text \"\\(.+\\)\""
+   (lambda (buffer text)
+     ;; Do something with buffer and text
+     ))</code></pre>
+
+
+<h3>Table Step</h3>
+
+<p>A table step looks like this:</p>
+
+<pre><code>Given these meals:
+  | meal      | price |
+  | Hamburger | $4.50 |
+  | Pizza     | $5.30 |</code></pre>
+
+<p>Corresponding step definition:</p>
+<pre><code>(Given "the following meals:"
+       (lambda (meals)
+         ;; Do something with text
+         ))</code></pre>
+
+<p>
+  The argument <strong>meals</strong> is a simple list where
+  the <strong>car</strong> of the list is the header and
+  the <strong>cdr</strong> or the list is the rows.
+</p>
+
+<p>The header would in the above case be:</p>
+
+<code>("meal" "price")</code>
+
+And the rows would be:
+<pre><code>(("Hamburger" "$4.50")
+ ("Pizza" "$5.30"))</code></pre>
+
+<p>To pick out the header and rows attribute from a table you do:</p>
+
+<pre><code>(let* ((table ...)
+       (header (car table))
+       (rows   (cdr table)))
+  ;; Do something with header and rows
+  )</code></pre>
+
+<p>
+  It is also possible to send arguments to a table step. The table
+  list will be the last argument.
+</p>
+
+<pre><code>Given these meals at "fast food":
+  | meal      | price |
+  | Hamburger | $4.50 |
+  | Pizza     | $5.30 |</code></pre>
+
+<p>Corresponding step definition:</p>
+
+<pre><code>(Given "these meals at \"\\(.+\\)\":"
+       (lambda (restaurant meals)
+         ;; Do something with restaurant and meals
+         ))</code></pre>
+
+<h3>Py-string Step</h3>
+
+<p>A Py-String (or Python string) step looks like this:</p>
+
+<pre><code>Given the following text:
+  """
+  some text
+  """</code></pre>
+
+<p>Corresponding step definition:</p>
+
+<pre><code>(Given "the following text:"
+       (lambda (text)
+         ;; Do something with text
+         ))</code></pre>
+
+<p>
+  It is also possible to send arguments to a Py-string step. The
+  Py-string will be the last argument.
+</p>
+
+<pre><code>Given the following text in buffer "buffer-name":
+  """
+  some text
+  """</code></pre>
+
+<p>Corresponding step definition:</p>
+
+<pre><code>(Given "the following text in buffer \"\\(.+\\)\":"
+       (lambda (buffer text)
+         ;; Do something with buffer and text
+         ))</code></pre>
+
+
+<h2>Calling steps from steps</h2>
+
+<p>
+  In order to keep your steps <strong>DRY</strong>, you can call steps
+  from other steps like this:
+</p>
+
+<pre><code>(Given "I go to a"
+       (lambda ()
+         ;; Go to a
+         ))
+
+(Given "I go to b"
+       (lambda ()
+         ;; Go to b
+         ))
+
+(Given "I go from a to b"
+       (lambda ()
+         (Given "I go to a")
+         (Given "I go to b")))</code></pre>
+
+<p>You can also pass arguments when calling other steps.</p>
+<pre><code>(Given "I am in buffer" "buffer-name")</code></pre>
+
+
+<h2>Hooks</h2>
+
+<p>
+  Ecukes provides four different hooks
+</p>
+  
+<h3>Setup</h3>
+<p>Runs once before anything runs.</p>
+<pre><code>(Setup
+ ;; Run code
+ )</code></pre>
+
+<h3>Before</h3>
+<p>Runs once before each step runs.</p>
+<pre><code>(Before
+ ;; Run code
+ )</code></pre>
+
+<h3>After</h3>
+<p>Runs once after each step runs.</p>
+<pre><code>(After
+ ;; Run code
+ )</code></pre>
+
+<h3>Teardown</h3>
+<p>Runs once when everything is done.</p>
+<pre><code>(Teardown
+ ;; Run code
+ )</code></pre>
+
+<p>
+  Hooks are useful if you test your program and change the state in some
+  feature. Since all scenarios execute in the same environment, the
+  state change will affect all scenarios after. You can solve that by
+  resetting the state in a before or after hook.
+</p>
+
+<p>
+  Hooks should be placed in any file in the
+  project <strong>features/support</strong> directory.
+</p>
+
 
 <h2>Issues/Bugs/Feature Requests</h2>
 <p>
