@@ -58,27 +58,10 @@
   (ecukes-stats-scenario
    (setq ecukes-stats-scenarios-failed (1+ ecukes-stats-scenarios-failed))))
 
-
-(defun ecukes-stats-steps-passed-p ()
-  (> ecukes-stats-steps-passed 0))
-
-(defun ecukes-stats-steps-failures-p ()
-  (> ecukes-stats-steps-failed 0))
-
-(defun ecukes-stats-steps-skipped-p ()
-  (> ecukes-stats-steps-skipped 0))
-
-(defun ecukes-stats-scenarios-passed-p ()
-  (> ecukes-stats-scenarios-passed 0))
-
-(defun ecukes-stats-scenarios-failures-p ()
-  (> ecukes-stats-scenarios-failed 0))
-
-
 (defun ecukes-stats-print-summary ()
   "Print scenario and step summary."
   (message
-   "%s\n%s"
+   "\n%s\n%s"
    (ecukes-stats-scenario-summary)
    (ecukes-stats-step-summary)))
 
@@ -89,9 +72,9 @@
         (failed (number-to-string ecukes-stats-scenarios-failed)))
     (with-ansi
      (let* ((ansi-failed
-             (if (ecukes-stats-scenarios-failures-p) (red "%s failed" failed)))
+             (red "%s failed" failed))
             (ansi-passed
-             (if (ecukes-stats-scenarios-passed-p) (green "%s passed" passed)))
+             (green "%s passed" passed))
             (ansi-scenarios
              (remove-if 'not (list ansi-failed ansi-passed))))
        (if (> ecukes-stats-scenarios 0)
@@ -106,11 +89,11 @@
         (skipped (number-to-string ecukes-stats-steps-skipped)))
     (with-ansi
      (let* ((ansi-failed
-             (if (ecukes-stats-steps-failures-p) (red "%s failed" failed)))
+             (red "%s failed" failed))
             (ansi-skipped
-             (if (ecukes-stats-steps-skipped-p) (cyan "%s skipped" skipped)))
+             (cyan "%s skipped" skipped))
             (ansi-passed
-             (if (ecukes-stats-steps-passed-p) (green "%s passed" passed)))
+             (green "%s passed" passed))
             (ansi-steps
              (remove-if 'not (list ansi-failed ansi-skipped ansi-passed))))
        (if (> ecukes-stats-steps 0)
