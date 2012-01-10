@@ -21,3 +21,11 @@
    (lambda (name type arg)
      (should (eq type 'py-string))
      (should (equal arg "  Lorem ipsum dolor sit amet.\nrabitur pellentesque iaculis eros.")))))
+
+(ert-deftest parse-py-string-step-same-lines ()
+  "Should parse py string when same lines."
+  (with-parse-step
+   "py-string-same-lines"
+   (lambda (name type arg)
+     (should (eq type 'py-string))
+     (should (equal arg "Lorem ipsum\nLorem ipsum")))))

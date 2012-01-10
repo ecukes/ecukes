@@ -28,4 +28,4 @@
    "table-same-row"
    (lambda (name type arg)
      (should (eq type 'table))
-     (should (equal arg '(("meal" "price") ("Hamburger" "$4.50")))))))
+     (should (equal arg '(("meal" "price") ("Hamburger" "$4.50") ("Hamburger" "$4.50")))))))

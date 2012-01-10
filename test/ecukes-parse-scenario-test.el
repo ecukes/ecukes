@@ -42,3 +42,10 @@
    "comments"
    (lambda (scenario name step-names tags)
      (should-not scenario))))
+
+(ert-deftest parse-scenario-same-step-names ()
+  "Should parse when same step names."
+  (with-parse-scenario
+   "same-step-names"
+   (lambda (scenario name step-names tags)
+     (should (equal (length step-names) 2)))))

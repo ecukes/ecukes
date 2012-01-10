@@ -93,7 +93,7 @@
   (let ((steps))
     (while (ecukes-forward-step)
       (let ((step (ecukes-parse-step)))
-        (add-to-list 'steps step t)))
+        (add-to-list 'steps step t 'eq)))
     steps))
 
 (defun ecukes-parse-step ()
@@ -124,7 +124,7 @@
     (forward-line 1)
     (let ((rows))
       (while (string-match-p ecukes-parse-table-re (ecukes-parse-line))
-        (add-to-list 'rows (ecukes-parse-table-step-row) t)
+        (add-to-list 'rows (ecukes-parse-table-step-row) t 'eq)
         (forward-line 1))
       rows)))
 
@@ -153,8 +153,8 @@
       (while (not (string-match-p ecukes-parse-py-string-re (ecukes-parse-line)))
         (let ((line (ecukes-parse-line)))
           (if (<= whites (length line))
-              (add-to-list 'lines (substring line whites) t)
-            (add-to-list 'lines nil t)))
+              (add-to-list 'lines (substring line whites) t 'eq)
+            (add-to-list 'lines nil t 'eq)))
         (forward-line 1))
       (mapconcat 'identity lines "\n"))))
 
