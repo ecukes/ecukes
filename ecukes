@@ -53,33 +53,89 @@
   (require 'cl))
 
 (require 'ansi)
-(require 'ecukes-steps)
-(require 'ecukes-startup)
+(require 'ecukes-template)
 (require 'ecukes-new)
 (require 'ecukes-def)
-(require 'ecukes-output)
+(require 'ecukes-startup)
 (require 'ecukes-parse)
+(require 'ecukes-steps)
 (require 'ecukes-run)
+(require 'ecukes-print)
 (require 'ecukes-hooks)
 (require 'ecukes-stats)
-(require 'ecukes-template)
 
 (add-to-list 'command-switch-alist '("--new" . ecukes-new-handler))
 
-(unless (ecukes-options-p)
-  (let ((feature-files (ecukes-feature-files argv)))
+(when (ecukes-startup-run-p)
+
+  (defun run-step (step)
+    "Run STEP, including increasing counters."
+    (ecukes-stats-step
+     (if previous-step-success
+         (cond
+          ((ecukes-run-step step)
+           (ecukes-stats-step-pass)
+           (ecukes-stats-scenario-pass)
+           (ecukes-print-step-success step))
+          (t
+           (ecukes-stats-step-fail)
+           (ecukes-stats-scenario-fail)
+           (ecukes-print-step-failure step)
+           (setq previous-step-success nil)))
+       (ecukes-stats-step-skip)
+       (ecukes-print-step-pending step))))
+
+  (let ((feature-files (ecukes-startup-features argv)))
     (cond (feature-files
-           (ecukes-load-project argv)
 
-           (let ((features))
-             (dolist (feature-file feature-files)
-               (let ((feature (ecukes-parse-feature feature-file)))
-                 (add-to-list 'features feature t 'eq)))
+           (ecukes-startup-load)
 
-             (let ((missing (ecukes-steps-missing features)))
-               (if missing
-                   (ecukes-output-missing-steps missing)
-                 (ecukes-run-features features)))))
-          (t (ecukes-output-red "You did not provide any features to run")))))
+           (ecukes-hooks-run-setup)
+
+           (dolist (feature-file feature-files)
+             (let* ((feature (ecukes-parse-feature feature-file))
+                    (background (ecukes-feature-background feature))
+                    (scenarios (ecukes-feature-scenarios feature))
+                    (steps
+                     (apply
+                      'append
+                      (if background (ecukes-background-steps background))
+                      (mapcar 'ecukes-scenario-steps scenarios)))
+                    (undefined (ecukes-steps-undefined steps)))
+
+               (setq previous-step-success t)
+               (setq background-runned nil)
+
+               (cond (undefined
+                      (ecukes-print-undefined-steps undefined))
+                     ((let ((intro (ecukes-feature-intro feature)))
+                        (ecukes-print-intro intro)
+
+                        (when background
+                          (ecukes-print-background-header)
+                          (dolist (step (ecukes-background-steps background))
+                            (run-step step))
+                          (setq background-runned t))
+
+                        (dolist (scenario scenarios)
+                          (ecukes-stats-scenario
+                           (ecukes-hooks-run-before)
+
+                           (when background
+                             (dolist (step (ecukes-background-steps background))
+                               (run-step step)))
+
+                           (ecukes-print-newline)
+                           (ecukes-print-scenario-header scenario)
+                           (dolist (step (ecukes-scenario-steps scenario))
+                             (run-step step))
+
+                           (ecukes-hooks-run-after))))))))
+           (ecukes-hooks-run-teardown)
+
+           (ecukes-stats-print-summary))
+          (t
+           (ecukes-print-message
+            (ansi-red "You did not provide any features to run"))))))
 
 ;;; ecukes.el ends here
