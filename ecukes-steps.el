@@ -31,9 +31,10 @@
           (let ((fn (ecukes-step-def-fn def)))
             (apply fn args)))))))
 
-(defun ecukes-steps-find (query)
-  "Find step definition bound to query."
-  (let* ((definition
+(defun ecukes-steps-find (name)
+  "Find step definition bound to NAME."
+  (let* ((query (ecukes-steps-query name))
+         (definition
            (find-if
             (lambda (def)
               (string-match-p (car def) query))
@@ -55,9 +56,14 @@
    (remove-if
     (lambda (step)
       (let ((name (ecukes-step-name step)))
-        (string-match ecukes-parse-step-re name)
-        (ecukes-steps-find (match-string 2 name))))
+        (ecukes-steps-find name)))
     steps)))
+
+(defun ecukes-steps-query (name)
+  "Returns a query based of NAME."
+  (if (string-match ecukes-parse-step-re name)
+      (match-string 2 name)
+    name))
 
 
 (provide 'ecukes-steps)

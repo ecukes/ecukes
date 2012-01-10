@@ -5,7 +5,7 @@
      (ecukes-steps-step regex fn)
      (should
       (equal
-       (ecukes-steps-find "a known state")
+       (ecukes-steps-find "Given a known state")
        (make-ecukes-step-def :fn fn :args nil))))))
 
 (ert-deftest steps-define-step-with-single-arg ()
@@ -15,7 +15,7 @@
      (ecukes-steps-step regex fn)
      (should
       (equal
-       (ecukes-steps-find "a known state")
+       (ecukes-steps-find "Given a known state")
        (make-ecukes-step-def :fn fn :args '("known")))))))
 
 (ert-deftest steps-define-step-with-multiple-args ()
@@ -25,7 +25,7 @@
      (ecukes-steps-step regex fn)
      (should
       (equal
-       (ecukes-steps-find "state known and unknown")
+       (ecukes-steps-find "Given state known and unknown")
        (make-ecukes-step-def :fn fn :args '("known" "unknown")))))))
 
 (ert-deftest steps-call-step-when-not-defined ()
@@ -98,3 +98,17 @@
       (equal
        (ecukes-steps-undefined (list step step step))
        (list step))))))
+
+(ert-deftest ecukes-steps-query-with-prefix ()
+  "Should correctly retrieve query with prefix."
+  (should
+   (equal
+    (ecukes-steps-query "Given a known state")
+    "a known state")))
+
+(ert-deftest ecukes-steps-query-without-prefix ()
+  "Should correctly retrieve query without prefix."
+  (should
+   (equal
+    (ecukes-steps-query "a known state")
+    "a known state")))
