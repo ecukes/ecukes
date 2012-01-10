@@ -17,11 +17,4 @@ should be included, please make a bug report.
 If you don't know anything about Cucumber I suggest you read up a bit
 about it before continuing with Ecukes.
 
-
-See [Wiki](http://github.com/rejeep/ecukes/wikis) for more information!
-
-
-## Projects Using Ecukes
-
-* Drag Stuff - <http://github.com/rejeep/drag-stuff>
-* Wrap Region - <http://github.com/rejeep/wrap-region>
+See <http://ecukes.info> for more information!
