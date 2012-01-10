@@ -11,7 +11,7 @@
 (add-to-list 'load-path ecukes-util-path)
 (add-to-list 'load-path ecukes-vendor-path)
 
-(setq ecukes-path nil)
+(setq ecukes-path (expand-file-name ".." ecukes-test-path))
 (setq ecukes-test-features-path (expand-file-name "features" ecukes-test-path))
 
 (eval-when-compile
