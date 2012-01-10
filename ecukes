@@ -68,7 +68,7 @@
 
 (when (ecukes-startup-run-p)
 
-  (defun run-step (step)
+  (defun run-step (step &optional print)
     "Run STEP, including increasing counters."
     (ecukes-stats-step
      (if previous-step-success
@@ -76,20 +76,23 @@
           ((ecukes-run-step step)
            (ecukes-stats-step-pass)
            (ecukes-stats-scenario-pass)
-           (ecukes-print-step-success step))
+           (if print
+               (ecukes-print-step-success step)))
           (t
            (ecukes-stats-step-fail)
            (ecukes-stats-scenario-fail)
-           (ecukes-print-step-failure step)
+           (if print
+               (ecukes-print-step-failure step))
            (setq previous-step-success nil)))
        (ecukes-stats-step-skip)
-       (ecukes-print-step-pending step))))
+       (if print
+           (ecukes-print-step-pending step)))))
 
   (let ((feature-files (ecukes-startup-features argv)))
     (cond (feature-files
 
            (ecukes-startup-load)
-
+           
            (ecukes-hooks-run-setup)
 
            (dolist (feature-file feature-files)
@@ -102,7 +105,7 @@
                       (if background (ecukes-background-steps background))
                       (mapcar 'ecukes-scenario-steps scenarios)))
                     (undefined (ecukes-steps-undefined steps)))
-
+               
                (setq previous-step-success t)
                (setq background-runned nil)
 
@@ -114,7 +117,7 @@
                         (when background
                           (ecukes-print-background-header)
                           (dolist (step (ecukes-background-steps background))
-                            (run-step step))
+                            (run-step step t))
                           (setq background-runned t))
 
                         (dolist (scenario scenarios)
@@ -128,7 +131,9 @@
                            (ecukes-print-newline)
                            (ecukes-print-scenario-header scenario)
                            (dolist (step (ecukes-scenario-steps scenario))
-                             (run-step step))
+                             (run-step step t))
+
+                           (setq previous-step-success t)
 
                            (ecukes-hooks-run-after))))))))
            (ecukes-hooks-run-teardown)
