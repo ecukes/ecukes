@@ -27,9 +27,10 @@
         (add-to-list 'ecukes-steps-definitions `(,regex . ,arg))
       (let* ((query (apply 'format regex args))
              (def (ecukes-steps-find query)))
-        (when def
-          (let ((fn (ecukes-step-def-fn def)))
-            (apply fn args)))))))
+        (if def
+            (let ((fn (ecukes-step-def-fn def)))
+              (apply fn args))
+          (error "Definition '%s' have not been defined" query))))))
 
 (defun ecukes-steps-find (name)
   "Find step definition bound to NAME."
@@ -59,11 +60,15 @@
         (ecukes-steps-find name)))
     steps)))
 
-(defun ecukes-steps-query (name)
-  "Returns a query based of NAME."
-  (if (string-match ecukes-parse-step-re name)
-      (match-string 2 name)
-    name))
+(defun ecukes-steps-query (name-or-step)
+  "Returns a query based of NAME-OR-STEP."
+  (let ((name
+         (if (ecukes-step-p name-or-step)
+             (ecukes-step-name step)
+           name-or-step)))
+    (if (string-match ecukes-parse-step-re name)
+        (match-string 2 name)
+      name)))
 
 
 (provide 'ecukes-steps)

@@ -13,10 +13,9 @@
   "Print STEP as undefined."
   (let ((name (ecukes-step-name step)))
     (string-match ecukes-parse-step-re name)
-    (let* ((state (match-string 2 name))
-           (fn (match-string 1 name))
-           (regex (ecukes-print-undefined-step-regex state))
-           (args (ecukes-print-undefined-step-args state))
+    (let* ((fn (match-string 1 name))
+           (regex (ecukes-print-undefined-step-regex step))
+           (args (ecukes-print-undefined-step-args step))
            (contents
             (ecukes-template-get
              'step
@@ -26,21 +25,26 @@
       (ecukes-print-message (ansi-yellow contents))
       (ecukes-print-newline))))
 
-(defun ecukes-print-undefined-step-args (state)
-  "Return step arguments as a list."
-  (let* ((quotes
-          (loop for sub on (cdr (split-string state "\""))
+(defun ecukes-print-undefined-step-args (step)
+  "Return STEP arguments as a list."
+  (let* ((query (ecukes-steps-query step))
+         (quotes
+          (loop for sub on (cdr (split-string query "\""))
                 by (function cddr)
                 collect (car sub)))
          (num-quotes (length quotes)))
+    (if (or (equal (ecukes-step-type step) 'table)
+            (equal (ecukes-step-type step) 'py-string))
+        (setq num-quotes (1+ num-quotes)))
     (mapconcat 'identity (make-list num-quotes "arg") " ")))
 
-(defun ecukes-print-undefined-step-regex (state)
+(defun ecukes-print-undefined-step-regex (step)
   "Return step regex."
-  (let* ((slashes "\\\\\\\\\\\\\\\\")
+  (let* ((query (ecukes-steps-query step))
+         (slashes "\\\\\\\\\\\\\\\\")
          (regex "\"[^\"]+\"")
-         (rep (format "\"%s(.+%s)\"" slashes slashes)))
-    (replace-regexp-in-string regex rep state)))
+         (rep (format "\\\\\\\\\"%s(.+%s)\\\\\\\\\"" slashes slashes)))
+    (replace-regexp-in-string regex rep query)))
 
 (defun ecukes-print-undefined-steps-title ()
   "Print missing steps title."

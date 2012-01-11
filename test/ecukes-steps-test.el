@@ -28,11 +28,6 @@
        (ecukes-steps-find "Given state known and unknown")
        (make-ecukes-step-def :fn fn :args '("known" "unknown")))))))
 
-(ert-deftest steps-call-step-when-not-defined ()
-  "Should call step when not defined."
-  (with-steps
-   (should-not (Given "a known state"))))
-
 (ert-deftest steps-call-step-no-arguments ()
   "Should call step with no arguments."
   (with-steps
@@ -53,31 +48,23 @@
             (format "%s-%s" state-1 state-2)))
    (should (equal (Given "state %s and %s" "known" "unknown") "known-unknown"))))
 
-(ert-deftest steps-undefined-none-undefined ()
-  "Should not find any steps when none is undefined."
+(ert-deftest steps-undefined-no-arguments ()
+  "Should error when not defined, no arguments."
   (with-steps
-   (let ((step (make-ecukes-step :name "Given a known state")))
-     (ecukes-steps-step "^a known state$" 'ignore)
-     (should-not (ecukes-steps-undefined (list step))))))
+   (Given "^a known state$" 'ignore)
+   (should-error (Given "an unknown state"))))
 
-(ert-deftest steps-undefined-single-undefined ()
-  "Should find single step when undefined."
+(ert-deftest steps-undefined-single-argument ()
+  "Should error when not defined, single argument."
   (with-steps
-   (let ((step (make-ecukes-step :name "Given a known state")))
-     (should
-      (equal
-       (ecukes-steps-undefined (list step))
-       (list step))))))
+   (Given "^a state \\(.+\\)$" 'ignore)
+   (should-error (Given "an state: foo"))))
 
-(ert-deftest steps-undefined-multiple-undefined ()
-  "Should find all steps when all are undefined."
+(ert-deftest steps-undefined-multiple-arguments ()
+  "Should error when not defined, multiple arguments."
   (with-steps
-   (let ((step-known   (make-ecukes-step :name "Given a known state"))
-         (step-unknown (make-ecukes-step :name "Given an unknown state")))
-     (should
-      (equal
-       (ecukes-steps-undefined (list step-known step-unknown))
-       (list step-known step-unknown))))))
+   (Given "^a state \\(.+\\) and \\(.+\\)$" 'ignore)
+   (should-error (Given "an state foo and bar"))))
 
 (ert-deftest steps-undefined-some-undefined ()
   "Should find some steps when some are undefined."
@@ -112,3 +99,10 @@
    (equal
     (ecukes-steps-query "a known state")
     "a known state")))
+
+(ert-deftest ecukes-steps-query-step ()
+  "Should correctly retrieve query from step."
+  (let ((step (make-ecukes-step :name "Given a known state")))
+    (should
+     (equal
+      (ecukes-steps-query step) "a known state"))))

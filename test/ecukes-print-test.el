@@ -21,45 +21,58 @@
 
 (ert-deftest print-undefined-step-args-no-argument ()
   "Should print undefined step arguments when no argument."
-  (should
-   (equal
-    (ecukes-print-undefined-step-args "a known state")
-    "")))
+  (let ((step (make-ecukes-step :name "Given a known state")))
+    (should
+     (equal
+      (ecukes-print-undefined-step-args step) ""))))
 
 (ert-deftest print-undefined-step-args-single-argument ()
   "Should print undefined step arguments when single argument."
-  (should
-   (equal
-    (ecukes-print-undefined-step-args "a \"known\" state")
-    "arg")))
+  (let ((step (make-ecukes-step :name "Given a \"known\" state")))
+    (should
+     (equal
+      (ecukes-print-undefined-step-args step) "arg"))))
 
 (ert-deftest print-undefined-step-args-multiple-arguments ()
   "Should print undefined step arguments when multiple arguments."
-  (should
-   (equal
-    (ecukes-print-undefined-step-args "state \"known\" and \"unknown\"")
-    "arg arg")))
+  (let ((step (make-ecukes-step :name "Given state \"known\" and \"unknown\"")))
+    (should
+     (equal
+      (ecukes-print-undefined-step-args step) "arg arg"))))
+
+(ert-deftest print-undefined-step-args-table ()
+  "Should print undefined step arguments when table."
+  (let ((step (make-ecukes-step :name "Given state \"known\":" :type 'table)))
+    (should
+     (equal
+      (ecukes-print-undefined-step-args step) "arg arg"))))
+
+(ert-deftest print-undefined-step-args-py-string ()
+  "Should print undefined step arguments when py-string."
+  (let ((step (make-ecukes-step :name "Given state \"known\":" :type 'py-string)))
+    (should
+     (equal
+      (ecukes-print-undefined-step-args step) "arg arg"))))
 
 (ert-deftest print-undefined-step-regex-no-argument ()
   "Should print undefined step regex when no argument."
   (should
    (equal
-    (ecukes-print-undefined-step-regex "a known state")
-    "a known state")))
+    (ecukes-print-undefined-step-regex "a known state") "a known state")))
 
 (ert-deftest print-undefined-step-regex-single-argument ()
   "Should print undefined step regex when single argument."
   (should
    (equal
     (ecukes-print-undefined-step-regex "a \"known\" state")
-    "a \"\\\\\\\\(.+\\\\\\\\)\" state")))
+    "a \\\\\"\\\\\\\\(.+\\\\\\\\)\\\\\" state")))
 
 (ert-deftest print-undefined-step-regex-multiple-arguments ()
   "Should print undefined step regex when multiple arguments."
   (should
    (equal
     (ecukes-print-undefined-step-regex "state \"known\" and \"unknown\"")
-    "state \"\\\\\\\\(.+\\\\\\\\)\" and \"\\\\\\\\(.+\\\\\\\\)\"")))
+    "state \\\\\"\\\\\\\\(.+\\\\\\\\)\\\\\" and \\\\\"\\\\\\\\(.+\\\\\\\\)\\\\\"")))
 
 (ert-deftest print-intro ()
   "Should print intro header and description."
