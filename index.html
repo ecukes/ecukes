@@ -11,8 +11,8 @@ title: Ecukes
 
 <h2>What is Ecukes?</h2>
 <p>
-  Ecukes is a testing tool for Emacs based on Cucumber. With Ecukes
-  you write Cucumber-like tests for your Emacs packages.
+  Ecukes is a testing tool for Emacs based on Cucumber. With Ecukes,
+  you can write Cucumber-like tests for your Emacs packages.
 </p>
 
 <p>
@@ -132,12 +132,12 @@ title: Ecukes
 <h2>Get it!</h2>
 <p>The source for <a href="http://github.com/rejeep/ecukes">Ecukes</a> is available on Github.</p>
 <code>
-  $ git clone git://github.com/rejeep/ecukes.git
+  <a href="http://github.com/rejeep/ecukes">http://github.com/rejeep/ecukes</a>
 </code>
 
-<p>Aswell as the source for <a href="http://github.com/rejeep/espuds">Espuds</a>.</p>
+<p>As well as the source for <a href="http://github.com/rejeep/espuds">Espuds</a>.</p>
 <code>
-  $ git clone git://github.com/rejeep/espuds.git
+  <a href="http://github.com/rejeep/espuds">http://github.com/rejeep/espuds</a>
 </code>
 
 
@@ -146,8 +146,9 @@ title: Ecukes
 
 <p>
   Download Ecukes and put the files somewhere in your filesystem. In
-  Ecukes root directory, there are a few executables you need. Make sure
-  that Ecukes is in your <strong>PATH</strong>:
+  Ecukes root directory, there is an executable
+  called <strong>ecukes</strong>. Make sure it's in
+  your <strong>PATH</strong>:
 </p>
 
 <code>
@@ -161,18 +162,18 @@ title: Ecukes
 <p>
   When you have the <strong>ecukes</strong> binary available, you can
   create the Ecukes files for an Emacs project. Lets say you have a
-  project called <strong>super-duper</strong>, that you want to test with
-  Ecukes.
+  project called <strong>super-duper</strong> that you want to test
+  with Ecukes.
 </p>
 
-<code>
-  $ cd /path/to/your/emacs/project
-  $ ecukes --new
-</code>
+<pre><code>$ cd /path/to/your/emacs/project
+$ ecukes --new</code></pre>
 
 Ecukes creates the <strong>features</strong> directory with these files:
 
-<pre><code>super-duper/
+<pre><code>$ ls super-duper
+
+super-duper/
     |-- README
     |-- features
     |   |-- step-definitions
@@ -184,19 +185,18 @@ Ecukes creates the <strong>features</strong> directory with these files:
 
 <p>
   Files in the <strong>support</strong> directory will be loaded
-  (<strong>env.el</strong> first, then the rest) each
-  time <strong>ecukes</strong> runs. All files
-  called <strong>-steps.el</strong> in
-  the <strong>step-definitions</strong> folder will be loaded as step
-  definitions.
+  (<strong>env.el</strong> first, then the rest) each time Ecukes
+  run. All files that ends with <strong>-steps.el</strong> in
+  the <strong>step-definitions</strong> directory will be loaded as
+  step definitions.
 </p>
 
 <a name="steps"></a>
 <h2>Steps</h2>
 <p>
   There are three different kind of
-  steps. <strong>Regular</strong>, <strong>table</strong>
-  and <strong>py-string</strong>.
+  steps: <strong>Regular</strong>, <strong>Table</strong>
+  and <strong>Py string</strong>.
 </p>
 
 <a name="regular-steps"></a>
@@ -261,7 +261,7 @@ Ecukes creates the <strong>features</strong> directory with these files:
   | Pizza     | $5.30 |</code></pre>
 
 <p>Corresponding step definition:</p>
-<pre><code>(Given "the following meals:"
+<pre><code>(Given "these meals:"
        (lambda (meals)
          ;; Do something with text
          ))</code></pre>
