@@ -20,7 +20,27 @@ title: Ecukes
   called <a href="http://github.com/rejeep/espuds">Espuds</a>.
 </p>
 
+<h2>Index</h2>
+<ul>
+  <li><a href="#example">Example</a></li>
+  <li><a href="#projects-using-ecukes">Projects using Ecukes</a></li>
+  <li><a href="#get-it">Get it!</a></li>
+  <li><a href="#installation">Installation</a></li>
+  <li><a href="#usage">Usage</a></li>
+  <li><a href="#steps">Steps</a></li>
+  <ul>
+    <li><a href="#regular-steps">Regular step</a></li>
+    <li><a href="#table-steps">Table step</a></li>
+    <li><a href="#py-string-steps">Py string step</a></li>
+    <li><a href="#calling-steps-from-steps">Calling steps from steps</a></li>
+  </ul>
+  <li><a href="#hooks">Hooks</a></li>
+  <li><a href="#contribution">Contribution</a></li>
+  <li><a href="#issues">Issues/Bugs/Feature Requests</a></li>
+</ul>
 
+
+<a name="example"></a>
 <h2>Example</h2>
 <p>Example from feature in <a href="http://github.com/rejeep/drag-stuff">Drag Stuff</a>.</p>
 <code class="example">
@@ -97,6 +117,7 @@ title: Ecukes
 </code>
 
 
+<a name="projects-using-ecukes"></a>
 <h2>Projects using Ecukes</h2>
 <ul>
   <li><a href="http://github.com/rejeep/drag-stuff">Drag Stuff</a></li>
@@ -107,6 +128,7 @@ title: Ecukes
 </ul>
 
 
+<a name="get-it"></a>
 <h2>Get it!</h2>
 <p>The source for <a href="http://github.com/rejeep/ecukes">Ecukes</a> is available on Github.</p>
 <code>
@@ -119,6 +141,7 @@ title: Ecukes
 </code>
 
 
+<a name="installation"></a>
 <h2>Installation</h2>
 
 <p>
@@ -132,6 +155,7 @@ title: Ecukes
 </code>
 
 
+<a name="usage"></a>
 <h2>Usage</h2>
 
 <p>
@@ -167,6 +191,7 @@ Ecukes creates the <strong>features</strong> directory with these files:
   definitions.
 </p>
 
+<a name="steps"></a>
 <h2>Steps</h2>
 <p>
   There are three different kind of
@@ -174,6 +199,7 @@ Ecukes creates the <strong>features</strong> directory with these files:
   and <strong>py-string</strong>.
 </p>
 
+<a name="regular-steps"></a>
 <h3>Regular Step</h3>
 
 <p>
@@ -224,6 +250,7 @@ Ecukes creates the <strong>features</strong> directory with these files:
      ))</code></pre>
 
 
+<a name="table-steps"></a>
 <h3>Table Step</h3>
 
 <p>A table step looks like this:</p>
@@ -278,6 +305,7 @@ And the rows would be:
          ;; Do something with restaurant and meals
          ))</code></pre>
 
+<a name="py-string-steps"></a>
 <h3>Py-string Step</h3>
 
 <p>A Py-String (or Python string) step looks like this:</p>
@@ -311,8 +339,8 @@ And the rows would be:
          ;; Do something with buffer and text
          ))</code></pre>
 
-
-<h2>Calling steps from steps</h2>
+<a name="calling-steps-from-steps"></a>
+<h3>Calling steps from steps</h3>
 
 <p>
   In order to keep your steps <strong>DRY</strong>, you can call steps
@@ -338,12 +366,13 @@ And the rows would be:
 <pre><code>(Given "I am in buffer" "buffer-name")</code></pre>
 
 
+<a name="hooks"></a>
 <h2>Hooks</h2>
 
 <p>
   Ecukes provides four different hooks
 </p>
-  
+
 <h3>Setup</h3>
 <p>Runs once before anything runs.</p>
 <pre><code>(Setup
@@ -380,6 +409,7 @@ And the rows would be:
   project <strong>features/support</strong> directory.
 </p>
 
+<a name="contribution"></a>
 <h2>Contribution</h2>
 
 <p>All contributions are much welcome and appreciated!</p>
@@ -407,6 +437,7 @@ $ git submodule update</code></pre>
 
 <code>$ /path/to/ecukes/test/ecukes-test some-test.el ...</code>
 
+<a name="issues"></a>
 <h2>Issues/Bugs/Feature Requests</h2>
 <p>
   Report on <a href="http://github.com/rejeep/ecukes/issues">Github Issues</a>.
