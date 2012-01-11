@@ -52,6 +52,8 @@ p {
 code {
   display: block;
   border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
   border: 1px #d2d2d2 solid;
   background: #fafafa;
   padding: 10px;
