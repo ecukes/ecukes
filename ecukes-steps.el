@@ -47,7 +47,7 @@
     (when definition
       (string-match regex query)
       (while (match-string index query)
-        (add-to-list 'args (match-string index query) t)
+        (add-to-list 'args (match-string index query) t 'eq)
         (setq index (1+ index)))
       (make-ecukes-step-def :fn fn :args args))))
 
