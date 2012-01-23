@@ -4,31 +4,31 @@
 
 
 ;; Given
-(Given "I have \"\\(.+\\)\""
+(Given "^I have \"\\(.+\\)\"$"
        (lambda (something)
          ;; Do something
          ))
 
 ;; When
-(When "I have \"\\(.+\\)\""
+(When "^I have \"\\(.+\\)\"$"
       (lambda (something)
         ;; Do something
         ))
 
 ;; Then
-(Then "I should have \"\\(.+\\)\""
+(Then "^I should have \"\\(.+\\)\"$"
       (lambda (something)
         ;; Do something
         ))
 
 ;; And
-(And "I have \"\\(.+\\)\""
+(And "^I have \"\\(.+\\)\"$"
      (lambda (something)
        ;; Do something
        ))
 
 ;; But
-(But "I should not have \"\\(.+\\)\""
+(But "^I should not have \"\\(.+\\)\"$"
      (lambda (something)
        ;; Do something
        ))
