@@ -29,3 +29,11 @@
    (lambda (name type arg)
      (should (eq type 'table))
      (should (equal arg '(("meal" "price") ("Hamburger" "$4.50") ("Hamburger" "$4.50")))))))
+
+(ert-deftest parse-table-step-empty-columns ()
+  "Should parse table with empty columns."
+  (with-parse-step
+   "table-empty-columns"
+   (lambda (name type arg)
+     (should (eq type 'table))
+     (should (equal arg '(("meal" "price") ("Hamburger" "") ("Pizza" "$5.30")))))))
