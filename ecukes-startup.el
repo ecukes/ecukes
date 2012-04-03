@@ -45,7 +45,7 @@
      step-definition-files)))
 
 (defun ecukes-startup-features (files)
-  "Returns a list of feature files to run."
+  "Return a list of feature files to run."
   (if files
       (let ((file (car files)))
         (if (file-directory-p file)

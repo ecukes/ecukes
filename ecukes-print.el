@@ -39,7 +39,7 @@
     (mapconcat 'identity (make-list num-quotes "arg") " ")))
 
 (defun ecukes-print-undefined-step-regex (step)
-  "Return step regex."
+  "Return STEP regex."
   (let* ((query (ecukes-steps-query step))
          (slashes "\\\\\\\\\\\\\\\\")
          (regex "\"[^\"]+\"")
@@ -53,7 +53,7 @@
     "Some steps does not have a matching definition. Please implement the following step definitions:\n")))
 
 (defun ecukes-print-intro (intro)
-  "Print intro."
+  "Print INTRO."
   (setq ecukes-print-offset 0)
   (let ((header (ecukes-intro-header intro)))
     (ecukes-print-message "Feature: %s" header))
@@ -77,17 +77,17 @@
   (ecukes-print-message "Background:"))
 
 (defun ecukes-print-step-success (step)
-  "Print step as success."
+  "Print STEP as success."
   (ecukes-print-step step 'ansi-green))
 
 (defun ecukes-print-step-failure (step)
-  "Print step as failure. Also print the error."
+  "Print STEP as failure. Also print the error."
   (ecukes-print-step step 'ansi-red)
   (let ((err (ecukes-step-err step)))
     (ecukes-print-error err)))
 
 (defun ecukes-print-step-pending (step)
-  "Print step as pending."
+  "Print STEP as pending."
   (ecukes-print-step step 'ansi-yellow))
 
 (defun ecukes-print-error (err)

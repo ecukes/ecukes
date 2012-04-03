@@ -61,7 +61,7 @@
     steps)))
 
 (defun ecukes-steps-query (name-or-step)
-  "Returns a query based of NAME-OR-STEP."
+  "Return a query based of NAME-OR-STEP."
   (let ((name
          (if (ecukes-step-p name-or-step)
              (ecukes-step-name step)

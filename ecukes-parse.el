@@ -141,7 +141,7 @@
       (string-match-p ecukes-parse-py-string-re line))))
 
 (defun ecukes-parse-py-string-step ()
-  "Parse py string step"
+  "Parse py string step."
   (save-excursion
     (forward-line 1)
     (let ((whites
@@ -168,7 +168,7 @@
     (if (and strip-whitespace (equal line "")) nil line)))
 
 (defun ecukes-forward-step ()
-  "Goes one step forward within current section."
+  "Go one step forward within current section."
   (forward-line 1)
   (let ((line (ecukes-parse-line t)))
     (unless (ecukes-parse-new-section-p)
@@ -177,7 +177,7 @@
         (ecukes-forward-step)))))
 
 (defun ecukes-parse-new-section-p ()
-  "Checks if current line is the start of a new section."
+  "Check if current line is the start of a new section."
   (let ((line (or (ecukes-parse-line t) "")))
     (or
      (eobp)
