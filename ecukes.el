@@ -40,9 +40,9 @@
 
 
 
-(defadvice message  (after log-messages-to-buffer
+(defadvice message  (after ecukes-log-messages-to-buffer
                            activate)
-  (with-current-buffer (get-buffer-create "*sauron-messages-log*")
+  (with-current-buffer (get-buffer-create "*ecukes-messages-log*")
     (insert ad-return-value "\n")))
 
 (defvar ecukes-path
@@ -157,7 +157,7 @@
 
 (when (boundp 'ecukes-tmp-file-target)
   (with-temp-buffer
-    (insert-buffer "*sauron-messages-log*")
+    (insert-buffer "*ecukes-messages-log*")
     ;; ecukes-tmp-file-target needs to get set from somewhere else
     (write-file ecukes-tmp-file-target))
 
