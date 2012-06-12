@@ -37,6 +37,14 @@
 (setq debug-on-error t)
 (setq debug-on-entry t)
 
+
+
+
+(defadvice message  (after log-messages-to-buffer
+                           activate)
+  (with-current-buffer (get-buffer-create "*sauron-messages-log*")
+    (insert ad-return-value "\n")))
+
 (defvar ecukes-path
   (file-name-directory load-file-name)
   "Path to ecukes.")
@@ -149,7 +157,7 @@
 
 (when (boundp 'ecukes-tmp-file-target)
   (with-temp-buffer
-    (insert-buffer "*Messages*")
+    (insert-buffer "*sauron-messages-log*")
     ;; ecukes-tmp-file-target needs to get set from somewhere else
     (write-file ecukes-tmp-file-target))
 
