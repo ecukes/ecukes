@@ -27,25 +27,19 @@ ECUKES_EL=$(dirname $BASH_SOURCE)/ecukes.el
 
 
 if [ -z "$ECUKES_EMACS" ] ; then
-    ECUKES_EMACS="/usr/bin/env emacs"
+    ECUKES_EMACS="emacs"
 fi
 
 if [ "$1" == "--graphical" ] ; then
     # create spec output file
-    OUTFILE=`mktemp /tmp/emacsoutput.XXXXX`
+    export ECUKES_OUTFILE=`mktemp /tmp/emacsoutput.XXXXX`
+    $ECUKES_EMACS --load "$ECUKES_EL" -q 
 
-    $ECUKES_EMACS \
-       --eval "(setq ecukes-tmp-file-target \"$OUTFILE\")" \
-       --load "$ECUKES_EL" -q 
-    
     # send that file to the console
-    cat $OUTFILE
+    cat $ECUKES_OUTFILE
 
     # clean up
-    rm $OUTFILE
-
-    exit
+    rm $ECUKES_OUTFILE
+else
+    $ECUKES_EMACS --script $ECUKES_EL "$@"
 fi
-
-$ECUKES_EMACS --script $ECUKES_EL "$@"
-

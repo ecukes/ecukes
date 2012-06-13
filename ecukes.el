@@ -37,13 +37,14 @@
 (setq debug-on-error t)
 (setq debug-on-entry t)
 
-
-
+(defvar *ecukes-message-log* (list ""))
 
 (defadvice message  (after ecukes-log-messages-to-buffer
                            activate)
-  (with-current-buffer (get-buffer-create "*ecukes-messages-log*")
-    (insert ad-return-value "\n")))
+  (when ad-return-value
+    (setf (cdr (last *ecukes-message-log*))
+          (cons ad-return-value nil))))
+
 
 (defvar ecukes-path
   (file-name-directory load-file-name)
@@ -154,13 +155,13 @@
            (ecukes-print-message
             (ansi-red "You did not provide any features to run"))))))
 
-
-(when (boundp 'ecukes-tmp-file-target)
+(when (getenv "ECUKES_OUTFILE")
   (with-temp-buffer
-    (insert-buffer "*ecukes-messages-log*")
+    (mapcar (lambda (line)
+              (insert line) (insert "\n"))
+            *ecukes-message-log*)
     ;; ecukes-tmp-file-target needs to get set from somewhere else
-    (write-file ecukes-tmp-file-target))
-
+    (write-file (getenv "ECUKES_OUTFILE")))
   ;; kill emacs needs to happen because when ecukes-tmp-file-target
   ;; is set, emacs is running as graphical and -q
   (kill-emacs))
