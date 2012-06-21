@@ -68,16 +68,16 @@
 
 (when (ecukes-startup-run-p)
 
-  (defun run-step (step &optional print)
+  (defun run-step (step &optional print background)
     "Run STEP, including increasing counters."
     (if previous-step-success
         (cond
          ((ecukes-run-step step)
-          (ecukes-stats-step-pass)
+          (unless background (ecukes-stats-step-pass))
           (if print
               (ecukes-print-step-success step)))
          (t
-          (ecukes-stats-step-fail)
+          (unless background (ecukes-stats-step-fail))
           (setq step-has-failed t)
           (if print
               (ecukes-print-step-failure step))
@@ -124,7 +124,7 @@
 
                           (when background
                             (dolist (step (ecukes-background-steps background))
-                              (run-step step)))
+                              (run-step step nil t)))
                           
                           (ecukes-print-newline)
                           (ecukes-print-scenario-header scenario)
