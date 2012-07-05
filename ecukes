@@ -33,7 +33,7 @@ fi
 if [ "$1" == "--graphical" ] ; then
     # create spec output file
     export ECUKES_OUTFILE=`mktemp /tmp/emacsoutput.XXXXX`
-    $ECUKES_EMACS --load "$ECUKES_EL" -q 
+    $ECUKES_EMACS --load "$ECUKES_EL" -q "${@:2}"
 
     # send that file to the console
     cat $ECUKES_OUTFILE
