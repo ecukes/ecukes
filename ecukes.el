@@ -1,3 +1,14 @@
+(defvar ecukes-path
+  (file-name-directory load-file-name)
+  "Path to ecukes.")
+
+(defvar ecukes-vendor-path
+  (expand-file-name "vendor" ecukes-path)
+  "Path to ecukes vendor.")
+
+(add-to-list 'load-path ecukes-path)
+(add-to-list 'load-path ecukes-vendor-path)
+
 (require 'ecukes-setup)
 (require 'ansi-color)
 
@@ -18,10 +29,12 @@
         ;; is set, emacs is running as graphical and -q
         (kill-emacs))
     (progn
-      (switch-to-buffer (get-buffer-create *ecukes-output-buffer*))
+      (switch-to-buffer (get-buffer-create "*ecukes-output-buffer*"))
       (erase-buffer)
       (mapcar (lambda (line)
                 (insert (ansi-color-apply line))
                 (insert "\n"))
               *ecukes-message-log*)
       (font-lock-mode t))))
+
+(provide 'ecukes)

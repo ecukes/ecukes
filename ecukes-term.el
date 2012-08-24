@@ -34,6 +34,20 @@
 
 ;;; Code:
 
+;; TODO: this code to setup paths is duplicated in ecukes.el. We need
+;; it here because it's loaded by bash, but maybe there's a way to
+;; remove the duplication?
+(defvar ecukes-path
+  (file-name-directory load-file-name)
+  "Path to ecukes.")
+
+(defvar ecukes-vendor-path
+  (expand-file-name "vendor" ecukes-path)
+  "Path to ecukes vendor.")
+
+(add-to-list 'load-path ecukes-path)
+(add-to-list 'load-path ecukes-vendor-path)
+
 (require 'ecukes-setup)
 
 (add-to-list 'command-switch-alist '("--new" . ecukes-new-handler))
