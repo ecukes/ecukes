@@ -1,5 +1,5 @@
 #!/usr/bin/env emacs --script
-;;; ecukes --- Cucumber for Emacs
+;;; ecukes.el --- Cucumber for Emacs
 
 ;; Copyright (C) 2010 Johan Andersson
 
