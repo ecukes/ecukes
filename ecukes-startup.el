@@ -3,7 +3,7 @@
 
 (defun ecukes-startup-project-path ()
   "Path to the project."
-  (directory-file-name (expand-file-name default-directory)))
+  (directory-file-name (ecukes-find-project-dir)))
 
 (defun ecukes-startup-project-name ()
   "Name of the project."
