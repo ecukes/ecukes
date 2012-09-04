@@ -1,3 +1,6 @@
+;;; ecukes-setup.el --- Common setup used when running in terminal and
+;;; in emacs
+
 (setq debug-on-error t)
 (setq debug-on-entry t)
 

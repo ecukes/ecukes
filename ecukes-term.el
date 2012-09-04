@@ -34,9 +34,6 @@
 
 ;;; Code:
 
-;; TODO: this code to setup paths is duplicated in ecukes.el. We need
-;; it here because it's loaded by bash, but maybe there's a way to
-;; remove the duplication?
 (defvar ecukes-path
   (file-name-directory load-file-name)
   "Path to ecukes.")
