@@ -23,7 +23,7 @@
 
 # see README for information
 
-ECUKES_EL=$(dirname $BASH_SOURCE)/ecukes.el
+ECUKES_EL=$(dirname $BASH_SOURCE)/ecukes-term.el
 
 
 if [ -z "$ECUKES_EMACS" ] ; then

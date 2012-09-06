@@ -58,6 +58,89 @@
   (let ((buffers (set-difference (buffer-list) ecukes-run-buffers :test 'equal)))
     (mapc 'kill-buffer buffers)))
 
+(defun run-step (step &optional print background)
+  "Run STEP, including increasing counters."
+  (if previous-step-success
+      (cond
+       ((ecukes-run-step step)
+        (unless background (ecukes-stats-step-pass))
+        (if print
+            (ecukes-print-step-success step)))
+       (t
+        (unless background (ecukes-stats-step-fail))
+        (setq step-has-failed t)
+        (if print
+            (ecukes-print-step-failure step))
+        (setq previous-step-success nil)))
+    (ecukes-stats-step-skip)
+    (if print
+        (ecukes-print-step-pending step))))
+
+(defun ecukes-run-default ()
+
+  (when (ecukes-startup-run-p)
+
+  (let ((feature-files (ecukes-startup-features argv)))
+    (cond (feature-files
+
+           (ecukes-startup-load)
+
+           (ecukes-hooks-run-setup)
+
+           (dolist (feature-file feature-files)
+             (let* ((feature (ecukes-parse-feature feature-file))
+                    (background (ecukes-feature-background feature))
+                    (scenarios (ecukes-feature-scenarios feature))
+                    (steps
+                     (apply
+                      'append
+                      (if background (ecukes-background-steps background))
+                      (mapcar 'ecukes-scenario-steps scenarios)))
+                    (undefined (ecukes-steps-undefined steps)))
+
+               (setq step-has-failed nil)
+               (setq previous-step-success t)
+               (setq background-runned nil)
+
+               (cond (undefined
+                      (ecukes-print-undefined-steps undefined))
+                     ((let ((intro (ecukes-feature-intro feature)))
+                        (ecukes-print-intro intro)
+
+                        (when background
+                          (ecukes-print-background-header)
+                          (dolist (step (ecukes-background-steps background))
+                            (run-step step t))
+                          (setq background-runned t))
+
+                        (dolist (scenario scenarios)
+                          (ecukes-hooks-run-before)
+
+                          (when background
+                            (dolist (step (ecukes-background-steps background))
+                              (run-step step nil t)))
+
+                          (ecukes-print-newline)
+                          (ecukes-print-scenario-header scenario)
+                          (dolist (step (ecukes-scenario-steps scenario))
+                            (run-step step t))
+
+                          (if step-has-failed
+                              (ecukes-stats-scenario-fail)
+                            (ecukes-stats-scenario-pass))
+
+                          (setq previous-step-success t)
+                          (setq step-has-failed nil)
+
+                          (ecukes-hooks-run-after)))))))
+
+           (ecukes-hooks-run-teardown)
+
+           (ecukes-stats-print-summary))
+          (t
+           (ecukes-print-message
+            (ansi-red "You did not provide any features to run")))))))
+
 (provide 'ecukes-run)
 
 ;;; ecukes-run.el ends here
