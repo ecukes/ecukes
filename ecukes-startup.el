@@ -3,7 +3,10 @@
 
 (defun ecukes-startup-project-path ()
   "Path to the project."
-  (directory-file-name (ecukes-find-project-dir)))
+  (let ((project-dir (ecukes-find-project-dir)))
+    (if (null project-dir)
+        (error "Unable to find 'features' directory. Are you sure you're inside a Ecukes Project Directory?")
+      (directory-file-name (ecukes-find-project-dir)))))
 
 (defun ecukes-startup-project-name ()
   "Name of the project."

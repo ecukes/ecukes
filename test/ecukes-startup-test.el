@@ -2,6 +2,7 @@
   "Should load support files."
   (with-mock
    (stub directory-files => '("env.el" "foo.el" "bar.el"))
+   (stub ecukes-find-project-dir => (file-name-directory (or load-file-name buffer-file-name)))
    (mock (load) :times 3)
    (ecukes-startup-load-support)))
 
@@ -9,6 +10,7 @@
   "Should load step definition files."
   (with-mock
    (stub directory-files => '("foo-steps.el" "bar-steps.el"))
+   (stub ecukes-find-project-dir => (file-name-directory (or load-file-name buffer-file-name)))
    (mock (load) :times 2)
    (ecukes-startup-load-step-definitions)))
 
@@ -16,6 +18,7 @@
   "Should return all feature files in features directory."
   (with-mock
    (stub file-directory-p => t)
+   (stub ecukes-find-project-dir => (file-name-directory (or load-file-name buffer-file-name)))
    (let ((feature-files '("foo.feature" "bar.feature")))
      (stub directory-files => feature-files)
      (should (equal (ecukes-startup-features ()) feature-files)))))

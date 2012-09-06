@@ -3,7 +3,7 @@
 
 (defun ecukes-find-project-dir ()
   "Start in current directory and check for features dir. If
-  found then return dir path, otherwise traverse up unitl features dir is found"
+  found then return dir path, otherwise traverse up until features dir is found"
   (interactive)
   (let ((cwd (ecukes-cwd))
         (project-dir nil))
@@ -12,7 +12,9 @@
        cwd
        '(lambda (dir) (if (and (not project-dir) (ecukes-find-features-dir dir))
                      (setq project-dir dir))))
-      (or project-dir "Can't find ecukes Project Directory"))))
+      (if (or (null project-dir) (string-equal project-dir ""))
+          nil
+        (concat (ecukes-remove-last project-dir "/") "/")))))
 
 (defun ecukes-find-features-dir (dir)
   "Return true if current directory contains a subdir named 'features'"
