@@ -98,7 +98,7 @@
     (cond (feature-files
 
            (ecukes-startup-load)
-           
+
            (ecukes-hooks-run-setup)
 
            (dolist (feature-file feature-files)
@@ -129,25 +129,25 @@
 
                         (dolist (scenario scenarios)
                           (ecukes-hooks-run-before)
-                          
+
                           (when background
                             (dolist (step (ecukes-background-steps background))
                               (run-step step nil t)))
-                          
+
                           (ecukes-print-newline)
                           (ecukes-print-scenario-header scenario)
                           (dolist (step (ecukes-scenario-steps scenario))
                             (run-step step t))
-                          
+
                           (if step-has-failed
                               (ecukes-stats-scenario-fail)
                             (ecukes-stats-scenario-pass))
-                          
+
                           (setq previous-step-success t)
                           (setq step-has-failed nil)
-                          
+
                           (ecukes-hooks-run-after)))))))
-           
+
            (ecukes-hooks-run-teardown)
 
            (ecukes-stats-print-summary))
@@ -161,11 +161,8 @@
               (insert line) (insert "\n"))
             *ecukes-message-log*)
     ;; ecukes-tmp-file-target needs to get set from somewhere else
-    (write-file (getenv "ECUKES_OUTFILE")))
-  ;; kill emacs needs to happen because when ecukes-tmp-file-target
-  ;; is set, emacs is running as graphical and -q
-  (kill-emacs))
+    (write-file (getenv "ECUKES_OUTFILE"))))
 
-
+(kill-emacs (if (> ecukes-stats-scenarios-failed 0) 1 0))
 
 ;;; ecukes.el ends here
