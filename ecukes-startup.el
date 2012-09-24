@@ -1,11 +1,28 @@
 ;;; ecukes-startup.el --- Helper functions when starting up Ecukes
 
+(defvar *ecukes-last-project-dir*
+  "Ecukes will attempt to find a dir named 'features' to
+  determine the root directory of the current project. Once it's
+  found a root directory, it caches it here so that it's possible
+  and convenient to re-run ecukes outside of the project
+  directory structure if needed")
+
+(defun ecukes-find-project-dir () 
+  "Return path to closest 'features' directory or nil if no
+'features' dir is found in any parent directories"
+  (let* ((plv-project-file "features")
+         (features-path (plv-find-project-file "." "")))
+    (if features-path
+        (setq *ecukes-last-project-dir* 
+              (expand-file-name (concat features-path "/.."))))
+      *ecukes-last-project-dir*))
 
 (defun ecukes-startup-project-path ()
   "Path to the project."
   (let ((project-dir (ecukes-find-project-dir)))
     (if (null project-dir)
-        (error "Unable to find 'features' directory. Are you sure you're inside a Ecukes Project Directory?")
+        (error "Unable to find 'features' directory. Are you sure
+        you're inside a Ecukes Project Directory?")
       (directory-file-name (ecukes-find-project-dir)))))
 
 (defun ecukes-startup-project-name ()

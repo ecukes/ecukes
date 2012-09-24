@@ -16,10 +16,10 @@
   (require 'cl))
 
 (require 'ansi)
+(require 'project-local-variables)
 (require 'ecukes-template)
 (require 'ecukes-new)
 (require 'ecukes-def)
-(require 'ecukes-directories)
 (require 'ecukes-startup)
 (require 'ecukes-parse)
 (require 'ecukes-steps)
