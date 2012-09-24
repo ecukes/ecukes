@@ -51,6 +51,7 @@
   (interactive)
   (progn
     (setq *ecukes-message-log* (list ""))
+    (ecukes-stats-reset)
     (ecukes-run-default)
     (switch-to-buffer (get-buffer-create "*ecukes-output-buffer*"))
     (erase-buffer)

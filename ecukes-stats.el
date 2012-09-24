@@ -21,6 +21,17 @@
 (defvar ecukes-stats-scenarios-failed 0
   "Number of scenarios that have failed.")
 
+(defun ecukes-stats-reset ()
+  "When running ecukes inside emacs session, we need to reset the
+stats back to 0 before each run"
+  (progn
+    (setq ecukes-stats-steps 0)
+    (setq ecukes-stats-steps-passed 0)
+    (setq ecukes-stats-steps-failed 0)
+    (setq ecukes-stats-steps-skipped 0)
+    (setq ecukes-stats-scenarios 0)
+    (setq ecukes-stats-scenarios-passed 0)
+    (setq ecukes-stats-scenarios-failed 0)))
 
 (defmacro ecukes-stats-step (&rest body)
   `(progn
