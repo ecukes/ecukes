@@ -70,16 +70,15 @@
   (let ((scenarios (number-to-string ecukes-stats-scenarios))
         (passed (number-to-string ecukes-stats-scenarios-passed))
         (failed (number-to-string ecukes-stats-scenarios-failed)))
-    (with-ansi
-     (let* ((ansi-failed
-             (red "%s failed" failed))
-            (ansi-passed
-             (green "%s passed" passed))
-            (ansi-scenarios
-             (remove-if 'not (list ansi-failed ansi-passed))))
-       (if (> ecukes-stats-scenarios 0)
-           (format "%s scenarios (%s)" scenarios (mapconcat 'identity ansi-scenarios ", "))
-         "0 scenarios")))))
+    (let* ((ansi-failed
+            (ansi-red "%s failed" failed))
+           (ansi-passed
+            (ansi-green "%s passed" passed))
+           (ansi-scenarios
+            (remove-if 'not (list ansi-failed ansi-passed))))
+      (if (> ecukes-stats-scenarios 0)
+          (format "%s scenarios (%s)" scenarios (mapconcat 'identity ansi-scenarios ", "))
+        "0 scenarios"))))
 
 (defun ecukes-stats-step-summary ()
   "Return step summary as a string."
@@ -87,18 +86,17 @@
         (passed (number-to-string ecukes-stats-steps-passed))
         (failed (number-to-string ecukes-stats-steps-failed))
         (skipped (number-to-string ecukes-stats-steps-skipped)))
-    (with-ansi
-     (let* ((ansi-failed
-             (red "%s failed" failed))
-            (ansi-skipped
-             (cyan "%s skipped" skipped))
-            (ansi-passed
-             (green "%s passed" passed))
-            (ansi-steps
-             (remove-if 'not (list ansi-failed ansi-skipped ansi-passed))))
-       (if (> ecukes-stats-steps 0)
-           (format "%s steps (%s)" steps (mapconcat 'identity ansi-steps ", "))
-         "0 steps")))))
+    (let* ((ansi-failed
+            (ansi-red "%s failed" failed))
+           (ansi-skipped
+            (ansi-cyan "%s skipped" skipped))
+           (ansi-passed
+            (ansi-green "%s passed" passed))
+           (ansi-steps
+            (remove-if 'not (list ansi-failed ansi-skipped ansi-passed))))
+      (if (> ecukes-stats-steps 0)
+          (format "%s steps (%s)" steps (mapconcat 'identity ansi-steps ", "))
+        "0 steps"))))
 
 
 (provide 'ecukes-stats)
