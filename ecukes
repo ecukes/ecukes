@@ -27,7 +27,11 @@ ECUKES_EL=$(dirname $BASH_SOURCE)/ecukes.el
 
 
 if [ -z "$ECUKES_EMACS" ] ; then
-    ECUKES_EMACS="emacs"
+    if [ -z "$EMACS" ] ; then
+        ECUKES_EMACS="$EMACS"
+    else
+        ECUKES_EMACS="emacs"
+    fi
 fi
 
 if [ "$1" == "--graphical" ] ; then
