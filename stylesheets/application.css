@@ -58,6 +58,7 @@ code {
   background: #fafafa;
   padding: 10px;
   margin-bottom: 30px;
+  overflow: scroll;
 }
 
 code.example ul {
