@@ -152,11 +152,11 @@
       (forward-line 1)
       (while (not (string-match-p ecukes-parse-py-string-re (ecukes-parse-line)))
         (let ((line (ecukes-parse-line)))
-          (if (<= whites (length line))
-              (add-to-list 'lines (substring line whites) t 'eq)
-            (add-to-list 'lines nil t 'eq)))
+          (push
+           (if (<= whites (length line)) (substring line whites) nil)
+           lines))
         (forward-line 1))
-      (mapconcat 'identity lines "\n"))))
+      (mapconcat 'identity (nreverse lines) "\n"))))
 
 (defun ecukes-parse-line (&optional strip-whitespace)
   "Parse current line."
