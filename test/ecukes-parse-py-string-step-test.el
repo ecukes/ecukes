@@ -29,3 +29,11 @@
    (lambda (name type arg)
      (should (eq type 'py-string))
      (should (equal arg "Lorem ipsum\nLorem ipsum")))))
+
+(ert-deftest parse-py-string-step-two-empty-lines ()
+  "Should parse py string with several empty lines."
+  (with-parse-step
+   "py-string-two-empty-lines"
+   (lambda (name type arg)
+     (should (eq type 'py-string))
+     (should (equal arg "abc\n\ndef\n")))))
