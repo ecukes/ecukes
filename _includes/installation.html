@@ -1,0 +1,54 @@
+<div id="installation" class="section">
+  <div class="row">
+    <div class="span12">
+      <div class="page-header">
+        <h2>Installation</h2>
+      </div>
+
+      <h3>Carton</h3>
+
+      <p>
+        It is highly recommended to install Ecukes is by
+        using <a href="https://github.com/rejeep/carton">Carton</a>. Install
+        Carton then add a <strong>Carton</strong> file looking something
+        like this.
+      </p>
+
+      <pre><code>(source "melpa" "http://melpa.milkbox.net/packages/")
+
+(package "super-duper" "0.0.1" "Super Duper.")
+
+(development
+  (depends-on "ecukes")
+  (depends-on "espuds"))</code></pre>
+
+      <p>
+        Next, run the <strong>carton</strong> command to install all
+        dependencies.
+      </p>
+
+      <p>
+        A simple way to run your features is to create
+        a <strong>Makefile</strong>.
+      </p>
+
+      <pre><code>ECUKES = $(shell find elpa/ecukes-*/ecukes | tail -1)
+
+all:
+	carton exec ${ECUKES} features
+</code></pre>
+
+      <h3>Submodule</h3>
+
+      <p>
+        If you prefer to install Ecukes using a submodule, add both Ecukes
+        and <a href="https://github.com/rejeep/ansi">Ansi</a> as
+        submodules. Ecukes requires ansi at runtime, which means that it
+        must be available in Emacs <strong>load-path</strong>. This line
+        does exactly that:
+      </p>
+
+      <pre><code>EMACSLOADPATH=$(emacs -Q --batch --eval '(message (mapconcat (quote identity) (append (file-expand-wildcards "util/*" t) load-path) ":"))' 2>&1) ./util/ecukes/ecukes features</code></pre>
+    </div>
+  </div>
+</div>

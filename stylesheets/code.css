@@ -1,0 +1,26 @@
+.code {
+  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-size: 12px;
+}
+
+.code ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.code li {
+  color: #015B4E;
+}
+
+.code .command, .code .feature .header, .code .background, .code .scenario {
+  margin-bottom: 20px;
+}
+
+.code .command, .code .feature .header .name, .code .background .name, .code .scenario .name, .code .stats li {
+  color: black;
+}
+
+.code .feature .header ul, .code .background ul, .code .scenario ul {
+  margin-left: 15px;
+}

@@ -1,0 +1,87 @@
+<div id="example" class="section">
+  <div class="row">
+    <div class="span12">
+      <div class="page-header">
+        <h2>Example</h2>
+      </div>
+
+      <p>
+        To get an idea of how Ecukes can be used, here is an example
+        from a feature in
+        <a href="http://github.com/rejeep/drag-stuff">drag-stuff</a>.
+      </p>
+
+      <div class="code well">
+        <div class="command">
+          ~/Code/drag-stuff $ carton exec ecukes features/line.feature
+        </div>
+
+        <div class="feature">
+          <div class="header">
+            <span class="name">Feature: Drag line</span>
+            <ul>
+              <li>In order to move a line up and down</li>
+              <li>As an Emacs user</li>
+              <li>I want to drag it</li>
+            </ul>
+          </div>
+
+          <div class="background">
+            <span class="name">Background:</span>
+            <ul>
+              <li>Given I am in the buffer "*drag-stuff*"</li>
+              <li>And the buffer is empty</li>
+              <li>And I insert</li>
+              <ul class="py-string">
+                <li>"""</li>
+                <li>line 1</li>
+                <li>line 2</li>
+                <li>"""</li>
+              </ul>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+          </div>
+
+          <div class="scenario">
+            <span class="name">Scenario: Drag line up</span>
+            <ul>
+              <li>When I go to line "2"</li>
+              <li>And I press "&lt;M-up&gt;"</li>
+              <li>Then I should see:</li>
+              <ul class="py-string">
+                <li>"""</li>
+                <li>line 2</li>
+                <li>line 1</li>
+                <li>"""</li>
+              </ul>
+            </ul>
+          </div>
+
+          <div class="scenario">
+            <span class="name">Scenario: Drag line down</span>
+            <ul>
+              <li>When I go to line "1"</li>
+              <li>And I press "&lt;M-down&gt;"</li>
+              <li>Then I should see:</li>
+              <ul class="py-string">
+                <li>"""</li>
+                <li>line 2</li>
+                <li>line 1</li>
+                <li>"""</li>
+              </ul>
+            </ul>
+          </div>
+        </div>
+
+        <div class="stats">
+          <ul>
+            <li>2 scenarios (<span class="failed">0 failed</span>, <span class="succeded">2 passed</span>)</li>
+            <li>11 steps (<span class="failed">0 failed</span>, <span class="succeded">11 passed</span>)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
