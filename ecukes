@@ -32,25 +32,19 @@
 
 ECUKES_EL=$(dirname $BASH_SOURCE)/ecukes.el
 
-
 if [ -z "$ECUKES_EMACS" ] ; then
-    if [ -z "$EMACS" ] ; then
-        ECUKES_EMACS="$EMACS"
-    else
-        ECUKES_EMACS="emacs"
-    fi
+  if [ -z "$EMACS" ] ; then
+    ECUKES_EMACS="emacs"
+  else
+    ECUKES_EMACS="$EMACS"
+  fi
 fi
 
-if [ "$1" == "--graphical" ] ; then
-    # create spec output file
-    export ECUKES_OUTFILE=`mktemp /tmp/emacsoutput.XXXXX`
-    $ECUKES_EMACS --load "$ECUKES_EL" -q "${@:2}"
-
-    # send that file to the console
-    cat $ECUKES_OUTFILE
-
-    # clean up
-    rm $ECUKES_OUTFILE
+if [ "$1" == "--batch" -o "$1" == "--script" ] ; then
+  $ECUKES_EMACS --script "$ECUKES_EL" "${@:2}"
 else
-    $ECUKES_EMACS --script $ECUKES_EL "$@"
+  export ECUKES_OUTFILE=$(mktemp /tmp/ecukes.XXX)
+  $ECUKES_EMACS --load "$ECUKES_EL" -Q "$@"
+  cat $ECUKES_OUTFILE
+  rm $ECUKES_OUTFILE
 fi
