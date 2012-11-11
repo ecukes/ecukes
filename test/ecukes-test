@@ -13,6 +13,8 @@
 (require 'cl)
 (require 'ert)
 (require 'el-mock)
+(require 's)
+(require 'dash)
 
 (require 'ecukes-template)
 (require 'ecukes-new)
