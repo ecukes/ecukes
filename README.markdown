@@ -18,14 +18,3 @@ If you don't know anything about Cucumber I suggest you read up a bit
 about it before continuing with Ecukes.
 
 See <http://ecukes.info> for more information!
-
-## To run inside emacs
-
-Add ecukes directory to load path. I like to keep ecukes inside my user home
-directory, so I use this:
-
-    (add-to-list 'load-path (concat user-emacs-directory user-login-name "/ecukes"))
-    (require 'ecukes)
-
-Then, open a buffer inside your elisp project and run `M-x ecukes`
-
