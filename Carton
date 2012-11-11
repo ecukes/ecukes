@@ -2,6 +2,7 @@
 
 (package "ecukes" "0.2.1" "Cucumber for Emacs.")
 
+(depends-on "s" "1.3.0")
 (depends-on "ansi" "0.0.2")
 (depends-on "project-local-variables")
 
