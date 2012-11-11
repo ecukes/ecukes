@@ -51,8 +51,7 @@
 
 (defun ecukes-hooks-run (hooks)
   "Run HOOKS."
-  (mapc 'funcall hooks))
-
+  (-each hooks 'funcall))
 
 (provide 'ecukes-hooks)
 
