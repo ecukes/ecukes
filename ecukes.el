@@ -7,6 +7,7 @@
 (add-to-list 'load-path ecukes-path)
 
 (require 'ecukes-setup)
+(require 'ansi-color)
 
 (defun ecukes ()
   (interactive)
