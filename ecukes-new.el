@@ -1,6 +1,10 @@
 ;;; ecukes-new.el --- Setup up Ecukes for a project
 
-(add-to-list 'load-path (file-name-directory load-file-name))
+(defvar ecukes-path
+  (file-name-directory load-file-name)
+  "Path to ecukes.")
+
+(add-to-list 'load-path ecukes-path)
 
 (require 's)
 (require 'ansi)
