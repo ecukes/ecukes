@@ -1,4 +1,4 @@
-;;; ecukes-setup.el --- Common setup
+;;; ecukes-setup.el --- Common setup for drivers
 
 (eval-when-compile
   (require 'cl))
@@ -8,11 +8,28 @@
 (require 'ecukes-project)
 (require 'ecukes-template)
 
+(defvar ecukes-message-log nil
+  "List of messages to `message'.")
+
+(defadvice message (after ecukes-log-messages-to-buffer activate)
+  (when ad-return-value
+    (add-to-list 'ecukes-message-log ad-return-value t)))
+
+(defun ecukes-quit (&optional exit-code)
+  "Quit Emacs with EXIT-CODE and write to file if in graphical mode."
+  (or exit-code (setq exit-code 1))
+  (let ((ecukes-outfile (getenv "ECUKES_OUTFILE")))
+    (when ecukes-outfile
+      (with-temp-buffer
+        (insert (mapconcat 'identity ecukes-message-log "\n"))
+        (write-file ecukes-outfile nil))))
+  (kill-emacs exit-code))
+
 (defun usage ()
   "Show usage information and quit."
   (message
    (ecukes-template-get 'usage))
-  (kill-emacs))
+  (ecukes-quit))
 
 (defun ecukes-setup ()
   "Validate and load."

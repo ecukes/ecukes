@@ -6,19 +6,15 @@
 
 (add-to-list 'load-path ecukes-path)
 
+(require 'ecukes-run)
 (require 'ecukes-setup)
 
-(ecukes-run-default)
+(ecukes-setup)
+;; Send what files to run...!
+(ecukes-run)
 
-(when (getenv "ECUKES_OUTFILE")
-  (with-temp-buffer
-    (mapcar (lambda (line)
-              (insert line) (insert "\n"))
-            *ecukes-message-log*)
-    ;; ecukes-tmp-file-target needs to get set from somewhere else
-    (write-file (getenv "ECUKES_OUTFILE")))
-  ;; kill emacs needs to happen because when ecukes-tmp-file-target
-  ;; is set, emacs is running as graphical and -q
-  (kill-emacs))
+;; TODO:
+;; Check for failing steps and return exit code thereafter
+(ecukes-quit)
 
 ;;; ecukes-term.el ends here

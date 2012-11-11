@@ -1,6 +1,28 @@
 (require 'ansi)
 (require 'ecukes-setup)
 
+(ert-deftest setup-ecukes-quit-failure ()
+  "Should quit with exit code 1 by default."
+  (with-mock
+   (stub getenv => nil)
+   (mock (kill-emacs 1) :times 1)
+   (ecukes-quit)))
+
+(ert-deftest setup-ecukes-quit-success ()
+  "Should quit with exit code 0 on success."
+  (with-mock
+   (stub getenv => nil)
+   (mock (kill-emacs 0) :times 1)
+   (ecukes-quit 0)))
+
+(ert-deftest setup-ecukes-quit-graphical ()
+  "Should write to file before quit when graphical."
+  (with-mock
+   (stub getenv => "/tmp/ecukes.XYZ")
+   (mock (kill-emacs 1) :times 1)
+   (mock (write-file "/tmp/ecukes.XYZ") :times 1)
+   (ecukes-quit)))
+
 (ert-deftest setup-setup ()
   "Should validate and setup."
   (with-mock
