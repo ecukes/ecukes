@@ -9,9 +9,10 @@
 
 (setq ecukes-path (expand-file-name ".." ecukes-test-path))
 (setq ecukes-fixtures-path (expand-file-name "fixtures" ecukes-test-path))
-
-(eval-when-compile
-  (require 'cl))
+  
+(require 'cl)
+(require 'ert)
+(require 'el-mock)
 
 (require 'ecukes-template)
 (require 'ecukes-new)
@@ -24,8 +25,6 @@
 (require 'ecukes-hooks)
 (require 'ecukes-stats)
 (require 'ansi)
-(require 'ert)
-(require 'el-mock)
 
 (load (expand-file-name "test-helper.el" ecukes-test-path) nil t)
 (dolist (test-file (or argv (directory-files ecukes-test-path t "-test.el$")))
