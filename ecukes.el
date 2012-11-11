@@ -29,3 +29,5 @@
     (font-lock-mode t)))
 
 (provide 'ecukes)
+
+;;; ecukes.el ends here
