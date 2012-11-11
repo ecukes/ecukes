@@ -11,6 +11,6 @@
     (should (equal "project" (ecukes-project-name)))))
 
 (ert-deftest project-features-path ()
-  "Should return correct project features path name."
+  "Should return correct project features path."
   (let ((default-directory "/path/to/project"))
     (should (equal "/path/to/project/features" (ecukes-project-features-path)))))
