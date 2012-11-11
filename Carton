@@ -3,6 +3,7 @@
 (package "ecukes" "0.2.1" "Cucumber for Emacs.")
 
 (depends-on "ansi" "0.0.2")
+(depends-on "project-local-variables")
 
 (development
  (depends-on "el-mock"))
