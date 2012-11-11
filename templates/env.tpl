@@ -8,14 +8,14 @@
        (project-directory
         (file-name-directory
          (directory-file-name features-directory))))
-  (setq {project-name}-root-path project-directory)
-  (setq {project-name}-util-path (expand-file-name "util" {project-name}-root-path)))
+  (setq {{project-name}}-root-path project-directory)
+  (setq {{project-name}}-util-path (expand-file-name "util" {{project-name}}-root-path)))
 
-(add-to-list 'load-path {project-name}-root-path)
-(add-to-list 'load-path (expand-file-name "espuds" {project-name}-util-path))
-(add-to-list 'load-path (expand-file-name "ert" {project-name}-util-path))
+(add-to-list 'load-path {{project-name}}-root-path)
+(add-to-list 'load-path (expand-file-name "espuds" {{project-name}}-util-path))
+(add-to-list 'load-path (expand-file-name "ert" {{project-name}}-util-path))
 
-(require '{project-name})
+(require '{{project-name}})
 (require 'espuds)
 (require 'ert)
 

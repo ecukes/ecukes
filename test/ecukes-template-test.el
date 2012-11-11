@@ -3,7 +3,7 @@
   (should
    (equal
     (ecukes-template-substitute
-     "replace {foo} in string"
+     "replace {{foo}} in string"
      '(("foo" . "bar")))
     "replace bar in string")))
 
@@ -12,7 +12,7 @@
   (should
    (equal
     (ecukes-template-substitute
-     "replace {foo} and {baz} in string"
+     "replace {{foo}} and {{baz}} in string"
      '(("foo" . "bar")
        ("baz" . "qux")))
     "replace bar and qux in string")))
@@ -23,5 +23,5 @@
    (equal
     (ecukes-template-substitute
      "do not replace anything"
-     '(("foo" . "bar")))
+     '(("not" . "NOT")))
     "do not replace anything")))
