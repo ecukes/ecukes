@@ -35,6 +35,6 @@
       (error))
     (funcall fn scenario name step-names tags)))
 
-(defun feature-file-path (category nameb)
+(defun feature-file-path (category name)
   (let ((category-path (expand-file-name category ecukes-fixtures-path)))
     (expand-file-name (format "%s.feature" name) category-path)))
