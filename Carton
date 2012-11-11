@@ -3,3 +3,6 @@
 (package "ecukes" "0.2.1" "Cucumber for Emacs.")
 
 (depends-on "ansi" "0.0.2")
+
+(development
+ (depends-on "el-mock"))
