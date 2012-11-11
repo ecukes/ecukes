@@ -30,7 +30,7 @@
 # Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 # Boston, MA 02110-1301, USA.
 
-ECUKES_EL=$(dirname $BASH_SOURCE)/ecukes.el
+ECUKES_EL=$(dirname $BASH_SOURCE)/ecukes-term.el
 
 if [ -z "$ECUKES_EMACS" ] ; then
   if [ -z "$EMACS" ] ; then
