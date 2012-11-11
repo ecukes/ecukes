@@ -8,7 +8,7 @@
 (add-to-list 'load-path ecukes-test-path)
 
 (setq ecukes-path (expand-file-name ".." ecukes-test-path))
-(setq ecukes-test-features-path (expand-file-name "features" ecukes-test-path))
+(setq ecukes-fixtures-path (expand-file-name "fixtures" ecukes-test-path))
 
 (eval-when-compile
   (require 'cl))
