@@ -12,6 +12,14 @@
   "Path to project features dir."
   (directory-file-name (expand-file-name "features" (ecukes-project-path))))
 
+(defun ecukes-project-support-path ()
+  "Path to project features dir."
+  (directory-file-name (expand-file-name "support" (ecukes-project-features-path))))
+
+(defun ecukes-project-step-definitions-path ()
+  "Path to project step definitions dir."
+  (directory-file-name (expand-file-name "step-definitions" (ecukes-project-features-path))))
+
 (provide 'ecukes-project)
 
 ;;; ecukes-project.el ends here
