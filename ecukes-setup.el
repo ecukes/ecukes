@@ -23,7 +23,7 @@
   (let ((ecukes-outfile (getenv "ECUKES_OUTFILE")))
     (when ecukes-outfile
       (with-temp-buffer
-        (insert (mapconcat 'identity ecukes-message-log "\n"))
+        (insert (s-join "\n" ecukes-message-log))
         (write-file ecukes-outfile nil))))
   (kill-emacs exit-code))
 
