@@ -50,5 +50,5 @@ else
   export ECUKES_OUTFILE=$(mktemp /tmp/ecukes.XXX)
   $ECUKES_EMACS --load "$ECUKES_EL" -Q "$@"
   cat $ECUKES_OUTFILE
-  rm $ECUKES_OUTFILE
+  rm -f $ECUKES_OUTFILE
 fi
