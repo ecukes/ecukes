@@ -32,6 +32,7 @@
 # Boston, MA 02110-1301, USA.
 
 ECUKES_EL=$(dirname $BASH_SOURCE)/ecukes-term.el
+ECUKES_NEW=$(dirname $BASH_SOURCE)/ecukes-new.el
 
 if [ -z "$ECUKES_EMACS" ] ; then
   if [ -z "$EMACS" ] ; then
@@ -41,7 +42,9 @@ if [ -z "$ECUKES_EMACS" ] ; then
   fi
 fi
 
-if [ "$1" == "--batch" -o "$1" == "--script" ] ; then
+if [ "$1" == "--new" ] ; then
+  $ECUKES_EMACS --script "$ECUKES_NEW" --eval "(ecukes-new)"
+elif [ "$1" == "--batch" -o "$1" == "--script" ] ; then
   $ECUKES_EMACS --script "$ECUKES_EL" "${@:2}"
 else
   export ECUKES_OUTFILE=$(mktemp /tmp/ecukes.XXX)

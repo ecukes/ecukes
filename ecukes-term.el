@@ -8,8 +8,6 @@
 
 (require 'ecukes-setup)
 
-(add-to-list 'command-switch-alist '("--new" . ecukes-new-handler))
-
 (ecukes-run-default)
 
 (when (getenv "ECUKES_OUTFILE")
