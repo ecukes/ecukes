@@ -4,12 +4,7 @@
   (file-name-directory load-file-name)
   "Path to ecukes.")
 
-(defvar ecukes-vendor-path
-  (expand-file-name "vendor" ecukes-path)
-  "Path to ecukes vendor.")
-
 (add-to-list 'load-path ecukes-path)
-(add-to-list 'load-path ecukes-vendor-path)
 
 (require 'ecukes-setup)
 
