@@ -1,3 +1,12 @@
+(require 'ecukes-hooks)
+
+(defmacro with-hooks (&rest body)
+  `(let ((ecukes-hooks-before)
+         (ecukes-hooks-after)
+         (ecukes-hooks-setup)
+         (ecukes-hooks-teardown))
+     ,@body))
+
 (ert-deftest hooks-before ()
   "Should run before hooks."
   (with-mock
@@ -33,3 +42,11 @@
     (Teardown
      (teardown-mock))
     (ecukes-hooks-run-teardown))))
+
+(ert-deftest hooks-append ()
+  "Should append hooks."
+  (with-hooks
+   (Before "1")
+   (Before "2")
+   (should (equal "1" (funcall (nth 0 ecukes-hooks-before))))
+   (should (equal "2" (funcall (nth 1 ecukes-hooks-before))))))

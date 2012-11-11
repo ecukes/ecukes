@@ -23,7 +23,6 @@
 (require 'ecukes-steps)
 (require 'ecukes-run)
 (require 'ecukes-print)
-(require 'ecukes-hooks)
 (require 'ecukes-stats)
 (require 'ansi)
 
