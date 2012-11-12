@@ -1,3 +1,5 @@
+(require 'ecukes-template)
+
 (ert-deftest template-substitute-with-single-substitution ()
   "Should substitute single substitution."
   (should
