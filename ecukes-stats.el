@@ -69,45 +69,34 @@ stats back to 0 before each run"
   (ecukes-stats-scenario
    (setq ecukes-stats-scenarios-failed (1+ ecukes-stats-scenarios-failed))))
 
-(defun ecukes-stats-print-summary ()
-  "Print scenario and step summary."
-  (message
-   "\n%s\n%s"
-   (ecukes-stats-scenario-summary)
-   (ecukes-stats-step-summary)))
+(defun ecukes-stats-step-summary ()
+  "Return step summary as a string."
+  (if (zerop ecukes-stats-steps)
+      "0 steps"
+    (format
+     "%d steps (%s, %s, %s)"
+     ecukes-stats-steps
+     (ansi-red "%d failed" ecukes-stats-steps-failed)
+     (ansi-cyan "%d skipped" ecukes-stats-steps-skipped)
+     (ansi-green "%d passed" ecukes-stats-steps-passed))))
 
 (defun ecukes-stats-scenario-summary ()
   "Return scenario summary as a string."
-  (let ((scenarios (number-to-string ecukes-stats-scenarios))
-        (passed (number-to-string ecukes-stats-scenarios-passed))
-        (failed (number-to-string ecukes-stats-scenarios-failed)))
-    (let* ((ansi-failed
-            (ansi-red "%s failed" failed))
-           (ansi-passed
-            (ansi-green "%s passed" passed))
-           (ansi-scenarios
-            (remove-if 'not (list ansi-failed ansi-passed))))
-      (if (> ecukes-stats-scenarios 0)
-          (format "%s scenarios (%s)" scenarios (mapconcat 'identity ansi-scenarios ", "))
-        "0 scenarios"))))
+  (if (zerop ecukes-stats-scenarios)
+      "0 scenarios"
+    (format
+     "%d scenarios (%s, %s)"
+     ecukes-stats-scenarios
+     (ansi-red "%d failed" ecukes-stats-scenarios-failed)
+     (ansi-green "%d passed" ecukes-stats-scenarios-passed))))
 
-(defun ecukes-stats-step-summary ()
-  "Return step summary as a string."
-  (let ((steps (number-to-string ecukes-stats-steps))
-        (passed (number-to-string ecukes-stats-steps-passed))
-        (failed (number-to-string ecukes-stats-steps-failed))
-        (skipped (number-to-string ecukes-stats-steps-skipped)))
-    (let* ((ansi-failed
-            (ansi-red "%s failed" failed))
-           (ansi-skipped
-            (ansi-cyan "%s skipped" skipped))
-           (ansi-passed
-            (ansi-green "%s passed" passed))
-           (ansi-steps
-            (remove-if 'not (list ansi-failed ansi-skipped ansi-passed))))
-      (if (> ecukes-stats-steps 0)
-          (format "%s steps (%s)" steps (mapconcat 'identity ansi-steps ", "))
-        "0 steps"))))
+(defun ecukes-stats-summary ()
+  "Return scenario and step summary."
+  (s-join
+   "\n"
+   (list
+    (ecukes-stats-scenario-summary)
+    (ecukes-stats-step-summary))))
 
 
 (provide 'ecukes-stats)
