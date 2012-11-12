@@ -1,3 +1,5 @@
+(require 'ecukes-stats)
+
 (defmacro with-stats (&rest body)
   `(let ((ecukes-stats-steps 0)
          (ecukes-stats-steps-passed 0)

@@ -22,7 +22,6 @@
 (require 'ecukes-steps)
 (require 'ecukes-run)
 (require 'ecukes-print)
-(require 'ecukes-stats)
 (require 'ansi)
 
 (load (expand-file-name "test-helper.el" ecukes-test-path) nil t)
