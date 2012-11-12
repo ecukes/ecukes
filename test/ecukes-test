@@ -16,7 +16,6 @@
 (require 's)
 (require 'dash)
 
-(require 'ecukes-new)
 (require 'ecukes-def)
 (require 'ecukes-parse)
 (require 'ecukes-steps)
