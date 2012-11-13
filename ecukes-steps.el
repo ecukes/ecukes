@@ -1,75 +1,60 @@
 ;;; ecukes-steps.el --- Functions to define and call step definitions
 
 
-(defvar ecukes-steps-definitions ()
+(defvar ecukes-steps-definitions nil
   "All defined step definitions.")
 
 
-(defalias 'Given 'ecukes-steps-step
+(defalias 'Given 'ecukes-steps-define-or-call-step
   "Put the system in a known state.")
 
-(defalias 'When 'ecukes-steps-step
+(defalias 'When 'ecukes-steps-define-or-call-step
   "Describe the key action.")
 
-(defalias 'Then 'ecukes-steps-step
+(defalias 'Then 'ecukes-steps-define-or-call-step
   "Observe outcomes.")
 
-(defalias 'And 'ecukes-steps-step
+(defalias 'And 'ecukes-steps-define-or-call-step
   "Make Given/When/Then read more fluently.")
 
-(defalias 'But 'ecukes-steps-step
+(defalias 'But 'ecukes-steps-define-or-call-step
   "Make Given/When/Then read more fluently.")
 
-(defun ecukes-steps-step (regex &rest args)
+(defun ecukes-steps-define-or-call-step (name &rest args)
   "Define or call step."
   (let ((arg (car args)))
     (if (functionp arg)
-        (add-to-list 'ecukes-steps-definitions `(,regex . ,arg))
-      (let* ((query (apply 'format regex args))
-             (def (ecukes-steps-find query)))
-        (if def
-            (let ((fn (ecukes-step-def-fn def)))
-              (apply fn args))
-          (error "Definition '%s' have not been defined" query))))))
+        (ecukes-steps-define name arg)
+      (ecukes-steps-call name args))))
+
+(defun ecukes-steps-define (regex fn)
+  "Define step."
+  (unless (--any? (equal regex it) ecukes-steps-definitions)
+    (add-to-list
+     'ecukes-steps-definitions
+     (make-ecukes-step-def :regex regex :fn fn))))
+
+(defun ecukes-steps-call (name args)
+  "Call step"
+  (let* ((query (apply 'format (cons name args)))
+         (step-def (ecukes-steps-find query)))
+    (if step-def
+        (apply (ecukes-step-def-fn step-def) args)
+      (error (ansi-red "Step not defined: `%s`" query)))))
+
+(defun ecukes-steps-missing-definition (steps)
+  "Return from STEPS those who have not been defined."
+  (-filter
+   (lambda (step)
+     (not (ecukes-steps-find (ecukes-step-name step))))
+   steps))
 
 (defun ecukes-steps-find (name)
-  "Find step definition bound to NAME."
-  (let* ((query (ecukes-steps-query name))
-         (definition
-           (find-if
-            (lambda (def)
-              (string-match-p (car def) query))
-            ecukes-steps-definitions))
-         (regex (car definition))
-         (fn (cdr definition))
-         (index 1)
-         (args))
-    (when definition
-      (string-match regex query)
-      (while (match-string index query)
-        (add-to-list 'args (match-string index query) t 'eq)
-        (setq index (1+ index)))
-      (make-ecukes-step-def :fn fn :args args))))
-
-(defun ecukes-steps-undefined (steps)
-  "Remove all items that are not defined in STEPS."
-  (delete-dups
-   (remove-if
-    (lambda (step)
-      (let ((name (ecukes-step-name step)))
-        (ecukes-steps-find name)))
-    steps)))
-
-(defun ecukes-steps-query (name-or-step)
-  "Return a query based of NAME-OR-STEP."
-  (let ((name
-         (if (ecukes-step-p name-or-step)
-             (ecukes-step-name step)
-           name-or-step)))
-    (if (string-match ecukes-parse-step-re name)
-        (match-string 2 name)
-      name)))
-
+  "Find step by name."
+  (-first
+   (lambda (step-def)
+     (s-matches? (ecukes-step-def-regex step-def) name))
+   ecukes-steps-definitions))
 
 (provide 'ecukes-steps)
 

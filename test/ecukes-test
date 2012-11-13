@@ -18,7 +18,6 @@
 
 (require 'ecukes-def)
 (require 'ecukes-parse)
-(require 'ecukes-steps)
 (require 'ecukes-run)
 (require 'ecukes-print)
 (require 'ansi)

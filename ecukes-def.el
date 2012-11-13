@@ -23,8 +23,8 @@ optional, but is conventionally included."
   name arg type err)
 
 (defstruct ecukes-step-def
-  "A step definition"
-  fn args)
+  "A step definition."
+  regex fn)
 
 
 (provide 'ecukes-def)
