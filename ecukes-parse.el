@@ -81,9 +81,9 @@
   (save-excursion
     (forward-line -1)
     (let ((line (ecukes-parse-line t)))
-      (when (and line (string-match ecukes-parse-tags-re line))
-        (delete-dups
-         (mapcar
+      (when (and line (s-matches? ecukes-parse-tags-re line))
+        (-distinct
+         (-map
           (lambda (tag)
             (substring tag 1))
           (split-string line "\\s-+")))))))
@@ -116,14 +116,14 @@
   (save-excursion
     (forward-line 1)
     (let ((line (ecukes-parse-line)))
-      (string-match-p ecukes-parse-table-re line))))
+      (s-matches? ecukes-parse-table-re line))))
 
 (defun ecukes-parse-table-step ()
   "Parse table step."
   (save-excursion
     (forward-line 1)
     (let ((rows))
-      (while (string-match-p ecukes-parse-table-re (ecukes-parse-line))
+      (while (s-matches? ecukes-parse-table-re (ecukes-parse-line))
         (add-to-list 'rows (ecukes-parse-table-step-row) t 'eq)
         (forward-line 1))
       rows)))
@@ -138,7 +138,7 @@
   (save-excursion
     (forward-line 1)
     (let ((line (ecukes-parse-line)))
-      (string-match-p ecukes-parse-py-string-re line))))
+      (s-matches? ecukes-parse-py-string-re line))))
 
 (defun ecukes-parse-py-string-step ()
   "Parse py string step."
@@ -150,21 +150,18 @@
              (current-column)))
           (lines))
       (forward-line 1)
-      (while (not (string-match-p ecukes-parse-py-string-re (ecukes-parse-line)))
+      (while (not (s-matches? ecukes-parse-py-string-re (ecukes-parse-line)))
         (let ((line (ecukes-parse-line)))
           (if (<= whites (length line))
               (add-to-list 'lines (substring line whites) t 'eq)
             (add-to-list 'lines nil t 'eq)))
         (forward-line 1))
-      (mapconcat 'identity lines "\n"))))
+      (s-join "\n" lines))))
 
 (defun ecukes-parse-line (&optional strip-whitespace)
   "Parse current line."
   (let* ((raw (buffer-substring (line-beginning-position) (line-end-position)))
-         (line
-          (if strip-whitespace
-              (replace-regexp-in-string "^\\s-*\\|\\s-*$" "" raw)
-            raw)))
+         (line (if strip-whitespace (s-trim raw) raw)))
     (if (and strip-whitespace (equal line "")) nil line)))
 
 (defun ecukes-forward-step ()
@@ -172,7 +169,7 @@
   (forward-line 1)
   (let ((line (ecukes-parse-line t)))
     (unless (ecukes-parse-new-section-p)
-      (if (string-match-p ecukes-parse-step-re (or line ""))
+      (if (s-matches? ecukes-parse-step-re (or line ""))
           (not (not line))
         (ecukes-forward-step)))))
 
@@ -181,8 +178,8 @@
   (let ((line (or (ecukes-parse-line t) "")))
     (or
      (eobp)
-     (string-match-p ecukes-parse-background-re line)
-     (string-match-p ecukes-parse-scenario-re line))))
+     (s-matches? ecukes-parse-background-re line)
+     (s-matches? ecukes-parse-scenario-re line))))
 
 
 (provide 'ecukes-parse)
