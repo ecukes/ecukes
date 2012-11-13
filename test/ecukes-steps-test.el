@@ -98,14 +98,4 @@
    (let* ((step
            (mock-step "Given a known state"))
           (steps (list step step)))
-     (should (equal (list step) (ecukes-steps-missing-definition steps))))))
-
-(ert-deftest steps-missing-definition-different-head ()
-  "Should return uniq step when same body, but different head."
-  (with-steps
-   (let* ((and
-           (mock-step "And a known state"))
-          (but
-           (mock-step "But a known state"))
-          (steps (list and but)))
-     (should (equal (length (ecukes-steps-missing-definition steps)) 1)))))
+     (should (equal steps (ecukes-steps-missing-definition steps))))))

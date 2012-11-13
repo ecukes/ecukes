@@ -45,16 +45,10 @@
 
 (defun ecukes-steps-missing-definition (steps)
   "Return from STEPS those who have not been defined."
-  (let ((-compare-fn
-         (lambda (step-1 step-2)
-           (equal
-            (ecukes-step-body step-1)
-            (ecukes-step-body step-2)))))
-    (-distinct
-     (-filter
-      (lambda (step)
-        (not (ecukes-steps-find (ecukes-step-body step))))
-      steps))))
+  (-filter
+   (lambda (step)
+     (not (ecukes-steps-find (ecukes-step-body step))))
+   steps))
 
 (defun ecukes-steps-find (name)
   "Find step by name."
