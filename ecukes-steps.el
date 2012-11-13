@@ -45,17 +45,11 @@
 
 (defun ecukes-steps-missing-definition (steps)
   "Return from STEPS those who have not been defined."
-  (-reject
-   (lambda (step)
-     (ecukes-steps-find (ecukes-step-body step)))
-   steps))
+  (--reject (ecukes-steps-find (ecukes-step-body it)) steps))
 
 (defun ecukes-steps-find (name)
   "Find step by name."
-  (-first
-   (lambda (step-def)
-     (s-matches? (ecukes-step-def-regex step-def) name))
-   ecukes-steps-definitions))
+  (--first (s-matches? (ecukes-step-def-regex it) name) ecukes-steps-definitions))
 
 (provide 'ecukes-steps)
 
