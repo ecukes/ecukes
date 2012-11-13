@@ -1,3 +1,5 @@
+(require 'ecukes-parse)
+
 (defun should-parse-scenario (name)
   (with-parse-scenario
    name

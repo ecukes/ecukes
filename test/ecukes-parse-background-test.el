@@ -1,3 +1,5 @@
+(require 'ecukes-parse)
+
 (defun with-parse-background (name fn)
   (let* ((feature-file (fixture-file-path "background" name))
          (feature (ecukes-parse-feature feature-file))

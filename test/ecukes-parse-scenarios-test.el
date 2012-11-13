@@ -1,3 +1,5 @@
+(require 'ecukes-parse)
+
 (defun with-parse-scenarios (name fn)
   (let* ((feature-file (fixture-file-path "scenarios" name))
          (feature (ecukes-parse-feature feature-file))

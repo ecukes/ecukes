@@ -17,7 +17,6 @@
 (require 'dash)
 
 (require 'ecukes-def)
-(require 'ecukes-parse)
 (require 'ecukes-run)
 (require 'ecukes-print)
 (require 'ansi)

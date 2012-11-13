@@ -1,3 +1,5 @@
+(require 'ecukes-parse)
+
 (ert-deftest parse-step-mix-regular-py-string-table ()
   "Should parse a mix of steps in order: regular, py-string, table."
   (with-parse-scenario

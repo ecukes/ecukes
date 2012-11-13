@@ -1,3 +1,5 @@
+(require 'ecukes-parse)
+
 (defun with-parse-intro (name fn)
   (let* ((feature-file (fixture-file-path "intro" name))
          (feature (ecukes-parse-feature feature-file))

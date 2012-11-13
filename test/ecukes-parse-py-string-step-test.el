@@ -1,3 +1,5 @@
+(require 'ecukes-parse)
+
 (ert-deftest parse-py-string-step-all-good ()
   "Should parse py string step when all good."
   (with-parse-step

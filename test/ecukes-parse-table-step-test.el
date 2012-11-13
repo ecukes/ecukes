@@ -1,3 +1,5 @@
+(require 'ecukes-parse)
+
 (ert-deftest parse-table-step-single-row ()
   "Should parse table with single row."
   (with-parse-step

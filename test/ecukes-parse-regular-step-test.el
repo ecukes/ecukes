@@ -1,3 +1,5 @@
+(require 'ecukes-parse)
+
 (ert-deftest parse-regular-step-given ()
   "Should parse given step."
   (with-parse-step
