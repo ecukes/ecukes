@@ -73,8 +73,7 @@
   "Parse scenario name."
   (save-excursion
     (let ((line (ecukes-parse-line)))
-      (string-match ecukes-parse-scenario-re line)
-      (match-string 1 line))))
+      (nth 1 (s-match ecukes-parse-scenario-re line)))))
 
 (defun ecukes-parse-scenario-tags ()
   "Parse tags."
