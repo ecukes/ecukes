@@ -3,7 +3,7 @@
      ,@body))
 
 (defun with-parse-step (name fn)
-  (let* ((feature-file (feature-file-path "step" name))
+  (let* ((feature-file (fixture-file-path "step" name))
          (feature (ecukes-parse-feature feature-file))
          (scenarios (ecukes-feature-scenarios feature))
          (scenario (car scenarios))
@@ -15,7 +15,7 @@
     (funcall fn name type arg)))
 
 (defun with-parse-scenario (name fn)
-  (let* ((feature-file (feature-file-path "scenario" name))
+  (let* ((feature-file (fixture-file-path "scenario" name))
          (feature (ecukes-parse-feature feature-file))
          (scenarios (ecukes-feature-scenarios feature))
          (scenario (car scenarios))
@@ -28,6 +28,6 @@
       (error))
     (funcall fn scenario name step-names tags)))
 
-(defun feature-file-path (category name)
+(defun fixture-file-path (category name)
   (let ((category-path (expand-file-name category ecukes-fixtures-path)))
     (expand-file-name (format "%s.feature" name) category-path)))

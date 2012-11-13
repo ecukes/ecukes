@@ -1,5 +1,5 @@
 (defun with-parse-background (name fn)
-  (let* ((feature-file (feature-file-path "background" name))
+  (let* ((feature-file (fixture-file-path "background" name))
          (feature (ecukes-parse-feature feature-file))
          (background (ecukes-feature-background feature))
          (steps (if background (ecukes-background-steps background) ())))

@@ -1,5 +1,5 @@
 (defun with-parse-scenarios (name fn)
-  (let* ((feature-file (feature-file-path "scenarios" name))
+  (let* ((feature-file (fixture-file-path "scenarios" name))
          (feature (ecukes-parse-feature feature-file))
          (scenarios (ecukes-feature-scenarios feature)))
     (funcall fn (mapcar 'ecukes-scenario-name scenarios))))
