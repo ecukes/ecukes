@@ -5,6 +5,7 @@
 (require 's)
 (require 'dash)
 (require 'ansi)
+(require 'ecukes-def)
 (require 'ecukes-steps)
 (require 'ecukes-hooks)
 (require 'ecukes-project)
