@@ -64,20 +64,20 @@
 
 (ert-deftest steps-missing-definition-no-definitions ()
   "Should return all steps when all missing."
-  (let ((steps (list (make-ecukes-step :name "Given a known state" :type 'regular))))
+  (let ((steps (list (mock-step "Given a known state"))))
     (should (equal (ecukes-steps-missing-definition steps) steps))))
 
 (ert-deftest steps-missing-definition-have-definitions ()
   "Should return nil when no steps missing."
   (with-steps
-   (let ((steps (list (make-ecukes-step :name "Given a known state" :type 'regular))))
+   (let ((steps (list (mock-step "Given a known state"))))
      (Given "^a known state$" 'ignore)
      (should-not (ecukes-steps-missing-definition steps)))))
 
 (ert-deftest steps-missing-definition-have-definitions-with-argument ()
   "Should return nil when no steps missing with argument."
   (with-steps
-   (let ((steps (list (make-ecukes-step :name "Given state \"known\"" :type 'regular))))
+   (let ((steps (list (mock-step "Given state \"known\""))))
      (Given "^state \"known\"$" 'ignore)
      (should-not (ecukes-steps-missing-definition steps)))))
 
@@ -85,9 +85,9 @@
   "Should return missing steps when some missing."
   (with-steps
    (let* ((known
-           (make-ecukes-step :name "Given a known state" :type 'regular))
+           (mock-step "Given a known state"))
           (unknown
-           (make-ecukes-step :name "Given an unknown state" :type 'regular))
+           (mock-step "Given an unknown state"))
           (steps (list known unknown)))
      (Given "^a known state$" 'ignore)
      (should (equal (list unknown) (ecukes-steps-missing-definition steps))))))
@@ -96,16 +96,16 @@
   "Should return uniq steps when same steps."
   (with-steps
    (let* ((step
-           (make-ecukes-step :name "Given a known state" :type 'regular))
+           (mock-step "Given a known state"))
           (steps (list step step)))
      (should (equal (list step) (ecukes-steps-missing-definition steps))))))
 
-(ert-deftest steps-missing-definition-same-step-name-different-args ()
-  "Should return uniq steps when same name but different args."
+(ert-deftest steps-missing-definition-different-head ()
+  "Should return uniq step when same body, but different head."
   (with-steps
-   (let* ((without-arg
-           (make-ecukes-step :name "Given a known state" :type 'regular :arg nil))
-          (with-arg
-           (make-ecukes-step :name "Given a known state" :type 'regular :arg '(table-data)))
-          (steps (list without-arg with-arg)))
-     (should (equal steps (ecukes-steps-missing-definition steps))))))
+   (let* ((and
+           (mock-step "And a known state"))
+          (but
+           (mock-step "But a known state"))
+          (steps (list and but)))
+     (should (equal (length (ecukes-steps-missing-definition steps)) 1)))))
