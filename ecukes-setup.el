@@ -24,7 +24,7 @@
   (let ((ecukes-outfile (getenv "ECUKES_OUTFILE")))
     (when ecukes-outfile
       (with-temp-buffer
-        (insert (s-join "\n" ecukes-message-log))
+        (insert (s-join "\n" ecukes-message-log) "\n")
         (write-file ecukes-outfile nil))))
   (kill-emacs exit-code))
 
