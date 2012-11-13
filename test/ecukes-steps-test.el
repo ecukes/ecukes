@@ -91,3 +91,21 @@
           (steps (list known unknown)))
      (Given "a known state" 'ignore)
      (should (equal (list unknown) (ecukes-steps-missing-definition steps))))))
+
+(ert-deftest steps-missing-definition-same-steps ()
+  "Should return uniq steps when same steps."
+  (with-steps
+   (let* ((step
+           (make-ecukes-step :name "Given a known state" :type 'regular))
+          (steps (list step step)))
+     (should (equal (list step) (ecukes-steps-missing-definition steps))))))
+
+(ert-deftest steps-missing-definition-same-step-name-different-args ()
+  "Should return uniq steps when same name but different args."
+  (with-steps
+   (let* ((without-arg
+           (make-ecukes-step :name "Given a known state" :type 'regular :arg nil))
+          (with-arg
+           (make-ecukes-step :name "Given a known state" :type 'regular :arg '(table-data)))
+          (steps (list without-arg with-arg)))
+     (should (equal steps (ecukes-steps-missing-definition steps))))))

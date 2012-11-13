@@ -44,10 +44,11 @@
 
 (defun ecukes-steps-missing-definition (steps)
   "Return from STEPS those who have not been defined."
-  (-filter
-   (lambda (step)
-     (not (ecukes-steps-find (ecukes-step-name step))))
-   steps))
+  (-distinct
+   (-filter
+    (lambda (step)
+      (not (ecukes-steps-find (ecukes-step-name step))))
+    steps)))
 
 (defun ecukes-steps-find (name)
   "Find step by name."
