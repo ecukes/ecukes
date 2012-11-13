@@ -1,5 +1,6 @@
 ;;; ecukes-steps.el --- Functions to define and call step definitions
 
+(require 'ecukes-parse)
 
 (defvar ecukes-steps-definitions nil
   "All defined step definitions.")
@@ -47,7 +48,8 @@
   (-distinct
    (-filter
     (lambda (step)
-      (not (ecukes-steps-find (ecukes-step-name step))))
+      (let ((matches (s-match ecukes-parse-step-re (ecukes-step-name step))))
+        (not (ecukes-steps-find (nth 2 matches)))))
     steps)))
 
 (defun ecukes-steps-find (name)

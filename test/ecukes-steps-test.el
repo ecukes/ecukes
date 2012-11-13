@@ -71,14 +71,14 @@
   "Should return nil when no steps missing."
   (with-steps
    (let ((steps (list (make-ecukes-step :name "Given a known state" :type 'regular))))
-     (Given "a known state" 'ignore)
+     (Given "^a known state$" 'ignore)
      (should-not (ecukes-steps-missing-definition steps)))))
 
 (ert-deftest steps-missing-definition-have-definitions-with-argument ()
   "Should return nil when no steps missing with argument."
   (with-steps
    (let ((steps (list (make-ecukes-step :name "Given state \"known\"" :type 'regular))))
-     (Given "state \"known\"" 'ignore)
+     (Given "^state \"known\"$" 'ignore)
      (should-not (ecukes-steps-missing-definition steps)))))
 
 (ert-deftest steps-missing-definition-some-missing ()
@@ -89,7 +89,7 @@
           (unknown
            (make-ecukes-step :name "Given an unknown state" :type 'regular))
           (steps (list known unknown)))
-     (Given "a known state" 'ignore)
+     (Given "^a known state$" 'ignore)
      (should (equal (list unknown) (ecukes-steps-missing-definition steps))))))
 
 (ert-deftest steps-missing-definition-same-steps ()
