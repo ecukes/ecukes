@@ -20,7 +20,7 @@ optional, but is conventionally included."
 
 (defstruct ecukes-step
   "A step is some kind of action."
-  name body arg type err)
+  name head body arg type err)
 
 (defstruct ecukes-step-def
   "A step definition."

@@ -4,7 +4,7 @@
   "Should parse given step."
   (with-parse-step
    "given"
-   (lambda (name body type arg)
+   (lambda (name head body type arg)
      (should (eq type 'regular))
      (should (equal name "Given a known state"))
      (should (equal body "a known state")))))
@@ -13,7 +13,7 @@
   "Should parse when step."
   (with-parse-step
    "when"
-   (lambda (name body type arg)
+   (lambda (name head body type arg)
      (should (eq type 'regular))
      (should (equal name "When the key action"))
      (should (equal body "the key action")))))
@@ -22,7 +22,7 @@
   "Should parse then step."
   (with-parse-step
    "then"
-   (lambda (name body type arg)
+   (lambda (name head body type arg)
      (should (eq type 'regular))
      (should (equal name "Then observe outcomes"))
      (should (equal body "observe outcomes")))))
@@ -31,7 +31,7 @@
   "Should parse and step."
   (with-parse-step
    "and"
-   (lambda (name body type arg)
+   (lambda (name head body type arg)
      (should (eq type 'regular))
      (should (equal name "And another key action"))
      (should (equal body "another key action")))))
@@ -40,7 +40,7 @@
   "Should parse but step."
   (with-parse-step
    "but"
-   (lambda (name body type arg)
+   (lambda (name head body type arg)
      (should (eq type 'regular))
      (should (eq type 'regular))
      (should (equal name "But observe outcomes")))))

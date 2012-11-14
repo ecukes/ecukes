@@ -99,6 +99,7 @@
   "Parse step."
   (let* ((name (ecukes-parse-line t))
          (matches (s-match ecukes-parse-step-re name))
+         (head (nth 1 matches))
          (body (nth 2 matches))
          (arg) (type))
     (cond
@@ -109,7 +110,7 @@
       (setq arg (ecukes-parse-table-step))
       (setq type 'table))
      (t (setq type 'regular)))
-    (make-ecukes-step :name name :body body :type type :arg arg)))
+    (make-ecukes-step :name name :head head :body body :type type :arg arg)))
 
 (defun ecukes-parse-table-step-p ()
   "Check if step is a table step or not."

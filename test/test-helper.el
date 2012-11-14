@@ -3,8 +3,10 @@
      ,@body))
 
 (defun mock-step (name)
-  (let ((body (nth 2 (s-match ecukes-parse-step-re name))))
-    (make-ecukes-step :name name :body body :type 'regular)))
+  (let* ((matches (s-match ecukes-parse-step-re name))
+        (head (nth 1 matches))
+        (body (nth 2 matches)))
+    (make-ecukes-step :name name :head head :body body :type 'regular)))
 
 (defun with-parse-step (name fn)
   (let* ((feature-file (fixture-file-path "step" name))
@@ -14,10 +16,11 @@
          (steps (ecukes-scenario-steps scenario))
          (step (car steps))
          (name (ecukes-step-name step))
+         (head (ecukes-step-head step))
          (body (ecukes-step-body step))
          (type (ecukes-step-type step))
          (arg (ecukes-step-arg step)))
-    (funcall fn name body type arg)))
+    (funcall fn name head body type arg)))
 
 (defun with-parse-scenario (name fn)
   (let* ((feature-file (fixture-file-path "scenario" name))
