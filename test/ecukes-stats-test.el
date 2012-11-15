@@ -10,6 +10,27 @@
          (ecukes-stats-scenarios-failed 0))
      ,@body))
 
+(ert-deftest stats-reset ()
+  "Should reset stats."
+  (with-stats
+   (setq ecukes-stats-steps 1)
+   (setq ecukes-stats-steps-passed 2)
+   (setq ecukes-stats-steps-failed 3)
+   (setq ecukes-stats-steps-skipped 4)
+   (setq ecukes-stats-scenarios 5)
+   (setq ecukes-stats-scenarios-passed 6)
+   (setq ecukes-stats-scenarios-failed 7)
+
+   (ecukes-stats-reset)
+
+   (should (equal ecukes-stats-steps 0))
+   (should (equal ecukes-stats-steps-passed 0))
+   (should (equal ecukes-stats-steps-failed 0))
+   (should (equal ecukes-stats-steps-skipped 0))
+   (should (equal ecukes-stats-scenarios 0))
+   (should (equal ecukes-stats-scenarios-passed 0))
+   (should (equal ecukes-stats-scenarios-failed 0))))
+
 (ert-deftest stats-update-num-steps ()
   "Should update number of steps."
   (with-stats
