@@ -19,8 +19,9 @@
          (head (ecukes-step-head step))
          (body (ecukes-step-body step))
          (type (ecukes-step-type step))
+         (args (ecukes-step-args step))
          (arg (ecukes-step-arg step)))
-    (funcall fn name head body type arg)))
+    (funcall fn name head body type args arg)))
 
 (defun with-parse-scenario (name fn)
   (let* ((feature-file (fixture-file-path "scenario" name))

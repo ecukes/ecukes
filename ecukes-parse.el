@@ -101,7 +101,9 @@
          (matches (s-match ecukes-parse-step-re name))
          (head (nth 1 matches))
          (body (nth 2 matches))
-         (arg) (type))
+         (arg)
+         (args (ecukes-parse-args body))
+         (type))
     (cond
      ((ecukes-parse-py-string-step-p)
       (setq arg (ecukes-parse-py-string-step))
@@ -110,7 +112,7 @@
       (setq arg (ecukes-parse-table-step))
       (setq type 'table))
      (t (setq type 'regular)))
-    (make-ecukes-step :name name :head head :body body :type type :arg arg)))
+    (make-ecukes-step :name name :head head :body body :type type :args args :arg arg)))
 
 (defun ecukes-parse-table-step-p ()
   "Check if step is a table step or not."
@@ -158,6 +160,12 @@
             (add-to-list 'lines nil t 'eq)))
         (forward-line 1))
       (s-join "\n" lines))))
+
+(defun ecukes-parse-args (body)
+  "Return args from step BODY."
+  (loop for sub on (cdr (split-string body "\""))
+        by (function cddr)
+        collect (car sub)))
 
 (defun ecukes-parse-line (&optional strip-whitespace)
   "Parse current line."
