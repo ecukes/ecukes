@@ -1,4 +1,4 @@
-({{fn}} "^{{regex}}$"
+({{head}} "^{{body}}$"
        (lambda ({{args}})
 
          ))

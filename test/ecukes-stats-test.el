@@ -1,15 +1,5 @@
 (require 'ecukes-stats)
 
-(defmacro with-stats (&rest body)
-  `(let ((ecukes-stats-steps 0)
-         (ecukes-stats-steps-passed 0)
-         (ecukes-stats-steps-failed 0)
-         (ecukes-stats-steps-skipped 0)
-         (ecukes-stats-scenarios 0)
-         (ecukes-stats-scenarios-passed 0)
-         (ecukes-stats-scenarios-failed 0))
-     ,@body))
-
 (ert-deftest stats-reset ()
   "Should reset stats."
   (with-stats

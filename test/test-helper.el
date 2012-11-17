@@ -1,12 +1,28 @@
+(require 'ecukes-parse)
+
 (defmacro with-steps (&rest body)
   `(let ((ecukes-steps-definitions))
      ,@body))
 
-(defun mock-step (name)
+(defmacro with-hooks (&rest body)
+  `(let ((ecukes-hooks-before)
+         (ecukes-hooks-after)
+         (ecukes-hooks-setup)
+         (ecukes-hooks-teardown))
+     ,@body))
+
+(defun mock-step (name &rest overrides)
   (let* ((matches (s-match ecukes-parse-step-re name))
-        (head (nth 1 matches))
-        (body (nth 2 matches)))
-    (make-ecukes-step :name name :head head :body body :type 'regular)))
+         (name (or (plist-get overrides :name) name))
+         (head (or (plist-get overrides :head) (nth 1 matches)))
+         (body (or (plist-get overrides :body) (nth 2 matches)))
+         (args (or (plist-get overrides :args) (ecukes-parse-args body)))
+         (type (or (plist-get overrides :type) 'regular))
+         (arg (plist-get overrides :arg))
+         (err (plist-get overrides :err))
+         (properties
+          (list :name name :head head :body body :args args :arg arg :type type :err err)))
+    (apply 'make-ecukes-step properties)))
 
 (defun with-parse-step (name fn)
   (let* ((feature-file (fixture-file-path "step" name))
@@ -36,6 +52,35 @@
           (setq tags (ecukes-scenario-tags scenario)))
       (error))
     (funcall fn scenario name step-names tags)))
+
+(defun with-parse-feature (name fn)
+  (let* ((feature-file (fixture-file-path "feature" name))
+         (feature (ecukes-parse-feature feature-file))
+         (intro (ecukes-feature-intro feature))
+         (scenarios (ecukes-feature-scenarios feature))
+         (background (ecukes-feature-background feature))
+         (steps
+          (-concat
+           (ecukes-background-steps background)
+           (-flatten (--map (ecukes-scenario-steps it) scenarios)))))
+    (funcall fn feature intro scenarios background steps)))
+
+(defun with-message (callback)
+  (let ((messages))
+    (flet ((message
+            (format-string &rest args)
+            (add-to-list 'messages (apply 'format (cons format-string args)) t 'eq)))
+      (funcall callback messages))))
+
+(defmacro with-stats (&rest body)
+  `(let ((ecukes-stats-steps 0)
+         (ecukes-stats-steps-passed 0)
+         (ecukes-stats-steps-failed 0)
+         (ecukes-stats-steps-skipped 0)
+         (ecukes-stats-scenarios 0)
+         (ecukes-stats-scenarios-passed 0)
+         (ecukes-stats-scenarios-failed 0))
+     ,@body))
 
 (defun fixture-file-path (category name)
   (let ((category-path (expand-file-name category ecukes-fixtures-path)))

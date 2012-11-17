@@ -7,6 +7,7 @@
 (add-to-list 'load-path ecukes-path)
 
 (require 's)
+(require 'dash)
 (require 'ansi)
 (require 'ecukes-project)
 (require 'ecukes-template)

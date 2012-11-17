@@ -10,6 +10,7 @@
 (require 'ecukes-hooks)
 (require 'ecukes-project)
 (require 'ecukes-template)
+(require 'ecukes-helpers)
 
 (defvar ecukes-message-log nil
   "List of messages to `message'.")
