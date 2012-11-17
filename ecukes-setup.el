@@ -18,9 +18,8 @@
 (defvar ecukes-message-log nil
   "List of messages to `message'.")
 
-;; todo test
 (defun ecukes-push-message (message type)
-  "..."
+  "Add MESSAGE with TYPE on messages log."
   (add-to-list 'ecukes-message-log `(,type . ,message) t 'eq))
 
 (defadvice message (around message-around activate)
