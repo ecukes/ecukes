@@ -18,6 +18,9 @@
 (require 'ansi)
 (require 'ecukes-def)
 
+(setq debug-on-entry t)
+(setq debug-on-error t)
+
 (load (expand-file-name "test-helper.el" ecukes-test-path) nil t)
 (dolist (test-file (or argv (directory-files ecukes-test-path t "-test.el$")))
   (load test-file nil t))
