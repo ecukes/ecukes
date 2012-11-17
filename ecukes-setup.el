@@ -12,12 +12,15 @@
 (require 'ecukes-template)
 (require 'ecukes-helpers)
 
+(defvar ecukes-verbose nil
+  "Should messages be printed or not.")
+
 (defvar ecukes-message-log nil
   "List of messages to `message'.")
 
-(defadvice message (after ecukes-log-messages-to-buffer activate)
-  (when ad-return-value
-    (add-to-list 'ecukes-message-log ad-return-value t 'eq)))
+(defadvice message (around ecukes-log-messages-to-buffer activate)
+  (when ecukes-verbose
+    (add-to-list 'ecukes-message-log ad-do-it t 'eq)))
 
 (defun ecukes-quit (&optional exit-code)
   "Quit Emacs with EXIT-CODE and write to file if in graphical mode."
@@ -48,6 +51,8 @@
     (when (-contains? options "--dbg")
       (setq debug-on-error t)
       (setq debug-on-entry t))
+    (when (-contains? options "--verbose")
+      (setq ecukes-verbose t))
     (setq argv (-difference argv options))))
 
 (defun ecukes-setup-help ()

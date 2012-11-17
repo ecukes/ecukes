@@ -59,6 +59,13 @@
     (should (equal debug-on-entry t))
     (should (equal debug-on-error t))))
 
+(ert-deftest setup-argv-verbose ()
+  "Should enable verbose."
+  (let ((ecukes-verbose nil)
+        (argv (list "features/a.feature" "--verbose")))
+    (ecukes-setup-argv)
+    (should (equal ecukes-verbose t))))
+
 (ert-deftest setup-help-short-flag ()
   "Should show usage information when argv contains '-h'"
   (let ((argv '("-h")))
