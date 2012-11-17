@@ -50,14 +50,15 @@
     (should (equal argv orig))))
 
 (ert-deftest setup-argv-dbg ()
-  "Should enable debug."
+  "Should enable debug (and verbose)."
   (let ((debug-on-entry nil)
         (debug-on-error nil)
         (argv (list "--dbg" "features")))
     (ecukes-setup-argv)
     (should (equal argv (list "features")))
     (should (equal debug-on-entry t))
-    (should (equal debug-on-error t))))
+    (should (equal debug-on-error t))
+    (should (equal ecukes-verbose t))))
 
 (ert-deftest setup-argv-verbose ()
   "Should enable verbose."
