@@ -76,7 +76,6 @@
         (should (equal success t))
         (should (equal expected messages)))))))
 
-;; TODO: Should run background before...
 (ert-deftest run-scenario ()
   "Should run scenario."
   (with-mock
@@ -98,6 +97,38 @@
               (s-concat "    " (ansi-green "Given an unknown state"))
               " ")))
         (should (equal expected messages)))))))
+
+(ert-deftest run-background-before-scenarios ()
+  "Should run background before each scenario."
+  (with-mock
+   (stub ecukes-print-intro)
+   (stub ecukes-run-background => t)
+   (mock (ecukes-run-scenario) :times 2)
+   (mock (ecukes-run-background-steps) :times 1)
+   (with-message
+    (lambda (messages)
+      (with-steps
+       (with-stats
+        (let ((feature
+               (make-ecukes-feature
+                :background (make-ecukes-background)
+                :scenarios
+                (list
+                 (make-ecukes-scenario)
+                 (make-ecukes-scenario)))))
+          (ecukes-run-feature feature))))))))
+
+(ert-deftest run-background-steps ()
+  "Should run background steps."
+  (with-mock
+   (mock (ecukes-run-step) :times 2)
+   (let ((background
+          (make-ecukes-background
+           :steps
+           (list
+            (make-ecukes-step)
+            (make-ecukes-step)))))
+     (ecukes-run-background-steps background))))
 
 (ert-deftest run-scenario-before-hook ()
   "Should run before hooks."

@@ -32,14 +32,22 @@
         (background (ecukes-feature-background feature))
         (scenarios (ecukes-feature-scenarios feature)))
     (ecukes-print-intro intro)
-    (let ((background-success t))
+    (let ((background-success t) (background-should-run))
       (when background
         (setq background-success (ecukes-run-background background)))
       (-each
        scenarios
        (lambda (scenario)
+         (when (and background background-success background-should-run)
+           (ecukes-run-background-steps background))
+         (setq background-should-run t)
          (ecukes-run-scenario scenario background-success))))
     (ecukes-print-stats-summary)))
+
+(defun ecukes-run-background-steps (background)
+  "Run BACKGROUND steps."
+  (let ((steps (ecukes-background-steps background)))
+    (--each steps (ecukes-run-step it))))
 
 (defun ecukes-run-background (background)
   "Run BACKGROUND."
