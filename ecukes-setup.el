@@ -17,7 +17,7 @@
 
 (defadvice message (after ecukes-log-messages-to-buffer activate)
   (when ad-return-value
-    (add-to-list 'ecukes-message-log ad-return-value t)))
+    (add-to-list 'ecukes-message-log ad-return-value t 'eq)))
 
 (defun ecukes-quit (&optional exit-code)
   "Quit Emacs with EXIT-CODE and write to file if in graphical mode."
