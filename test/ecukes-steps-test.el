@@ -99,3 +99,31 @@
            (mock-step "Given a known state"))
           (steps (list step step)))
      (should (equal steps (ecukes-steps-missing-definition steps))))))
+
+(ert-deftest steps-args-no-args ()
+  "Should return empty list when no args."
+  (with-steps
+   (Given "^a known state$" 'ignore)
+   (let ((step (mock-step "Given a known state")))
+     (should (equal (ecukes-steps-args step) nil)))))
+
+(ert-deftest steps-args-single-arg ()
+  "Should return args when single arg."
+  (with-steps
+   (Given "^state \"\\(.+\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\"")))
+     (should (equal (ecukes-steps-args step) (list "known"))))))
+
+(ert-deftest steps-args-multiple-args ()
+  "Should return args when multiple args."
+  (with-steps
+   (Given "^state \"\\(.+\\)\" and \"\\(.+\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\" and \"unknown\"")))
+     (should (equal (ecukes-steps-args step) (list "known" "unknown"))))))
+
+(ert-deftest steps-args-without-quotes ()
+  "Should return args when multiple (unquoted) args."
+  (with-steps
+   (Given "^state \\(.+\\) and \\(.+\\)$" 'ignore)
+   (let ((step (mock-step "Given state known and unknown")))
+     (should (equal (ecukes-steps-args step) (list "known" "unknown"))))))

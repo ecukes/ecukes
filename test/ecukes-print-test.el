@@ -3,20 +3,26 @@
 (ert-deftest print-missing-steps ()
   "Should print header and steps."
   (with-mock
-   (let ((known (mock-step "Given state known"))
-         (unknown (mock-step "And state unknown")))
-     (mock (ecukes-print-message) :times 2)
-     (mock (ecukes-print-missing-steps-header) :times 1)
-     (ecukes-print-missing-steps (list known unknown)))))
+   (with-steps
+    (Given "^state known$" 'ignore)
+    (Given "^state unknown$" 'ignore)
+    (let ((known (mock-step "Given state known"))
+          (unknown (mock-step "And state unknown")))
+      (mock (ecukes-print-message) :times 2)
+      (mock (ecukes-print-missing-steps-header) :times 1)
+      (ecukes-print-missing-steps (list known unknown))))))
 
 (ert-deftest print-missing-steps-same-step ()
   "Should print header and same steps only once."
   (with-mock
-   (let ((known (mock-step "Given state known"))
-         (unknown (mock-step "And state known")))
-     (mock (ecukes-print-message) :times 1)
-     (mock (ecukes-print-missing-steps-header) :times 1)
-     (ecukes-print-missing-steps (list known unknown)))))
+   (with-steps
+    (Given "^state known$" 'ignore)
+    (Given "^state unknown$" 'ignore)
+    (let ((known (mock-step "Given state known"))
+          (unknown (mock-step "And state known")))
+      (mock (ecukes-print-message) :times 1)
+      (mock (ecukes-print-missing-steps-header) :times 1)
+      (ecukes-print-missing-steps (list known unknown))))))
 
 (ert-deftest print-missing-steps-header ()
   "Should print header."
@@ -30,73 +36,99 @@
 
 (ert-deftest print-step-string-no-args ()
   "Should print step when no args."
-  (let ((step (mock-step "Given a state"))
-        (expected "(Given \"^a state$\"\n       (lambda ()\n\n         ))"))
-    (should (equal (ecukes-print-step-string step) expected))))
+  (with-steps
+   (Given "^a state$" 'ignore)
+   (let ((step (mock-step "Given a state"))
+         (expected "(Given \"^a state$\"\n       (lambda ()\n\n         ))"))
+     (should (equal (ecukes-print-step-string step) expected)))))
 
 (ert-deftest print-step-string-single-arg ()
   "Should print step when single arg."
-  (let ((step (mock-step "Given state \"known\""))
-        (expected "(Given \"^state \\\"\\\\([^\\\"]+\\\\)\\\"$\"\n       (lambda (arg)\n\n         ))"))
-    (should (equal (ecukes-print-step-string step) expected))))
+  (with-steps
+   (Given "^state \"\\(known\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\""))
+         (expected "(Given \"^state \\\"\\\\([^\\\"]+\\\\)\\\"$\"\n       (lambda (arg)\n\n         ))"))
+     (should (equal (ecukes-print-step-string step) expected)))))
 
 (ert-deftest print-step-string-multiple-args ()
   "Should print step when multiple args."
-  (let ((step (mock-step "Given state \"known\" and \"unknown\""))
-        (expected "(Given \"^state \\\"\\\\([^\\\"]+\\\\)\\\" and \\\"\\\\([^\\\"]+\\\\)\\\"$\"\n       (lambda (arg-1 arg-2)\n\n         ))"))
-    (should (equal (ecukes-print-step-string step) expected))))
+  (with-steps
+   (Given "^state \"\\(known\\)\" and \"\\(unknown\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\" and \"unknown\""))
+         (expected "(Given \"^state \\\"\\\\([^\\\"]+\\\\)\\\" and \\\"\\\\([^\\\"]+\\\\)\\\"$\"\n       (lambda (arg-1 arg-2)\n\n         ))"))
+     (should (equal (ecukes-print-step-string step) expected)))))
 
 (ert-deftest print-step-args-no-args ()
   "Should be empty when no step args."
-  (let ((step (mock-step "Given a state")))
-    (should (equal (ecukes-print-step-args step) ""))))
+  (with-steps
+   (Given "^a state$" 'ignore)
+   (let ((step (mock-step "Given a state")))
+     (should (equal (ecukes-print-step-args step) "")))))
 
 (ert-deftest print-step-args-single-arg ()
   "Should return correct step args when single arg."
-  (let ((step (mock-step "Given state \"known\"")))
-    (should (equal (ecukes-print-step-args step) "arg"))))
+  (with-steps
+   (Given "^state \"\\(known\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\"")))
+     (should (equal (ecukes-print-step-args step) "arg")))))
 
 (ert-deftest print-step-args-multiple-args ()
   "Should return correct step args when multiple args."
-  (let ((step (mock-step "Given state \"known\" and \"unknown\"")))
-    (should (equal (ecukes-print-step-args step) "arg-1 arg-2"))))
+  (with-steps
+   (Given "^state \"\\(known\\)\" and \"\\(unknown\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\" and \"unknown\"")))
+     (should (equal (ecukes-print-step-args step) "arg-1 arg-2")))))
 
 (ert-deftest print-step-args-with-args-and-table ()
   "Should return correct step args when args and table."
-  (let ((step (mock-step "Given state \"known\"" :type 'table)))
-    (should (equal (ecukes-print-step-args step) "arg-1 arg-2"))))
+  (with-steps
+   (Given "^state \"\\(known\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\"" :type 'table)))
+     (should (equal (ecukes-print-step-args step) "arg-1 arg-2")))))
 
 (ert-deftest print-step-args-py-string ()
   "Should return correct step args when args and py-string."
-  (let ((step (mock-step "Given a known state" :type 'py-string)))
-    (should (equal (ecukes-print-step-args step) "arg"))))
+  (with-steps
+   (Given "^a known state$" 'ignore)
+   (let ((step (mock-step "Given a known state" :type 'py-string)))
+     (should (equal (ecukes-print-step-args step) "arg")))))
 
 (ert-deftest print-step-args-table ()
   "Should return correct step args when args and table."
-  (let ((step (mock-step "Given a known state" :type 'table)))
-    (should (equal (ecukes-print-step-args step) "arg"))))
+  (with-steps
+   (Given "^a known state$" 'ignore)
+   (let ((step (mock-step "Given a known state" :type 'table)))
+     (should (equal (ecukes-print-step-args step) "arg")))))
 
 (ert-deftest print-step-args-with-args-and-py-string ()
   "Should return correct step args when args and py-string."
-  (let ((step (mock-step "Given state \"known\"" :type 'py-string)))
-    (should (equal (ecukes-print-step-args step) "arg-1 arg-2"))))
+  (with-steps
+   (Given "^state \"\\(known\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\"" :type 'py-string)))
+     (should (equal (ecukes-print-step-args step) "arg-1 arg-2")))))
 
 (ert-deftest print-step-body-no-args ()
   "Should be empty when no step args."
-  (let ((step (mock-step "Given a state")))
-    (should (equal (ecukes-print-step-body step) "a state"))))
+  (with-steps
+   (Given "^a state$" 'ignore)
+   (let ((step (mock-step "Given a state")))
+     (should (equal (ecukes-print-step-body step) "a state")))))
 
 (ert-deftest print-step-body-single-arg ()
   "Should return correct step body when single arg."
-  (let ((step (mock-step "Given state \"known\""))
-        (expected "state \\\"\\\\([^\\\"]+\\\\)\\\""))
-    (should (equal (ecukes-print-step-body step) expected))))
+  (with-steps
+   (Given "^state \"\\(known\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\""))
+         (expected "state \\\"\\\\([^\\\"]+\\\\)\\\""))
+     (should (equal (ecukes-print-step-body step) expected)))))
 
 (ert-deftest print-step-body-multiple-args ()
   "Should return correct step body when multiple args."
-  (let ((step (mock-step "Given state \"known\" and \"unknown\""))
-        (expected "state \\\"\\\\([^\\\"]+\\\\)\\\" and \\\"\\\\([^\\\"]+\\\\)\\\""))
-    (should (equal (ecukes-print-step-body step) expected))))
+  (with-steps
+   (Given "^state \"\\(known\\)\" and \"\\(unknown\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\" and \"unknown\""))
+         (expected "state \\\"\\\\([^\\\"]+\\\\)\\\" and \\\"\\\\([^\\\"]+\\\\)\\\""))
+     (should (equal (ecukes-print-step-body step) expected)))))
 
 (ert-deftest print-intro ()
   "Should print intro."

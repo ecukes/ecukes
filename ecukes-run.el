@@ -97,7 +97,7 @@
         (progn
           (let* ((body (ecukes-step-body step))
                  (arg (ecukes-step-arg step))
-                 (args (ecukes-step-args step))
+                 (args (ecukes-steps-args step))
                  (args (if arg (cons arg args) args))
                  (step-def (ecukes-steps-find body))
                  (fn (ecukes-step-def-fn step-def)))

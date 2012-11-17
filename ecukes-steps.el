@@ -51,6 +51,12 @@
   "Find step by name."
   (--first (s-matches? (ecukes-step-def-regex it) name) ecukes-steps-definitions))
 
+(defun ecukes-steps-args (step)
+  "Return args from step BODY."
+  (let* ((body (ecukes-step-body step))
+         (step-def (ecukes-steps-find body)))
+    (cdr (s-match (ecukes-step-def-regex step-def) body))))
+
 (provide 'ecukes-steps)
 
 ;;; ecukes-steps.el ends here

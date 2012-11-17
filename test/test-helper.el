@@ -16,12 +16,11 @@
          (name (or (plist-get overrides :name) name))
          (head (or (plist-get overrides :head) (nth 1 matches)))
          (body (or (plist-get overrides :body) (nth 2 matches)))
-         (args (or (plist-get overrides :args) (ecukes-parse-args body)))
          (type (or (plist-get overrides :type) 'regular))
          (arg (plist-get overrides :arg))
          (err (plist-get overrides :err))
          (properties
-          (list :name name :head head :body body :args args :arg arg :type type :err err)))
+          (list :name name :head head :body body :arg arg :type type :err err)))
     (apply 'make-ecukes-step properties)))
 
 (defun with-parse-step (name fn)
@@ -35,9 +34,8 @@
          (head (ecukes-step-head step))
          (body (ecukes-step-body step))
          (type (ecukes-step-type step))
-         (args (ecukes-step-args step))
          (arg (ecukes-step-arg step)))
-    (funcall fn name head body type args arg)))
+    (funcall fn name head body type arg)))
 
 (defun with-parse-scenario (name fn)
   (let* ((feature-file (fixture-file-path "scenario" name))

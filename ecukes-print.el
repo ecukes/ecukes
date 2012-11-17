@@ -1,6 +1,7 @@
 ;;; ecukes-print.el --- Print various stuff on screen
 
 (require 'ecukes-stats)
+(require 'ecukes-steps)
 (require 'ecukes-template)
 
 (defvar ecukes-print-offset 0
@@ -39,7 +40,7 @@
   "Return args from STEP."
   (let* ((result)
          (arg (ecukes-step-arg step))
-         (args (ecukes-step-args step))
+         (args (ecukes-steps-args step))
          (type (ecukes-step-type step))
          (args-count
           (+
@@ -59,7 +60,7 @@
 (defun ecukes-print-step-body (step)
   "Return body from STEP."
   (let* ((body (ecukes-step-body step))
-         (args (ecukes-step-args step))
+         (args (ecukes-steps-args step))
          (result body))
     (when args
       (-each
