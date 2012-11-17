@@ -23,13 +23,41 @@
    (mock (write-file "/tmp/ecukes.XYZ") :times 1)
    (ecukes-quit)))
 
-(ert-deftest setup-setup ()
+(ert-deftest setup ()
   "Should validate and setup."
   (with-mock
    (mock (ecukes-setup-help) :times 1)
    (mock (ecukes-setup-features-dir-exist) :times 1)
    (mock (ecukes-setup-load) :times 1)
+   (mock (ecukes-setup-argv) :times 1)
    (ecukes-setup)))
+
+(ert-deftest setup-argv-empty ()
+  "Should leave as is when empty."
+  (let ((argv))
+    (ecukes-setup-argv)
+    (should (equal argv nil))))
+
+(ert-deftest setup-argv-non-options ()
+  "Should leave as is when non options."
+  (let* ((argv (list "features"))
+         (orig argv))
+    (ecukes-setup-argv)
+    (should (equal argv orig)))
+  (let* ((argv (list "features/a.feature" "features/b.feature"))
+         (orig argv))
+    (ecukes-setup-argv)
+    (should (equal argv orig))))
+
+(ert-deftest setup-argv-dbg ()
+  "Should enable debug."
+  (let ((debug-on-entry nil)
+        (debug-on-error nil)
+        (argv (list "--dbg" "features")))
+    (ecukes-setup-argv)
+    (should (equal argv (list "features")))
+    (should (equal debug-on-entry t))
+    (should (equal debug-on-error t))))
 
 (ert-deftest setup-help-short-flag ()
   "Should show usage information when argv contains '-h'"

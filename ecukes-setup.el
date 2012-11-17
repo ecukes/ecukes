@@ -38,8 +38,17 @@
 (defun ecukes-setup ()
   "Validate and load."
   (ecukes-setup-help)
+  (ecukes-setup-argv)
   (ecukes-setup-features-dir-exist)
   (ecukes-setup-load))
+
+(defun ecukes-setup-argv ()
+  "Setup options from `argv'."
+  (let ((options (--filter (s-starts-with? "--" it) argv)))
+    (when (-contains? options "--dbg")
+      (setq debug-on-error t)
+      (setq debug-on-entry t))
+    (setq argv (-difference argv options))))
 
 (defun ecukes-setup-help ()
   "Print usage and quit if `argv' contains '-h' or '--help'."

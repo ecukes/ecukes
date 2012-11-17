@@ -5,9 +5,6 @@
 (require 'ecukes-print)
 (require 'ecukes-stats)
 
-;; TODO: !!!TEMPORARY!!!
-(setq debug-on-error t)
-
 (defun ecukes-run (feature-files)
   "Parse and run FEATURE-FILES if no steps are missing."
   (let* ((features
