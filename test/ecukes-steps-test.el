@@ -127,3 +127,15 @@
    (Given "^state \\(.+\\) and \\(.+\\)$" 'ignore)
    (let ((step (mock-step "Given state known and unknown")))
      (should (equal (ecukes-steps-args step) (list "known" "unknown"))))))
+
+(ert-deftest steps-args-not-defined-no-arg ()
+  "Should return quoted args when not defined when no args."
+  (with-steps
+   (let ((step (mock-step "Given state known")))
+     (should (equal (ecukes-steps-args step) nil)))))
+
+(ert-deftest steps-args-not-defined-args ()
+  "Should return quoted args when not defined when args."
+  (with-steps
+   (let ((step (mock-step "Given state \"known\" and \"unknown\"")))
+     (should (equal (ecukes-steps-args step) (list "known" "unknown"))))))

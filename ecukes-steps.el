@@ -55,7 +55,11 @@
   "Return args from step BODY."
   (let* ((body (ecukes-step-body step))
          (step-def (ecukes-steps-find body)))
-    (cdr (s-match (ecukes-step-def-regex step-def) body))))
+    (if step-def
+        (cdr (s-match (ecukes-step-def-regex step-def) body))
+      (loop for sub on (cdr (split-string body "\""))
+            by (function cddr)
+            collect (car sub)))))
 
 (provide 'ecukes-steps)
 
