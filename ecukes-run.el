@@ -24,7 +24,8 @@
   "Run FEATURES."
   (ecukes-hooks-run-setup)
   (-each features 'ecukes-run-feature)
-  (ecukes-hooks-run-teardown))
+  (ecukes-hooks-run-teardown)
+  (ecukes-print-stats-summary))
 
 (defun ecukes-run-feature (feature)
   "Run FEATURE."
@@ -41,8 +42,7 @@
          (when (and background background-success background-should-run)
            (ecukes-run-background-steps background))
          (setq background-should-run t)
-         (ecukes-run-scenario scenario background-success))))
-    (ecukes-print-stats-summary)))
+         (ecukes-run-scenario scenario background-success))))))
 
 (defun ecukes-run-background-steps (background)
   "Run BACKGROUND steps."

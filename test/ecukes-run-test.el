@@ -6,6 +6,7 @@
   "Should run setup hooks."
   (with-mock
    (stub ecukes-run-feature)
+   (stub ecukes-print-stats-summary)
    (mock (setup-mock) :times 1)
    (with-hooks
     (Setup (setup-mock))
@@ -18,6 +19,7 @@
   "Should run teardown hooks."
   (with-mock
    (stub ecukes-run-feature)
+   (stub ecukes-print-stats-summary)
    (mock (teardown-mock) :times 1)
    (with-hooks
     (Teardown (teardown-mock))
@@ -25,6 +27,17 @@
      "simple"
      (lambda (feature intro scenarios background steps)
        (ecukes-run-features (list feature)))))))
+
+(ert-deftest run-features-print-summary-once ()
+  "Should print summary once."
+  (with-mock
+   (stub ecukes-run-feature)
+   (mock (ecukes-print-stats-summary) :times 1)
+   (let ((features
+          (list
+           (make-ecukes-feature)
+           (make-ecukes-feature))))
+     (ecukes-run-features features))))
 
 (ert-deftest run-feature-no-background ()
   "Should run feature when no background."
@@ -49,7 +62,6 @@
       (lambda (feature intro scenarios background steps)
         (with-mock
          (mock (ecukes-print-intro intro) :times 1)
-         (mock (ecukes-print-stats-summary) :times 1)
          (mock (ecukes-run-background) :times 1)
          (mock (ecukes-run-scenario) :times 1)
          (ecukes-run-feature feature)))))))
