@@ -18,18 +18,34 @@
 (defvar ecukes-message-log nil
   "List of messages to `message'.")
 
-(defadvice message (around ecukes-log-messages-to-buffer activate)
-  (when ecukes-verbose
-    (add-to-list 'ecukes-message-log ad-do-it t 'eq)))
+;; todo test
+(defun ecukes-push-message (message type)
+  "..."
+  (add-to-list 'ecukes-message-log `(,type . ,message) t 'eq))
+
+(defadvice message (around message-around activate)
+  (if ecukes-verbose (ecukes-push-message ad-do-it 'message)))
+
+(defadvice print (around print-log activate)
+  (if ecukes-verbose (ecukes-push-message ad-do-it 'print)))
 
 (defun ecukes-quit (&optional exit-code)
   "Quit Emacs with EXIT-CODE and write to file if in graphical mode."
   (or exit-code (setq exit-code 1))
-  (let ((ecukes-outfile (getenv "ECUKES_OUTFILE")))
-    (when ecukes-outfile
+  (let ((outfile (getenv "ECUKES_OUTFILE"))
+        (output
+         (-map
+          (lambda (log)
+            (let ((type (car log))
+                  (message (cdr log)))
+              (if (eq type 'print)
+                  (prin1-to-string message)
+                message)))
+          ecukes-message-log)))
+    (when outfile
       (with-temp-buffer
-        (insert (s-join "\n" ecukes-message-log) "\n")
-        (write-file ecukes-outfile nil))))
+        (insert (s-join "\n" output) "\n")
+        (write-file outfile nil))))
   (kill-emacs exit-code))
 
 (defun usage ()
