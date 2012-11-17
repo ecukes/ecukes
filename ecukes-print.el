@@ -30,11 +30,12 @@
   (let ((head (ecukes-step-head step))
         (body (ecukes-print-step-body step))
         (args (ecukes-print-step-args step)))
-    (ecukes-template-get
-     'missing-step
-     `(("head" . ,head)
-       ("body" . ,body)
-       ("args" . ,args)))))
+    (ansi-yellow
+     (ecukes-template-get
+      'missing-step
+      `(("head" . ,head)
+        ("body" . ,body)
+        ("args" . ,args))))))
 
 (defun ecukes-print-step-args (step)
   "Return args from STEP."

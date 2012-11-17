@@ -39,7 +39,8 @@
   (with-steps
    (Given "^a state$" 'ignore)
    (let ((step (mock-step "Given a state"))
-         (expected "(Given \"^a state$\"\n       (lambda ()\n\n         ))"))
+         (expected
+          (ansi-yellow "(Given \"^a state$\"\n       (lambda ()\n\n         ))")))
      (should (equal (ecukes-print-step-string step) expected)))))
 
 (ert-deftest print-step-string-single-arg ()
@@ -47,7 +48,8 @@
   (with-steps
    (Given "^state \"\\(known\\)\"$" 'ignore)
    (let ((step (mock-step "Given state \"known\""))
-         (expected "(Given \"^state \\\"\\\\([^\\\"]+\\\\)\\\"$\"\n       (lambda (arg)\n\n         ))"))
+         (expected
+          (ansi-yellow "(Given \"^state \\\"\\\\([^\\\"]+\\\\)\\\"$\"\n       (lambda (arg)\n\n         ))")))
      (should (equal (ecukes-print-step-string step) expected)))))
 
 (ert-deftest print-step-string-multiple-args ()
@@ -55,7 +57,8 @@
   (with-steps
    (Given "^state \"\\(known\\)\" and \"\\(unknown\\)\"$" 'ignore)
    (let ((step (mock-step "Given state \"known\" and \"unknown\""))
-         (expected "(Given \"^state \\\"\\\\([^\\\"]+\\\\)\\\" and \\\"\\\\([^\\\"]+\\\\)\\\"$\"\n       (lambda (arg-1 arg-2)\n\n         ))"))
+         (expected
+          (ansi-yellow "(Given \"^state \\\"\\\\([^\\\"]+\\\\)\\\" and \\\"\\\\([^\\\"]+\\\\)\\\"$\"\n       (lambda (arg-1 arg-2)\n\n         ))")))
      (should (equal (ecukes-print-step-string step) expected)))))
 
 (ert-deftest print-step-args-no-args ()
