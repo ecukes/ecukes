@@ -158,21 +158,25 @@
    (ecukes-print-newline)))
 
 (ert-deftest print-message ()
-  "Should print message."
-  (with-messages
-   (lambda (messages)
-     (let ((message "MESSAGE"))
-       (ecukes-print-message message)
-       (should (equal messages (list message)))))))
+  "Should print formatted message."
+  (with-mock
+   (mock (ecukes-print-format "MESSAGE" nil) :times 1)
+   (with-messages
+    (lambda (messages)
+      (ecukes-print-message "MESSAGE")))))
 
-(ert-deftest print-message-offset ()
-  "Should print message with offset."
-  (with-messages
-   (lambda (messages)
-     (ecukes-print-message "MESSAGE")
-     (let ((ecukes-print-offset 2))
-       (ecukes-print-message "MESSAGE"))
-     (should (equal messages (list "MESSAGE" "  MESSAGE"))))))
+(ert-deftest format-message-simple ()
+  "Should format message when simple."
+  (should (equal (ecukes-print-format "MESSAGE") "MESSAGE")))
+
+(ert-deftest format-message ()
+  "Should format message."
+  (should (equal (ecukes-print-format "MESSAGE %s" "EGASSEM") "MESSAGE EGASSEM")))
+
+(ert-deftest format-message-offset ()
+  "Should format message with offset."
+  (let ((ecukes-print-offset 2))
+    (should (equal (ecukes-print-format "MESSAGE") "  MESSAGE"))))
 
 (ert-deftest print-background-header ()
   "Should print background header."

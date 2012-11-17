@@ -179,7 +179,8 @@
 
 (ert-deftest stats-summary-no-scenarios-or-steps ()
   "Should show both scenarios and steps when no scenarios or steps."
-  (should (equal (ecukes-stats-summary) "0 scenarios\n0 steps")))
+  (with-stats
+   (should (equal (ecukes-stats-summary) "0 scenarios\n0 steps"))))
 
 (ert-deftest stats-summary-with-scenarios-or-steps ()
   "Should show both scenarios and steps when both scenarios and steps."

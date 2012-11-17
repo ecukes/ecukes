@@ -175,9 +175,13 @@
 
 (defun ecukes-print-message (format-string &rest args)
   "Print MESSAGE."
+  (message (ecukes-print-format format-string args)))
+
+(defun ecukes-print-format (format-string &rest args)
+  "Return formatted message."
   (let ((message (apply 'format (cons format-string args)))
         (offset (s-repeat ecukes-print-offset " ")))
-    (message (s-concat offset message))))
+    (s-concat offset message)))
 
 (provide 'ecukes-print)
 
