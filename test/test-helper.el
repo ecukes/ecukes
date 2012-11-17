@@ -63,7 +63,7 @@
            (-flatten (--map (ecukes-scenario-steps it) scenarios)))))
     (funcall fn feature intro scenarios background steps)))
 
-(defun with-message (callback)
+(defun with-messages (callback)
   (let ((messages))
     (flet ((message
             (format-string &rest args)

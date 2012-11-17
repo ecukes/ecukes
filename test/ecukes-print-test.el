@@ -132,7 +132,7 @@
 
 (ert-deftest print-intro ()
   "Should print intro."
-  (with-message
+  (with-messages
    (lambda (messages)
      (with-parse-feature
       "simple"
@@ -145,7 +145,7 @@
   "Should print stats summary."
   (with-mock
    (stub ecukes-stats-summary => "SUMMARY")
-   (with-message
+   (with-messages
     (lambda (messages)
       (ecukes-print-stats-summary)
       (should
@@ -159,7 +159,7 @@
 
 (ert-deftest print-message ()
   "Should print message."
-  (with-message
+  (with-messages
    (lambda (messages)
      (let ((message "MESSAGE"))
        (ecukes-print-message message)
@@ -167,7 +167,7 @@
 
 (ert-deftest print-message-offset ()
   "Should print message with offset."
-  (with-message
+  (with-messages
    (lambda (messages)
      (ecukes-print-message "MESSAGE")
      (let ((ecukes-print-offset 2))
@@ -176,14 +176,14 @@
 
 (ert-deftest print-background-header ()
   "Should print background header."
-  (with-message
+  (with-messages
    (lambda (messages)
      (ecukes-print-background-header)
      (should (equal messages (list "  Background:"))))))
 
 (ert-deftest print-scenario-header ()
   "Should print scenario header."
-  (with-message
+  (with-messages
    (lambda (messages)
      (let ((scenario (make-ecukes-scenario :name "Simple")))
        (ecukes-print-scenario-header scenario)
@@ -191,7 +191,7 @@
 
 (ert-deftest print-step-success ()
   "Should print successful step."
-  (with-message
+  (with-messages
    (lambda (messages)
      (let ((step (mock-step "Given a state"))
            (expected (list (format "    %s" (ansi-green "Given a state")))))
@@ -200,7 +200,7 @@
 
 (ert-deftest print-step-failure ()
   "Should print successful step."
-  (with-message
+  (with-messages
    (lambda (messages)
      (let ((step (mock-step "Given a state" :err "ERROR"))
            (expected
@@ -212,7 +212,7 @@
 
 (ert-deftest print-step-skipped ()
   "Should print skipped step."
-  (with-message
+  (with-messages
    (lambda (messages)
      (let ((step (mock-step "Given a state"))
            (expected
@@ -223,7 +223,7 @@
 
 (ert-deftest print-step-failure-no-error ()
   "Should print failed step no error."
-  (with-message
+  (with-messages
    (lambda (messages)
      (let ((step (mock-step "Given a state"))
            (expected
@@ -235,7 +235,7 @@
 
 (ert-deftest print-step-failure-multi-line-error ()
   "Should print successful failure multi line error."
-  (with-message
+  (with-messages
    (lambda (messages)
      (let ((step (mock-step "Given a state" :err "KNOWN\nERROR"))
            (expected
@@ -250,7 +250,7 @@
   "Should print table if step is table step."
   (with-mock
    (mock (ecukes-print-table) :times 1)
-   (with-message
+   (with-messages
     (lambda (messages)
       (let ((step
              (mock-step "Given this:" :type 'table)))
@@ -260,7 +260,7 @@
   "Should print py-string if step is py-string step."
   (with-mock
    (mock (ecukes-print-py-string) :times 1)
-   (with-message
+   (with-messages
     (lambda (messages)
       (let ((step
              (mock-step "Given this:" :type 'py-string)))
@@ -268,7 +268,7 @@
 
 (ert-deftest print-step-table-success ()
   "Should print table if step is table step when success."
-  (with-message
+  (with-messages
    (lambda (messages)
      (let ((step (mock-step "Given this:" :type 'table :arg '(("x" "y") ("x1" "y1") ("x2" "y2"))))
            (expected
@@ -281,7 +281,7 @@
 
 (ert-deftest print-step-table-failure ()
   "Should print table if step is table step when failure."
-  (with-message
+  (with-messages
    (lambda (messages)
      (let ((step (mock-step "Given this:" :type 'table :arg '(("x" "y") ("x1" "y1") ("x2" "y2"))))
            (expected
@@ -294,7 +294,7 @@
 
 (ert-deftest print-step-table-skipped ()
   "Should print table if step is table step when skipped."
-  (with-message
+  (with-messages
    (lambda (messages)
      (let ((step (mock-step "Given this:" :type 'table :arg '(("x" "y") ("x1" "y1") ("x2" "y2"))))
            (expected
@@ -307,7 +307,7 @@
 
 (ert-deftest print-step-py-string-success ()
   "Should print py-string if step is py-string step when success."
-  (with-message
+  (with-messages
    (lambda (messages)
      (let ((step (mock-step "Given this:" :type 'table :arg "foo\nbar\nbaz\nqux"))
            (expected
@@ -323,7 +323,7 @@
 
 (ert-deftest print-step-py-string-failure ()
   "Should print py-string if step is py-string step when failure."
-  (with-message
+  (with-messages
    (lambda (messages)
      (let ((step (mock-step "Given this:" :type 'table :arg "foo\nbar\nbaz\nqux"))
            (expected
@@ -339,7 +339,7 @@
 
 (ert-deftest print-step-py-string-skipped ()
   "Should print py-string if step is py-string step when skipped."
-  (with-message
+  (with-messages
    (lambda (messages)
      (let ((step (mock-step "Given this:" :type 'table :arg "foo\nbar\nbaz\nqux"))
            (expected

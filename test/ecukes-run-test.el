@@ -41,7 +41,7 @@
 
 (ert-deftest run-feature-no-background ()
   "Should run feature when no background."
-  (with-message
+  (with-messages
    (lambda (messages)
      (with-parse-feature
       "simple"
@@ -55,7 +55,7 @@
 
 (ert-deftest run-feature ()
   "Should run feature."
-  (with-message
+  (with-messages
    (lambda (messages)
      (with-parse-feature
       "simple"
@@ -70,7 +70,7 @@
   "Should run background."
   (with-mock
    (mock (ecukes-run-step) => t :times 2)
-   (with-message
+   (with-messages
     (lambda (messages)
       (let ((success
              (ecukes-run-background
@@ -92,7 +92,7 @@
   "Should run scenario."
   (with-mock
    (mock (ecukes-run-step) => t :times 2)
-   (with-message
+   (with-messages
     (lambda (messages)
       (ecukes-run-scenario
        (make-ecukes-scenario
@@ -117,7 +117,7 @@
    (stub ecukes-run-background => t)
    (mock (ecukes-run-scenario) :times 2)
    (mock (ecukes-run-background-steps) :times 1)
-   (with-message
+   (with-messages
     (lambda (messages)
       (with-steps
        (with-stats
@@ -170,7 +170,7 @@
 
 (ert-deftest run-background-with-successful-steps-stats ()
   "Should update step stats count when successful steps."
-  (with-message
+  (with-messages
    (lambda (messages)
      (with-steps
       (with-stats
@@ -189,7 +189,7 @@
 
 (ert-deftest run-background-with-failing-step-stats ()
   "Should update step stats count when failing steps."
-  (with-message
+  (with-messages
    (lambda (messages)
      (with-steps
       (with-stats
@@ -208,7 +208,7 @@
 
 (ert-deftest run-scenario-stats ()
   "Should update scenario stats count."
-  (with-message
+  (with-messages
    (lambda (messages)
      (with-stats
       (ecukes-run-scenario (make-ecukes-scenario) t)
@@ -218,7 +218,7 @@
 
 (ert-deftest run-scenario-with-successful-steps-stats ()
   "Should update scenario and step stats count when successful steps."
-  (with-message
+  (with-messages
    (lambda (messages)
      (with-steps
       (with-stats
@@ -241,7 +241,7 @@
 
 (ert-deftest run-scenario-with-failing-step-stats ()
   "Should update scenario and step stats count when failing steps."
-  (with-message
+  (with-messages
    (lambda (messages)
      (with-steps
       (with-stats
@@ -266,7 +266,7 @@
   "Should update stats count when running feature all successful."
   (with-mock
    (stub ecukes-print-intro)
-   (with-message
+   (with-messages
     (lambda (messages)
       (with-steps
        (with-stats
@@ -300,7 +300,7 @@
   "Should update stats count when running feature failing in background."
   (with-mock
    (stub ecukes-print-intro)
-   (with-message
+   (with-messages
     (lambda (messages)
       (with-steps
        (with-stats
