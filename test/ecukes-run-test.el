@@ -99,6 +99,32 @@
               " ")))
         (should (equal expected messages)))))))
 
+(ert-deftest run-scenario-before-hook ()
+  "Should run before hooks."
+  (with-stats
+   (with-mock
+    (stub ecukes-print-scenario-header)
+    (stub ecukes-scenario-steps)
+    (stub ecukes-run-steps)
+    (stub ecukes-print-newline)
+    (mock (before-mock) :times 1)
+    (with-hooks
+     (Before (before-mock))
+     (ecukes-run-scenario nil nil)))))
+
+(ert-deftest run-scenario-after-hook ()
+  "Should run after hooks."
+  (with-stats
+   (with-mock
+    (stub ecukes-print-scenario-header)
+    (stub ecukes-scenario-steps)
+    (stub ecukes-run-steps)
+    (stub ecukes-print-newline)
+    (mock (after-mock) :times 1)
+    (with-hooks
+     (After (after-mock))
+     (ecukes-run-scenario nil nil)))))
+
 (ert-deftest run-background-with-successful-steps-stats ()
   "Should update step stats count when successful steps."
   (with-message

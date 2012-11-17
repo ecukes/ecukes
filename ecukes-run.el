@@ -51,13 +51,15 @@
 
 (defun ecukes-run-scenario (scenario background-success)
   "Run SCENARIO."
+  (ecukes-hooks-run-before)
   (ecukes-print-scenario-header scenario)
   (let* ((steps (ecukes-scenario-steps scenario))
          (success (ecukes-run-steps steps background-success)))
     (if success
         (ecukes-stats-scenario-pass)
       (ecukes-stats-scenario-fail)))
-  (ecukes-print-newline))
+  (ecukes-print-newline)
+  (ecukes-hooks-run-after))
 
 (defun ecukes-run-steps (steps success)
   "Run and print STEPS and return `t' if all was successful, `nil' otherwise."
