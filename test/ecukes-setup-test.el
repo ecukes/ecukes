@@ -1,14 +1,6 @@
 (require 'ansi)
 (require 'ecukes-setup)
 
-(ert-deftest setup-push-message ()
-  "Should push type and message to log."
-  (let ((ecukes-message-log))
-    (ecukes-push-message "PRINT" 'print)
-    (ecukes-push-message "MESSAGE" 'message)
-    (should (equal (nth 0 ecukes-message-log) '(print . "PRINT"))) 
-    (should (equal (nth 1 ecukes-message-log) '(message . "MESSAGE")))))
-
 (ert-deftest setup-ecukes-quit-failure ()
   "Should quit with exit code 1 by default."
   (with-mock
@@ -93,6 +85,7 @@
   "Should print message when no features dir exist."
   (with-mock
    (stub file-directory-p => nil)
+   (stub message)
    (mock (usage) :times 1)
    (mock (ansi-red "Missing `features` directory.") :times 1)
    (ecukes-setup-features-dir-exist)))

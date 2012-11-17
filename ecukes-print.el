@@ -176,7 +176,7 @@
 
 (defun ecukes-print-message (format-string &rest args)
   "Print MESSAGE."
-  (let ((ecukes-verbose t))
+  (let ((ecukes-message t))
     (message (apply 'ecukes-print-format (cons format-string args)))))
 
 (defun ecukes-print-format (format-string &rest args)

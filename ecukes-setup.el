@@ -13,20 +13,27 @@
 (require 'ecukes-helpers)
 
 (defvar ecukes-verbose nil
-  "Should messages be printed or not.")
+  "Show `message' output if true.")
+
+(defvar ecukes-message nil
+  "Tells if current message if from Ecukes or external.")
+
+(defvar ecukes-internal-message-log nil
+  "List with `message' output.")
 
 (defvar ecukes-message-log nil
-  "List of messages to `message'.")
-
-(defun ecukes-push-message (message type)
-  "Add MESSAGE with TYPE on messages log."
-  (add-to-list 'ecukes-message-log `(,type . ,message) t 'eq))
+  "List with `message' output (only from external code).")
 
 (defadvice message (around message-around activate)
-  (if ecukes-verbose (ecukes-push-message ad-do-it 'message)))
+  (let ((message (apply 'format (ad-get-args 0))))
+    (unless ecukes-message
+      (add-to-list 'ecukes-message-log message t 'eq))
+    (when (or ecukes-message ecukes-verbose)
+      (add-to-list 'ecukes-internal-message-log `(message . ,message) t 'eq)
+      ad-do-it)))
 
-(defadvice print (around print-log activate)
-  (if ecukes-verbose (ecukes-push-message ad-do-it 'print)))
+(defadvice print (around print-around activate)
+  (add-to-list 'ecukes-internal-message-log `(print . ,ad-do-it) t 'eq))
 
 (defun ecukes-quit (&optional exit-code)
   "Quit Emacs with EXIT-CODE and write to file if in graphical mode."
@@ -40,7 +47,7 @@
               (if (eq type 'print)
                   (prin1-to-string message)
                 message)))
-          ecukes-message-log)))
+          ecukes-internal-message-log)))
     (when outfile
       (with-temp-buffer
         (insert (s-join "\n" output) "\n")
@@ -49,7 +56,7 @@
 
 (defun usage ()
   "Show usage information and quit."
-  (let ((ecukes-verbose t))
+  (let ((ecukes-message t))
     (message
      (ecukes-template-get 'usage))
     (ecukes-quit)))
@@ -80,8 +87,9 @@
 (defun ecukes-setup-features-dir-exist ()
   "Print usage and quit if there's no features directory."
   (unless (file-directory-p (ecukes-project-features-path))
-    (message
-     (ansi-red "Missing `features` directory."))
+    (let ((ecukes-message t))
+      (message
+       (ansi-red "Missing `features` directory.")))
     (usage)))
 
 (defun ecukes-setup-load ()
