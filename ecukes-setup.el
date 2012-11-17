@@ -49,14 +49,15 @@
 
 (defun usage ()
   "Show usage information and quit."
-  (message
-   (ecukes-template-get 'usage))
-  (ecukes-quit))
+  (let ((ecukes-verbose t))
+    (message
+     (ecukes-template-get 'usage))
+    (ecukes-quit)))
 
 (defun ecukes-setup ()
   "Validate and load."
-  (ecukes-setup-help)
   (ecukes-setup-argv)
+  (ecukes-setup-help)
   (ecukes-setup-features-dir-exist)
   (ecukes-setup-load))
 
