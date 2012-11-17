@@ -32,14 +32,18 @@
     (ecukes-print-intro intro)
     (let ((background-success t) (background-should-run))
       (when background
+        (ecukes-hooks-run-before)
         (setq background-success (ecukes-run-background background)))
       (-each
        scenarios
        (lambda (scenario)
+         (if background-should-run
+             (ecukes-hooks-run-before))
          (when (and background background-success background-should-run)
            (ecukes-run-background-steps background))
-         (setq background-should-run t)
-         (ecukes-run-scenario scenario background-success))))))
+         (ecukes-run-scenario scenario background-success)
+         (ecukes-hooks-run-after)
+         (setq background-should-run t))))))
 
 (defun ecukes-run-background-steps (background)
   "Run BACKGROUND steps."
@@ -56,15 +60,13 @@
 
 (defun ecukes-run-scenario (scenario background-success)
   "Run SCENARIO."
-  (ecukes-hooks-run-before)
   (ecukes-print-scenario-header scenario)
   (let* ((steps (ecukes-scenario-steps scenario))
          (success (ecukes-run-steps steps background-success)))
     (if success
         (ecukes-stats-scenario-pass)
       (ecukes-stats-scenario-fail)))
-  (ecukes-print-newline)
-  (ecukes-hooks-run-after))
+  (ecukes-print-newline))
 
 (defun ecukes-run-steps (steps success)
   "Run and print STEPS and return `t' if all was successful, `nil' otherwise."
