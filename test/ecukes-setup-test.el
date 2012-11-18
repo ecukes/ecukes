@@ -93,15 +93,15 @@
     (should (equal argv (list "features/a.feature")))))
 
 (ert-deftest setup-help-short-flag ()
-  "Should show usage information when argv contains '-h'"
+  "Should show usage information when argv contains '-h'."
   (let ((argv '("-h")))
     (with-mock
      (mock (usage) :times 1)
      (ecukes-setup-help))))
 
 (ert-deftest setup-help-long-flag ()
-  "Should show usage information when argv contains '--help'"
-  (let ((argv '("--help")))
+  "Should show usage information when argv contains '--info'."
+  (let ((argv '("--info")))
     (with-mock
      (mock (usage) :times 1)
      (ecukes-setup-help))))

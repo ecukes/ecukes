@@ -104,8 +104,8 @@
     (setq argv (-difference argv options))))
 
 (defun ecukes-setup-help ()
-  "Print usage and quit if `argv' contains '-h' or '--help'."
-  (when (or (-contains? argv "-h") (-contains? argv "--help"))
+  "Print usage and quit if `argv' contains '-h' or '--info'."
+  (when (or (-contains? argv "-h") (-contains? argv "--info"))
     (usage)))
 
 (defun ecukes-setup-features-dir-exist ()
