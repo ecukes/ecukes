@@ -40,7 +40,10 @@
   (let* ((query (apply 'format (cons name args)))
          (step-def (ecukes-steps-find query)))
     (if step-def
-        (apply (ecukes-step-def-fn step-def) args)
+        (apply (ecukes-step-def-fn step-def)
+               (or args
+                   (ecukes-steps-args
+                    (make-ecukes-step :body name))))
       (error (ansi-red "Step not defined: `%s`" query)))))
 
 (defun ecukes-steps-missing-definition (steps)

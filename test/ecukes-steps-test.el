@@ -37,6 +37,14 @@
             (format "%s-%s" state-1 state-2)))
    (should (equal (Given "state %s and %s" "known" "unknown") "known-unknown"))))
 
+(ert-deftest steps-call-step-line-arguments ()
+  "Should call step with inline arguments."
+  (with-steps
+   (Given "^state \\(.+\\) and \\(.+\\)$"
+          (lambda (state-1 state-2)
+            (format "%s-%s" state-1 state-2)))
+   (should (equal (Given "state known and unknown") "known-unknown"))))
+
 (ert-deftest steps-undefined-no-arguments ()
   "Should error when not defined, no arguments."
   (with-steps
