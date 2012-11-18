@@ -33,3 +33,7 @@
 (ert-deftest parse-scenarios-with-background ()
   "Should parse scenarios with background."
   (should-parse-scenarios "with-background"))
+
+(ert-deftest parse-scenarios-empty ()
+  "Should parse empty scenarios."
+  (should-parse-scenarios "empty"))

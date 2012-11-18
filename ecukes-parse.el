@@ -10,7 +10,7 @@
   "Regexp matching background header.")
 
 (defconst ecukes-parse-scenario-re
-  "^\\s-*Scenario:\\s-*\\(.+[^ ]\\)\\s-*$"
+  "^[\t ]*Scenario:[\t ]*\\(.+?\\)[\t ]*$"
   "Regexp matching scenario header.")
 
 (defconst ecukes-parse-step-re
