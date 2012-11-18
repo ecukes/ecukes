@@ -181,7 +181,8 @@
     (or
      (eobp)
      (s-matches? ecukes-parse-background-re line)
-     (s-matches? ecukes-parse-scenario-re line))))
+     (s-matches? ecukes-parse-scenario-re line)
+     (s-matches? ecukes-parse-tags-re line))))
 
 
 (provide 'ecukes-parse)
