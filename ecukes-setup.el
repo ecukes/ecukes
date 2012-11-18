@@ -12,6 +12,10 @@
 (require 'ecukes-template)
 (require 'ecukes-helpers)
 
+
+(defvar ecukes-tags nil
+  "List of tags.")
+
 (defvar ecukes-verbose nil
   "Show `message' output if true.")
 
@@ -70,13 +74,33 @@
 
 (defun ecukes-setup-argv ()
   "Setup options from `argv'."
-  (let ((options (--filter (s-starts-with? "--" it) argv)))
-    (when (-contains? options "--dbg")
+  (let ((options))
+    (when (-contains? argv "--dbg")
       (setq debug-on-error t)
       (setq debug-on-entry t)
-      (setq ecukes-verbose t))
-    (when (-contains? options "--verbose")
-      (setq ecukes-verbose t))
+      (setq ecukes-verbose t)
+      (push "--dbg" options))
+    (when (-contains? argv "--verbose")
+      (setq ecukes-verbose t)
+      (push "--verbose" options))
+    (let ((is-tag))
+      (-each
+       argv
+       (lambda (arg)
+         (cond ((equal arg "--tags")
+                (push "--tags" options)
+                (setq is-tag t))
+               (t
+                (when is-tag
+                  (push arg options)
+                  (setq
+                   ecukes-tags
+                   (-concat
+                    ecukes-tags
+                    (--map
+                     (substring it 1)
+                     (split-string arg ","))))
+                  (setq is-tag nil)))))))
     (setq argv (-difference argv options))))
 
 (defun ecukes-setup-help ()
