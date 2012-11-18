@@ -37,13 +37,15 @@
       (-each
        scenarios
        (lambda (scenario)
-         (if background-should-run
-             (ecukes-hooks-run-before))
-         (when (and background background-success background-should-run)
-           (ecukes-run-background-steps background))
-         (ecukes-run-scenario scenario background-success)
-         (ecukes-hooks-run-after)
-         (setq background-should-run t))))))
+         (let ((tags (ecukes-scenario-tags scenario)))
+           (when (or (not ecukes-tags) (-intersection ecukes-tags tags))
+             (if background-should-run
+                 (ecukes-hooks-run-before))
+             (when (and background background-success background-should-run)
+               (ecukes-run-background-steps background))
+             (ecukes-run-scenario scenario background-success)
+             (ecukes-hooks-run-after)
+             (setq background-should-run t))))))))
 
 (defun ecukes-run-background-steps (background)
   "Run BACKGROUND steps."

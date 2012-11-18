@@ -86,6 +86,23 @@
                 (make-ecukes-scenario)))))
          (ecukes-run-feature feature)))))))
 
+(ert-deftest run-scenarios-with-tags ()
+  "Should run scenarios matching tags."
+  (with-messages
+   (lambda (messages)
+     (with-mock
+      (stub ecukes-print-intro)
+      (mock (ecukes-run-scenario) :times 1)
+      (let ((ecukes-tags (list "foo"))
+            (feature
+             (make-ecukes-feature
+              :background (make-ecukes-background)
+              :scenarios
+              (list
+               (make-ecukes-scenario :tags (list "foo"))
+               (make-ecukes-scenario :tags (list "bar"))))))
+        (ecukes-run-feature feature))))))
+
 (ert-deftest run-background ()
   "Should run background."
   (with-mock
