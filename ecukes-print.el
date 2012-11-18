@@ -88,7 +88,12 @@
 (defun ecukes-print-scenario-header (scenario)
   "Print SCENARIO header."
   (let ((name (ecukes-scenario-name scenario))
+        (tags (ecukes-scenario-tags scenario))
         (ecukes-print-offset 2))
+    (when tags
+      (ecukes-print-message
+       (ansi-cyan
+        (s-join " " (--map (s-concat "@" it) tags)))))
     (ecukes-print-message "Scenario: %s" name)))
 
 (defun ecukes-print-step (step status)

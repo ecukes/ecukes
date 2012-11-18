@@ -196,6 +196,17 @@
        (ecukes-print-scenario-header scenario)
        (should (equal messages (list "  Scenario: Simple")))))))
 
+(ert-deftest print-scenario-header-tags ()
+  "Should print scenario header when tags."
+  (with-messages
+   (lambda (messages)
+     (let ((scenario
+            (make-ecukes-scenario :name "Simple" :tags (list "foo" "bar")))
+           (expected
+            (list (format "  %s" (ansi-cyan "@foo @bar")) "  Scenario: Simple")))
+       (ecukes-print-scenario-header scenario)
+       (should (equal messages expected))))))
+
 (ert-deftest print-step-success ()
   "Should print successful step."
   (with-messages
