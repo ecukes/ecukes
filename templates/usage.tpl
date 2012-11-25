@@ -2,7 +2,7 @@ USAGE: ecukes [--script|--win] [file|dir] [options]
 
 OPTIONS:
  -h, --help             Display this help message
- --script               Run Ecukes as a script/batch jobn
+ --script               Run Ecukes as a script/batch job
  --win                  Run Ecukes with full GUI window
  --new                  Create new Ecukes setup for project
  --verbose              Show `message' and `print' output
