@@ -11,11 +11,17 @@
 (require 'ecukes-setup)
 (require 'ansi-color)
 
-(defun ecukes ()
-  (interactive)
+(defun ecukes (&optional ask-for-tags)
+  (interactive "P")
   (unless (ecukes-project-path)
     (error "You are not visiting an Ecukes project."))
   (ecukes-setup)
+  (if ask-for-tags
+      (setq
+       ecukes-tags
+       (--map
+        (substring it 1)
+        (split-string (read-string "Run tags: ") ","))))
   (let ((feature-files
          (if (s-matches? "\.feature$" (buffer-file-name))
              (list (buffer-file-name))
