@@ -29,7 +29,8 @@
   (let ((intro (ecukes-feature-intro feature))
         (background (ecukes-feature-background feature))
         (scenarios (ecukes-feature-scenarios feature)))
-    (ecukes-print-intro intro)
+    (if intro
+        (ecukes-print-intro intro))
     (let ((background-success t) (background-should-run (not background)))
       (when background
         (ecukes-hooks-run-before)

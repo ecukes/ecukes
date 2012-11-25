@@ -105,6 +105,14 @@
                 (make-ecukes-scenario)))))
          (ecukes-run-feature feature)))))))
 
+(ert-deftest run-feature-no-intro ()
+  "Should run feature when no intro."
+  (with-mock
+   (not-called ecukes-print-intro)
+   (let ((feature
+          (make-ecukes-feature)))
+     (ecukes-run-feature feature))))
+
 (ert-deftest run-scenarios-with-tags ()
   "Should run scenarios matching tags."
   (with-messages
