@@ -26,7 +26,6 @@
 (ert-deftest setup ()
   "Should validate and setup."
   (with-mock
-   (mock (ecukes-setup-help) :times 1)
    (mock (ecukes-setup-features-dir-exist) :times 1)
    (mock (ecukes-setup-load) :times 1)
    (mock (ecukes-setup-argv) :times 1)
@@ -92,19 +91,6 @@
     (should (equal ecukes-tags (list "foo" "bar" "baz")))
     (should (equal argv (list "features/a.feature")))))
 
-(ert-deftest setup-help-short-flag ()
-  "Should show usage information when argv contains '-h'."
-  (let ((argv '("-h")))
-    (with-mock
-     (mock (usage) :times 1)
-     (ecukes-setup-help))))
-
-(ert-deftest setup-help-long-flag ()
-  "Should show usage information when argv contains '--info'."
-  (let ((argv '("--info")))
-    (with-mock
-     (mock (usage) :times 1)
-     (ecukes-setup-help))))
 (ert-deftest setup-argv-win ()
   "Should run with win."
   (let ((argv (list "--win" "features/a.feature")))

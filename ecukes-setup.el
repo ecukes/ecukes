@@ -68,7 +68,6 @@
 (defun ecukes-setup ()
   "Validate and load."
   (ecukes-setup-argv)
-  (ecukes-setup-help)
   (ecukes-setup-features-dir-exist)
   (ecukes-setup-load))
 
@@ -104,11 +103,6 @@
                      (split-string arg ","))))
                   (setq is-tag nil)))))))
     (setq argv (-difference argv options))))
-
-(defun ecukes-setup-help ()
-  "Print usage and quit if `argv' contains '-h' or '--info'."
-  (when (or (-contains? argv "-h") (-contains? argv "--info"))
-    (usage)))
 
 (defun ecukes-setup-features-dir-exist ()
   "Print usage and quit if there's no features directory."

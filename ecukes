@@ -31,8 +31,9 @@
 # Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 # Boston, MA 02110-1301, USA.
 
-ECUKES_EL=$(dirname $BASH_SOURCE)/ecukes-term.el
-ECUKES_NEW=$(dirname $BASH_SOURCE)/ecukes-new.el
+ECUKES_HOME=$(dirname $BASH_SOURCE)
+ECUKES_EL=$ECUKES_HOME/ecukes-term.el
+ECUKES_NEW=$ECUKES_HOME/ecukes-new.el
 
 if [ -z "$ECUKES_EMACS" ] ; then
   if [ -z "$EMACS" ] ; then
@@ -42,7 +43,9 @@ if [ -z "$ECUKES_EMACS" ] ; then
   fi
 fi
 
-if [ "$1" == "--new" ] ; then
+if [ "$1" == "-h" -o "$1" == "--help" ] ; then
+  cat $ECUKES_HOME/templates/usage.tpl
+elif [ "$1" == "--new" ] ; then
   $ECUKES_EMACS --script "$ECUKES_NEW" --eval "(ecukes-new)"
 elif [ "$1" == "--script" ] ; then
   $ECUKES_EMACS --script "$ECUKES_EL" "${@:2}"
