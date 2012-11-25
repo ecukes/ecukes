@@ -116,14 +116,15 @@
 (ert-deftest setup-load-support ()
   "Should load support first and only once, then the rest."
   (with-mock
-   (stub expand-file-name => "/path/to/project/features/support/env.el")
-   (stub
-    directory-files =>
-    '("/path/to/project/features/support/env.el"
-      "/path/to/project/features/support/foo.el"
-      "/path/to/project/features/support/bar.el"))
-   (mock (load) :times 3)
-   (ecukes-setup-load-support)))
+   (with-project
+    (stub expand-file-name => "/path/to/project/features/support/env.el")
+    (stub
+     directory-files =>
+     '("/path/to/project/features/support/env.el"
+       "/path/to/project/features/support/foo.el"
+       "/path/to/project/features/support/bar.el"))
+    (mock (load) :times 3)
+    (ecukes-setup-load-support))))
 
 (ert-deftest setup-load-step-definitions ()
   "Should load all step definitions."

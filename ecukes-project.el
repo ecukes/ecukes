@@ -1,8 +1,13 @@
 ;;; ecukes-project.el --- Project helpers
 
-(defun ecukes-project-path ()
+(defun ecukes-project-path (&optional dir)
   "Path to project."
-  (directory-file-name (expand-file-name default-directory)))
+  (or dir (setq dir default-directory))
+  (if (file-directory-p (expand-file-name "features" dir))
+      (directory-file-name dir)
+    (let ((new-dir (expand-file-name (file-name-as-directory "..") dir)))
+      (unless (equal dir "/")
+        (ecukes-project-path new-dir)))))
 
 (defun ecukes-project-name ()
   "Name of the project."
