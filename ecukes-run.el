@@ -30,7 +30,7 @@
         (background (ecukes-feature-background feature))
         (scenarios (ecukes-feature-scenarios feature)))
     (ecukes-print-intro intro)
-    (let ((background-success t) (background-should-run))
+    (let ((background-success t) (background-should-run (not background)))
       (when background
         (ecukes-hooks-run-before)
         (setq background-success (ecukes-run-background background)))

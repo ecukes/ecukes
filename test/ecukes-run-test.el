@@ -66,8 +66,8 @@
          (mock (ecukes-run-scenario) :times 1)
          (ecukes-run-feature feature)))))))
 
-(ert-deftest run-feature-hooks ()
-  "Should run feature hooks."
+(ert-deftest run-feature-hooks-with-background ()
+  "Should run feature hooks with background."
   (with-messages
    (lambda (messages)
      (with-mock
@@ -80,6 +80,25 @@
        (let ((feature
               (make-ecukes-feature
                :background (make-ecukes-background)
+               :scenarios
+               (list
+                (make-ecukes-scenario)
+                (make-ecukes-scenario)))))
+         (ecukes-run-feature feature)))))))
+
+(ert-deftest run-feature-hooks-without-background ()
+  "Should run feature hooks without background."
+  (with-messages
+   (lambda (messages)
+     (with-mock
+      (stub ecukes-print-intro)
+      (mock (before-mock) :times 2)
+      (mock (after-mock) :times 2)
+      (with-hooks
+       (Before (before-mock))
+       (After (after-mock))
+       (let ((feature
+              (make-ecukes-feature
                :scenarios
                (list
                 (make-ecukes-scenario)
