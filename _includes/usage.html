@@ -60,13 +60,56 @@ create   super-duper.feature</code></pre>
 
       <h3>Modes</h3>
 
-      <p>Ecukes can run in three modes:</p>
-
-      <ul>
-        <li>No win: <strong>default</strong></li>
-        <li>Graphical: <strong>--win</strong></li>
-        <li>Script: <strong>--script</strong></li>
-      </ul>
+      <p>Ecukes can run in a few different modes.</p>
+      
+      <h4>No win (default)</h4>
+      <p>
+        Running with no win is the default way to run features. In
+        this mode, Ecukes will run Emacs with the <strong>-nw</strong>
+        option.
+      </p>
+      
+      <p>Example:</p>
+      <pre><code>$ carton exec ecukes features</code></pre>
+      
+      <h4>Win</h4>
+      <p>
+        This will start up an Emacs window and run the features. To
+        use this mode, specify <strong>--win</strong> as first option
+        to <strong>ecukes</strong>.
+      </p>
+      
+      <p>Example:</p>
+      <pre><code>$ carton exec ecukes --win features</code></pre>
+      
+      <h4>Script</h4>
+      <p>
+        This will run the features as a batch job. This mode has a few
+        quirks and is only recommended as a way to run the features
+        fast.
+      </p>
+      
+      <p>Example:</p>
+      <pre><code>$ carton exec ecukes --script features</code></pre>
+      
+      <h4>Inline</h4>
+      <p>
+        You can also run features directly in your current Emacs
+        session. To to that, make sure Ecukes and its dependencies are
+        available in your <strong>load-path</strong>. If you are using
+        Carton for your Emacs setup, simply
+        add <strong>ecukes</strong> as a dependency and you are
+        set. Then require ecukes.
+      </p>
+      
+      <pre><code>(require 'ecukes)</code></pre>
+      
+      <p>
+        To run features, visit a file in your project and run
+        the <strong>ecukes</strong> function.
+      </p>
+      
+      <pre><code>M-x ecukes</code></pre>
 
       <h3>Examples</h3>
       <p>Here are a few ways to run Ecukes:</p>
