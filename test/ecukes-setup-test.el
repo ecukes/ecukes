@@ -105,6 +105,11 @@
     (with-mock
      (mock (usage) :times 1)
      (ecukes-setup-help))))
+(ert-deftest setup-argv-win ()
+  "Should run with win."
+  (let ((argv (list "--win" "features/a.feature")))
+    (ecukes-setup-argv)
+    (should (equal argv (list "features/a.feature")))))
 
 (ert-deftest setup-features-directory-exist-when-no-features-dir ()
   "Should print message when no features dir exist."

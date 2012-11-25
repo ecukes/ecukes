@@ -1,8 +1,9 @@
-USAGE: ecukes [--script|--batch] [file|dir] [options]
+USAGE: ecukes [--script|--win] [file|dir] [options]
 
 OPTIONS:
  -h, --info             Display this help message
- --script, --batch      Run Ecukes in non graphical mode
+ --script               Run Ecukes as a script/batch jobn
+ --win                  Run Ecukes with full GUI window
  --new                  Create new Ecukes setup for project
  --verbose              Show `message' and `print' output
  --dbg                  Run in debug mode (enable as much debug options in Emacs as possible)

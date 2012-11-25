@@ -83,6 +83,8 @@
     (when (-contains? argv "--verbose")
       (setq ecukes-verbose t)
       (push "--verbose" options))
+    (when (-contains? argv "--win")
+      (push "--win" options))
     (let ((is-tag))
       (-each
        argv

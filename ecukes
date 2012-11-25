@@ -44,11 +44,17 @@ fi
 
 if [ "$1" == "--new" ] ; then
   $ECUKES_EMACS --script "$ECUKES_NEW" --eval "(ecukes-new)"
-elif [ "$1" == "--batch" -o "$1" == "--script" ] ; then
+elif [ "$1" == "--script" ] ; then
   $ECUKES_EMACS --script "$ECUKES_EL" "${@:2}"
 else
   export ECUKES_OUTFILE=$(mktemp /tmp/ecukes.XXX)
-  $ECUKES_EMACS --load "$ECUKES_EL" -Q "$@"
+  
+  if [[ "$1" == "--win" ]]; then
+    $ECUKES_EMACS --load "$ECUKES_EL" -Q "$@"
+  else
+    $ECUKES_EMACS -nw --load "$ECUKES_EL" -Q "$@"
+  fi
+
   cat $ECUKES_OUTFILE
   rm -f $ECUKES_OUTFILE
 fi
