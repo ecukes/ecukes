@@ -4,18 +4,39 @@
       <div class="page-header">
         <h2>Usage</h2>
       </div>
+      
+      <p>This is the Ecukes usage information:</p>
+      
+      <pre><code>$ carton exec ecukes --help
+USAGE: ecukes [--script|--win] [file|dir] [options]
 
+OPTIONS:
+ -h, --help             Display this help message
+ --script               Run Ecukes as a script/batch job
+ --win                  Run Ecukes with full GUI window
+ --new                  Create new Ecukes setup for project
+ --verbose              Show `message' output
+ --dbg                  Run in debug mode (enable as much debug options in Emacs as possible)
+ --tags TAG_EXPRESSION  Only execute the scenarios with tags matching TAG_EXPRESSION.
+                        TAG_EXPRESSION Examples: --tags @dev, --tags @dev,@local</code></pre>
+      
       <p>
-        When you have the <strong>ecukes</strong> binary available, you can
-        create the Ecukes files for an Emacs project. Lets say you have a
-        project called <strong>super-duper</strong> that you want to test
-        with Ecukes.
+        Let's say you have a project
+        called <strong>super-duper</strong> that you want to test with
+        Ecukes.
       </p>
+      
+      <p>First, create all boilerplate files:</p>
 
-      <pre><code>$ cd /path/to/your/emacs/project
-$ ecukes --new</code></pre>
+      <pre><code>$ carton exec ecukes --new
+create features
+create   step-definition
+create     super-duper-steps.el
+create   support
+create     env.el
+create   super-duper.feature</code></pre>
 
-      Ecukes creates the <strong>features</strong> directory with these files:
+      <p>The project will now look like this:</p>
 
       <pre><code>$ ls super-duper
 
@@ -37,15 +58,45 @@ $ ecukes --new</code></pre>
         step definitions.
       </p>
 
-      <p>You can run the features in a few different ways.</p>
+      <h3>Modes</h3>
+
+      <p>Ecukes can run in three modes:</p>
 
       <ul>
-        <li>Run all features in batch mode <strong>ecukes features</strong></li>
-        <li>Run all features in graphical mode <strong>ecukes --graphical features</strong></li>
-        <li>Run specific feature in batch mode <strong>ecukes features/project.feature</strong></li>
-
-        <li>Run specific features in graphical mode <strong>ecukes --graphical features/awesome-*.feature</strong></li>
+        <li>No win: <strong>default</strong></li>
+        <li>Graphical: <strong>--win</strong></li>
+        <li>Script: <strong>--script</strong></li>
       </ul>
+
+      <h3>Examples</h3>
+      <p>Here are a few ways to run Ecukes:</p>
+
+      <p>Create boilerplate files for current project.</p>
+      <pre><code>$ carton exec ecukes --new</code></pre>
+      
+      <p>Show usage information.</p>
+      <pre><code>$ carton exec ecukes --help</code></pre>
+      
+      <p>Run all features in no win mode.</p>
+      <pre><code>$ carton exec ecukes</code></pre>
+
+      <p>Run all features in win mode.</p>
+      <pre><code>$ carton exec ecukes --win features</code></pre>
+
+      <p>Run all features in script mode.</p>
+      <pre><code>$ carton exec ecukes --script</code></pre>
+
+      <p>Run one feature in no win mode.</p>
+      <pre><code>$ carton exec ecukes features/super-duper.feature</code></pre>
+
+      <p>Run one feature in win mode with verbose output.</p>
+      <pre><code>$ carton exec ecukes --win features/super-duper.feature --verbose</code></pre>
+
+      <p>Run all scenarios tagged with <strong>@super</strong> in script mode with debug.</p>
+      <pre><code>$ carton exec ecukes --script features/super-duper.feature --dbg --tags @super</code></pre>
+      
+      <p>Run all features in no win mode. Use Emacs binary installed via Homebrew.</p>
+      <pre><code>ECUKES_EMACS="/usr/local/Cellar/emacs/24.2/Emacs.app/Contents/MacOS/Emacs" carton exec ~/Code/ecukes/ecukes</code></pre>
     </div>
   </div>
 </div>
