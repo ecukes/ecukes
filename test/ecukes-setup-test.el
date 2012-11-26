@@ -135,3 +135,10 @@
       "/path/to/project/features/step-definitions/misc-steps.el"))
    (mock (load) :times 2)
    (ecukes-setup-load-step-definitions)))
+
+(ert-deftest setup-message-nil ()
+  "Should handle printing nil message."
+  (let ((ecukes-internal-message-log))
+    (message nil)
+    (should (equal (car (car ecukes-internal-message-log)) 'message))
+    (should (equal (cdr (car ecukes-internal-message-log)) ""))))

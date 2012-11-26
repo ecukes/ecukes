@@ -29,7 +29,10 @@
   "List with `message' output (only from external code).")
 
 (defadvice message (around message-around activate)
-  (let ((message (apply 'format (ad-get-args 0))))
+  (let ((message
+         (if (car (ad-get-args 0))
+             (apply 'format (ad-get-args 0))
+           "")))
     (unless ecukes-message
       (add-to-list 'ecukes-message-log message t 'eq))
     (when (or ecukes-message ecukes-verbose)
