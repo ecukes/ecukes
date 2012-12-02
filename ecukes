@@ -58,6 +58,10 @@ else
     "$ECUKES_EMACS" -nw --load "$ECUKES_EL" -Q "$@"
   fi
 
+  STATUS=$?
+
   cat $ECUKES_OUTFILE
   rm -f $ECUKES_OUTFILE
+
+  exit $STATUS
 fi
