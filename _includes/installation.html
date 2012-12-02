@@ -37,18 +37,6 @@
 all:
 	carton exec ${ECUKES} features
 </code></pre>
-
-      <h3>Submodule</h3>
-
-      <p>
-        If you prefer to install Ecukes using a submodule, add both Ecukes
-        and <a href="https://github.com/rejeep/ansi">Ansi</a> as
-        submodules. Ecukes requires ansi at runtime, which means that it
-        must be available in Emacs <strong>load-path</strong>. This line
-        does exactly that:
-      </p>
-
-      <pre><code>EMACSLOADPATH=$(emacs -Q --batch --eval '(message (mapconcat (quote identity) (append (file-expand-wildcards "util/*" t) load-path) ":"))' 2>&1) ./util/ecukes/ecukes features</code></pre>
     </div>
   </div>
 </div>

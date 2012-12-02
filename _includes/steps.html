@@ -170,8 +170,10 @@
          (Given "I go to a")
          (Given "I go to b")))</code></pre>
 
-      <p>You can also pass arguments when calling other steps.</p>
-      <pre><code>(Given "I am xin buffer \"%s\"" "buffer-name")</code></pre>
+      <p>You can also pass arguments when calling other steps, like this:</p>
+      <pre><code>(Given "I am in buffer \"%s\"" buffer-name-variable)</code></pre>
+      <p>Or like this:</p>
+      <pre><code>(Given "I am in buffer \"buffer-name\"")</code></pre>
     </div>
   </div>
 </div>
