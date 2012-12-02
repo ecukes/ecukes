@@ -1,3 +1,5 @@
+(require 'ecukes-parse)
+
 (ert-deftest parse-tags-single-tag ()
   "Should parse single tag."
   (with-parse-scenario

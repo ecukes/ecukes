@@ -1,5 +1,7 @@
+(require 'ecukes-parse)
+
 (defun with-parse-intro (name fn)
-  (let* ((feature-file (feature-file-path "intro" name))
+  (let* ((feature-file (fixture-file-path "intro" name))
          (feature (ecukes-parse-feature feature-file))
          (intro (ecukes-feature-intro feature))
          (header) (description))
@@ -96,4 +98,17 @@
        '("In order to aviod silly mistakes"
          "As a math idiot"
          "And as an idiot in general"
+         "I want to be told the sum of two numbers"))))))
+
+(ert-deftest parse-intro-scenario-tags ()
+  "Should not consider scenario tags part of intro."
+  (with-parse-intro
+   "scenario-tags"
+   (lambda (intro header description)
+     (should (equal header "Addition of two numbers"))
+     (should
+      (equal
+       description
+       '("In order to aviod silly mistakes"
+         "As a math idiot"
          "I want to be told the sum of two numbers"))))))

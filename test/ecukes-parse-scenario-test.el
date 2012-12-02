@@ -1,3 +1,5 @@
+(require 'ecukes-parse)
+
 (defun should-parse-scenario (name)
   (with-parse-scenario
    name
@@ -49,3 +51,7 @@
    "same-step-names"
    (lambda (scenario name step-names tags)
      (should (equal (length step-names) 2)))))
+
+(ert-deftest parse-scenario-whitespace ()
+  "Should parse when whitespace under header."
+  (should-parse-scenario "whitespace"))

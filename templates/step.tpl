@@ -1,4 +1,0 @@
-({fn} "^{regex}$"
-       (lambda ({args})
-
-         ))

@@ -1,3 +1,5 @@
+(require 'ecukes-parse)
+
 (defmacro with-line (line &rest body)
   `(with-mock
     (stub buffer-substring => ,line)

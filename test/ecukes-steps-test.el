@@ -1,32 +1,21 @@
-(ert-deftest steps-define-step-with-no-args ()
-  "Should define step with no args."
-  (with-steps
-   (let ((regex "^a known state$") (fn 'ignore))
-     (ecukes-steps-step regex fn)
-     (should
-      (equal
-       (ecukes-steps-find "Given a known state")
-       (make-ecukes-step-def :fn fn :args nil))))))
+(require 'ecukes-steps)
 
-(ert-deftest steps-define-step-with-single-arg ()
-  "Should define step with single arg."
+(ert-deftest steps-define-step ()
+  "Should define step."
   (with-steps
-   (let ((regex "^a \\(.+\\) state$") (fn 'ignore))
-     (ecukes-steps-step regex fn)
-     (should
-      (equal
-       (ecukes-steps-find "Given a known state")
-       (make-ecukes-step-def :fn fn :args '("known")))))))
+   (Given "^a known state$" 'ignore)
+   (should
+    (equal
+     (make-ecukes-step-def :regex "^a known state$" :fn 'ignore)
+     (car ecukes-steps-definitions)))))
 
-(ert-deftest steps-define-step-with-multiple-args ()
-  "Should define step with multiple args."
+(ert-deftest steps-define-same-step-twice ()
+  "Should not define same step twice."
   (with-steps
-   (let ((regex "^state \\(.+\\) and \\(.+\\)$") (fn 'ignore))
-     (ecukes-steps-step regex fn)
-     (should
-      (equal
-       (ecukes-steps-find "Given state known and unknown")
-       (make-ecukes-step-def :fn fn :args '("known" "unknown")))))))
+   (Given "^a known state$" 'ignore)
+   (Given "^a known state$" 'ignore)
+   (should
+    (equal (length ecukes-steps-definitions) 1))))
 
 (ert-deftest steps-call-step-no-arguments ()
   "Should call step with no arguments."
@@ -37,7 +26,7 @@
 (ert-deftest steps-call-step-single-argument ()
   "Should call step with single argument."
   (with-steps
-   (Given "^a \\(.+\\) state$" (lambda (state) state))
+   (Given "^a \\(.+\\) state$" 'identity)
    (should (equal (Given "a %s state" "known") "known"))))
 
 (ert-deftest steps-call-step-multiple-arguments ()
@@ -48,61 +37,113 @@
             (format "%s-%s" state-1 state-2)))
    (should (equal (Given "state %s and %s" "known" "unknown") "known-unknown"))))
 
+(ert-deftest steps-call-step-line-arguments ()
+  "Should call step with inline arguments."
+  (with-steps
+   (Given "^state \\(.+\\) and \\(.+\\)$"
+          (lambda (state-1 state-2)
+            (format "%s-%s" state-1 state-2)))
+   (should (equal (Given "state known and unknown") "known-unknown"))))
+
 (ert-deftest steps-undefined-no-arguments ()
   "Should error when not defined, no arguments."
   (with-steps
-   (Given "^a known state$" 'ignore)
-   (should-error (Given "an unknown state"))))
+   (with-mock
+    (mock (error (ansi-red "Step not defined: `a known state`")) :times 1)
+    (Given "a known state"))))
 
 (ert-deftest steps-undefined-single-argument ()
   "Should error when not defined, single argument."
   (with-steps
-   (Given "^a state \\(.+\\)$" 'ignore)
-   (should-error (Given "an state: foo"))))
+   (with-mock
+    (mock (error (ansi-red "Step not defined: `a known state`")) :times 1)
+    (Given "a %s state" "known"))))
 
 (ert-deftest steps-undefined-multiple-arguments ()
   "Should error when not defined, multiple arguments."
   (with-steps
-   (Given "^a state \\(.+\\) and \\(.+\\)$" 'ignore)
-   (should-error (Given "an state foo and bar"))))
+   (with-mock
+    (mock (error (ansi-red "Step not defined: `state known and unknown`")) :times 1)
+    (Given "state %s and %s" "known" "unknown"))))
 
-(ert-deftest steps-undefined-some-undefined ()
-  "Should find some steps when some are undefined."
+(ert-deftest steps-missing-definition-no-steps ()
+  "Should return nil when no steps."
+  (should-not (ecukes-steps-missing-definition nil)))
+
+(ert-deftest steps-missing-definition-no-definitions ()
+  "Should return all steps when all missing."
+  (let ((steps (list (mock-step "Given a known state"))))
+    (should (equal (ecukes-steps-missing-definition steps) steps))))
+
+(ert-deftest steps-missing-definition-have-definitions ()
+  "Should return nil when no steps missing."
   (with-steps
-   (let ((step-known   (make-ecukes-step :name "Given a known state"))
-         (step-unknown (make-ecukes-step :name "Given an unknown state")))
-     (ecukes-steps-step "^a known state$" 'ignore)
-     (should
-      (equal
-       (ecukes-steps-undefined (list step-known step-unknown))
-       (list step-unknown))))))
+   (let ((steps (list (mock-step "Given a known state"))))
+     (Given "^a known state$" 'ignore)
+     (should-not (ecukes-steps-missing-definition steps)))))
 
-(ert-deftest steps-undefined-none-undefined-ask-multiple-for-same ()
-  "Should find single step when undefined, but asked for multiple times."
+(ert-deftest steps-missing-definition-have-definitions-with-argument ()
+  "Should return nil when no steps missing with argument."
   (with-steps
-   (let ((step (make-ecukes-step :name "Given a known state")))
-     (should
-      (equal
-       (ecukes-steps-undefined (list step step step))
-       (list step))))))
+   (let ((steps (list (mock-step "Given state \"known\""))))
+     (Given "^state \"known\"$" 'ignore)
+     (should-not (ecukes-steps-missing-definition steps)))))
 
-(ert-deftest ecukes-steps-query-with-prefix ()
-  "Should correctly retrieve query with prefix."
-  (should
-   (equal
-    (ecukes-steps-query "Given a known state")
-    "a known state")))
+(ert-deftest steps-missing-definition-some-missing ()
+  "Should return missing steps when some missing."
+  (with-steps
+   (let* ((known
+           (mock-step "Given a known state"))
+          (unknown
+           (mock-step "Given an unknown state"))
+          (steps (list known unknown)))
+     (Given "^a known state$" 'ignore)
+     (should (equal (list unknown) (ecukes-steps-missing-definition steps))))))
 
-(ert-deftest ecukes-steps-query-without-prefix ()
-  "Should correctly retrieve query without prefix."
-  (should
-   (equal
-    (ecukes-steps-query "a known state")
-    "a known state")))
+(ert-deftest steps-missing-definition-same-steps ()
+  "Should return uniq steps when same steps."
+  (with-steps
+   (let* ((step
+           (mock-step "Given a known state"))
+          (steps (list step step)))
+     (should (equal steps (ecukes-steps-missing-definition steps))))))
 
-(ert-deftest ecukes-steps-query-step ()
-  "Should correctly retrieve query from step."
-  (let ((step (make-ecukes-step :name "Given a known state")))
-    (should
-     (equal
-      (ecukes-steps-query step) "a known state"))))
+(ert-deftest steps-args-no-args ()
+  "Should return empty list when no args."
+  (with-steps
+   (Given "^a known state$" 'ignore)
+   (let ((step (mock-step "Given a known state")))
+     (should (equal (ecukes-steps-args step) nil)))))
+
+(ert-deftest steps-args-single-arg ()
+  "Should return args when single arg."
+  (with-steps
+   (Given "^state \"\\(.+\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\"")))
+     (should (equal (ecukes-steps-args step) (list "known"))))))
+
+(ert-deftest steps-args-multiple-args ()
+  "Should return args when multiple args."
+  (with-steps
+   (Given "^state \"\\(.+\\)\" and \"\\(.+\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\" and \"unknown\"")))
+     (should (equal (ecukes-steps-args step) (list "known" "unknown"))))))
+
+(ert-deftest steps-args-without-quotes ()
+  "Should return args when multiple (unquoted) args."
+  (with-steps
+   (Given "^state \\(.+\\) and \\(.+\\)$" 'ignore)
+   (let ((step (mock-step "Given state known and unknown")))
+     (should (equal (ecukes-steps-args step) (list "known" "unknown"))))))
+
+(ert-deftest steps-args-not-defined-no-arg ()
+  "Should return quoted args when not defined when no args."
+  (with-steps
+   (let ((step (mock-step "Given state known")))
+     (should (equal (ecukes-steps-args step) nil)))))
+
+(ert-deftest steps-args-not-defined-args ()
+  "Should return quoted args when not defined when args."
+  (with-steps
+   (let ((step (mock-step "Given state \"known\" and \"unknown\"")))
+     (should (equal (ecukes-steps-args step) (list "known" "unknown"))))))

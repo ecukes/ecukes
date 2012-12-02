@@ -1,141 +1,390 @@
-(ert-deftest print-undefined-steps-should-print-title ()
-  "Should print undefined steps title when printing undefined steps."
+(require 'ecukes-print)
+
+(ert-deftest print-missing-steps ()
+  "Should print header and steps."
   (with-mock
-   (stub ecukes-print-message)
-   (mock (ecukes-print-undefined-steps-title) :times 1)
-   (ecukes-print-undefined-steps nil)))
+   (with-steps
+    (Given "^state known$" 'ignore)
+    (Given "^state unknown$" 'ignore)
+    (let ((known (mock-step "Given state known"))
+          (unknown (mock-step "And state unknown")))
+      (mock (ecukes-print-message) :times 2)
+      (mock (ecukes-print-missing-steps-header) :times 1)
+      (ecukes-print-missing-steps (list known unknown))))))
 
-(ert-deftest print-undefined-steps-should-print-steps ()
-  "Should print all undefined steps."
+(ert-deftest print-missing-steps-same-step ()
+  "Should print header and same steps only once."
   (with-mock
-   (stub ecukes-print-message)
-   (mock (ecukes-print-undefined-step) :times 2)
-   (ecukes-print-undefined-steps '(0 0))))
+   (with-steps
+    (Given "^state known$" 'ignore)
+    (Given "^state unknown$" 'ignore)
+    (let ((known (mock-step "Given state known"))
+          (unknown (mock-step "And state known")))
+      (mock (ecukes-print-message) :times 1)
+      (mock (ecukes-print-missing-steps-header) :times 1)
+      (ecukes-print-missing-steps (list known unknown))))))
 
-(ert-deftest print-undefined-step ()
-  "Should print undefined step."
-  (let ((step (make-ecukes-step :name "Given a known state")))
-    (with-mock
-     (mock (ecukes-print-message) :times 2)
-     (ecukes-print-undefined-step step))))
+(ert-deftest print-missing-steps-header ()
+  "Should print header."
+  (with-mock
+   (mock
+    (ecukes-print-message
+     (ansi-yellow
+      "Some steps does not have a matching definition. Please implement the following step definitions:\n"))
+    :times 1)
+   (ecukes-print-missing-steps-header)))
 
-(ert-deftest print-undefined-step-args-no-argument ()
-  "Should print undefined step arguments when no argument."
-  (let ((step (make-ecukes-step :name "Given a known state")))
-    (should
-     (equal
-      (ecukes-print-undefined-step-args step) ""))))
+(ert-deftest print-step-string-no-args ()
+  "Should print step when no args."
+  (with-steps
+   (Given "^a state$" 'ignore)
+   (let ((step (mock-step "Given a state"))
+         (expected
+          (ansi-yellow "(Given \"^a state$\"\n       (lambda ()\n\n         ))")))
+     (should (equal (ecukes-print-step-string step) expected)))))
 
-(ert-deftest print-undefined-step-args-single-argument ()
-  "Should print undefined step arguments when single argument."
-  (let ((step (make-ecukes-step :name "Given a \"known\" state")))
-    (should
-     (equal
-      (ecukes-print-undefined-step-args step) "arg"))))
+(ert-deftest print-step-string-single-arg ()
+  "Should print step when single arg."
+  (with-steps
+   (Given "^state \"\\(known\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\""))
+         (expected
+          (ansi-yellow "(Given \"^state \\\"\\\\([^\\\"]+\\\\)\\\"$\"\n       (lambda (arg)\n\n         ))")))
+     (should (equal (ecukes-print-step-string step) expected)))))
 
-(ert-deftest print-undefined-step-args-multiple-arguments ()
-  "Should print undefined step arguments when multiple arguments."
-  (let ((step (make-ecukes-step :name "Given state \"known\" and \"unknown\"")))
-    (should
-     (equal
-      (ecukes-print-undefined-step-args step) "arg arg"))))
+(ert-deftest print-step-string-multiple-args ()
+  "Should print step when multiple args."
+  (with-steps
+   (Given "^state \"\\(known\\)\" and \"\\(unknown\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\" and \"unknown\""))
+         (expected
+          (ansi-yellow "(Given \"^state \\\"\\\\([^\\\"]+\\\\)\\\" and \\\"\\\\([^\\\"]+\\\\)\\\"$\"\n       (lambda (arg-1 arg-2)\n\n         ))")))
+     (should (equal (ecukes-print-step-string step) expected)))))
 
-(ert-deftest print-undefined-step-args-table ()
-  "Should print undefined step arguments when table."
-  (let ((step (make-ecukes-step :name "Given state \"known\":" :type 'table)))
-    (should
-     (equal
-      (ecukes-print-undefined-step-args step) "arg arg"))))
+(ert-deftest print-step-args-no-args ()
+  "Should be empty when no step args."
+  (with-steps
+   (Given "^a state$" 'ignore)
+   (let ((step (mock-step "Given a state")))
+     (should (equal (ecukes-print-step-args step) "")))))
 
-(ert-deftest print-undefined-step-args-py-string ()
-  "Should print undefined step arguments when py-string."
-  (let ((step (make-ecukes-step :name "Given state \"known\":" :type 'py-string)))
-    (should
-     (equal
-      (ecukes-print-undefined-step-args step) "arg arg"))))
+(ert-deftest print-step-args-single-arg ()
+  "Should return correct step args when single arg."
+  (with-steps
+   (Given "^state \"\\(known\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\"")))
+     (should (equal (ecukes-print-step-args step) "arg")))))
 
-(ert-deftest print-undefined-step-regex-no-argument ()
-  "Should print undefined step regex when no argument."
-  (should
-   (equal
-    (ecukes-print-undefined-step-regex "a known state") "a known state")))
+(ert-deftest print-step-args-multiple-args ()
+  "Should return correct step args when multiple args."
+  (with-steps
+   (Given "^state \"\\(known\\)\" and \"\\(unknown\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\" and \"unknown\"")))
+     (should (equal (ecukes-print-step-args step) "arg-1 arg-2")))))
 
-(ert-deftest print-undefined-step-regex-single-argument ()
-  "Should print undefined step regex when single argument."
-  (should
-   (equal
-    (ecukes-print-undefined-step-regex "a \"known\" state")
-    "a \\\\\"\\\\\\\\(.+\\\\\\\\)\\\\\" state")))
+(ert-deftest print-step-args-with-args-and-table ()
+  "Should return correct step args when args and table."
+  (with-steps
+   (Given "^state \"\\(known\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\"" :type 'table)))
+     (should (equal (ecukes-print-step-args step) "arg-1 arg-2")))))
 
-(ert-deftest print-undefined-step-regex-multiple-arguments ()
-  "Should print undefined step regex when multiple arguments."
-  (should
-   (equal
-    (ecukes-print-undefined-step-regex "state \"known\" and \"unknown\"")
-    "state \\\\\"\\\\\\\\(.+\\\\\\\\)\\\\\" and \\\\\"\\\\\\\\(.+\\\\\\\\)\\\\\"")))
+(ert-deftest print-step-args-py-string ()
+  "Should return correct step args when args and py-string."
+  (with-steps
+   (Given "^a known state$" 'ignore)
+   (let ((step (mock-step "Given a known state" :type 'py-string)))
+     (should (equal (ecukes-print-step-args step) "arg")))))
+
+(ert-deftest print-step-args-table ()
+  "Should return correct step args when args and table."
+  (with-steps
+   (Given "^a known state$" 'ignore)
+   (let ((step (mock-step "Given a known state" :type 'table)))
+     (should (equal (ecukes-print-step-args step) "arg")))))
+
+(ert-deftest print-step-args-with-args-and-py-string ()
+  "Should return correct step args when args and py-string."
+  (with-steps
+   (Given "^state \"\\(known\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\"" :type 'py-string)))
+     (should (equal (ecukes-print-step-args step) "arg-1 arg-2")))))
+
+(ert-deftest print-step-body-no-args ()
+  "Should be empty when no step args."
+  (with-steps
+   (Given "^a state$" 'ignore)
+   (let ((step (mock-step "Given a state")))
+     (should (equal (ecukes-print-step-body step) "a state")))))
+
+(ert-deftest print-step-body-single-arg ()
+  "Should return correct step body when single arg."
+  (with-steps
+   (Given "^state \"\\(known\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\""))
+         (expected "state \\\"\\\\([^\\\"]+\\\\)\\\""))
+     (should (equal (ecukes-print-step-body step) expected)))))
+
+(ert-deftest print-step-body-multiple-args ()
+  "Should return correct step body when multiple args."
+  (with-steps
+   (Given "^state \"\\(known\\)\" and \"\\(unknown\\)\"$" 'ignore)
+   (let ((step (mock-step "Given state \"known\" and \"unknown\""))
+         (expected "state \\\"\\\\([^\\\"]+\\\\)\\\" and \\\"\\\\([^\\\"]+\\\\)\\\""))
+     (should (equal (ecukes-print-step-body step) expected)))))
 
 (ert-deftest print-intro ()
-  "Should print intro header and description."
+  "Should print intro."
+  (with-messages
+   (lambda (messages)
+     (with-parse-feature
+      "simple"
+      (lambda (feature intro scenarios background steps)
+        (ecukes-print-intro intro)
+        (let ((expected (list "Feature: Simple" "  This" "  Is" "  Simple" " ")))
+          (should (equal messages expected))))))))
+
+(ert-deftest print-stats-summary ()
+  "Should print stats summary."
   (with-mock
-   (let ((intro
-          (make-ecukes-intro
-           :header "Addition of two numbers"
-           :description
-           '("In order to aviod silly mistakes"
-             "As a math idiot"
-             "I want to be told the sum of two numbers"))))
-     (mock (ecukes-print-message) :times 5)
-     (ecukes-print-intro intro))))
+   (stub ecukes-stats-summary => "SUMMARY")
+   (with-messages
+    (lambda (messages)
+      (ecukes-print-stats-summary)
+      (should
+       (equal messages (list "SUMMARY")))))))
 
 (ert-deftest print-newline ()
   "Should print newline."
   (with-mock
-   (mock (ecukes-print-message " "))
+   (mock (ecukes-print-message " ") :times 1)
    (ecukes-print-newline)))
+
+(ert-deftest print-message ()
+  "Should print formatted message."
+  (with-mock
+   (mock (ecukes-print-format "MESSAGE" nil) :times 1)
+   (with-messages
+    (lambda (messages)
+      (ecukes-print-message "MESSAGE")))))
+
+(ert-deftest format-message-simple ()
+  "Should format message when simple."
+  (should (equal (ecukes-print-format "MESSAGE") "MESSAGE")))
+
+(ert-deftest format-message ()
+  "Should format message."
+  (should (equal (ecukes-print-format "MESSAGE %s" "EGASSEM") "MESSAGE EGASSEM")))
+
+(ert-deftest format-message-offset ()
+  "Should format message with offset."
+  (let ((ecukes-print-offset 2))
+    (should (equal (ecukes-print-format "MESSAGE") "  MESSAGE"))))
 
 (ert-deftest print-background-header ()
   "Should print background header."
-  (with-mock
-   (mock (ecukes-print-message "Background:") :times 1)
-   (ecukes-print-background-header)))
+  (with-messages
+   (lambda (messages)
+     (ecukes-print-background-header)
+     (should (equal messages (list "  Background:"))))))
+
+(ert-deftest print-scenario-header ()
+  "Should print scenario header."
+  (with-messages
+   (lambda (messages)
+     (let ((scenario (make-ecukes-scenario :name "Simple")))
+       (ecukes-print-scenario-header scenario)
+       (should (equal messages (list "  Scenario: Simple")))))))
+
+(ert-deftest print-scenario-header-tags ()
+  "Should print scenario header when tags."
+  (with-messages
+   (lambda (messages)
+     (let ((scenario
+            (make-ecukes-scenario :name "Simple" :tags (list "foo" "bar")))
+           (expected
+            (list (format "  %s" (ansi-cyan "@foo @bar")) "  Scenario: Simple")))
+       (ecukes-print-scenario-header scenario)
+       (should (equal messages expected))))))
 
 (ert-deftest print-step-success ()
-  "Should print step success."
-  (with-mock
-   (mock (ecukes-print-step) :times 1)
-   (ecukes-print-step-success nil)))
+  "Should print successful step."
+  (with-messages
+   (lambda (messages)
+     (let ((step (mock-step "Given a state"))
+           (expected (list (format "    %s" (ansi-green "Given a state")))))
+       (ecukes-print-step step 'success)
+       (should (equal messages expected))))))
 
 (ert-deftest print-step-failure ()
-  "Should print step failure."
-  (with-mock
-   (stub ecukes-step-err => "err")
-   (mock (ecukes-print-step) :times 1)
-   (mock (ecukes-print-error) => "err")
-   (ecukes-print-step-failure nil)))
+  "Should print successful step."
+  (with-messages
+   (lambda (messages)
+     (let ((step (mock-step "Given a state" :err "ERROR"))
+           (expected
+            (list
+             (format "    %s" (ansi-red "Given a state"))
+             (format "      %s" (ansi-red "ERROR")))))
+       (ecukes-print-step step 'failure)
+       (should (equal messages expected))))))
 
-(ert-deftest print-step-pending ()
-  "Should print step pending."
-  (with-mock
-   (mock (ecukes-print-step) :times 1)
-   (ecukes-print-step-pending nil)))
+(ert-deftest print-step-skipped ()
+  "Should print skipped step."
+  (with-messages
+   (lambda (messages)
+     (let ((step (mock-step "Given a state"))
+           (expected
+            (list
+             (format "    %s" (ansi-cyan "Given a state")))))
+       (ecukes-print-step step 'skipped)
+       (should (equal messages expected))))))
 
-(ert-deftest print-error ()
-  "Should print error."
-  (with-mock
-   (mock (ecukes-print-message) :times 1)
-   (mock (ansi-red) :times 1)
-   (ecukes-print-error "err")))
+(ert-deftest print-step-failure-no-error ()
+  "Should print failed step no error."
+  (with-messages
+   (lambda (messages)
+     (let ((step (mock-step "Given a state"))
+           (expected
+            (list
+             (format "    %s" (ansi-red "Given a state"))
+             (format "      %s" (ansi-red "Unknown error...")))))
+       (ecukes-print-step step 'failure)
+       (should (equal messages expected))))))
 
-(ert-deftest print-step ()
-  "Should print step."
-  (with-mock
-   (stub ecukes-step-name => "a known state")
-   (mock (ecukes-print-message) :times 1)
-   (ecukes-print-step nil 'ignore)))
+(ert-deftest print-step-failure-multi-line-error ()
+  "Should print successful failure multi line error."
+  (with-messages
+   (lambda (messages)
+     (let ((step (mock-step "Given a state" :err "KNOWN\nERROR"))
+           (expected
+            (list
+             (format "    %s" (ansi-red "Given a state"))
+             (format "      %s" (ansi-red "KNOWN"))
+             (format "      %s" (ansi-red "ERROR")))))
+       (ecukes-print-step step 'failure)
+       (should (equal messages expected))))))
 
-(ert-deftest print-sceario-header ()
-  "Should print header."
+(ert-deftest print-step-table ()
+  "Should print table if step is table step."
   (with-mock
-   (stub ecukes-scenario-name => "Foo bar")
-   (mock (ecukes-print-message "Scenario: %s" "Foo bar"))
-   (ecukes-print-scenario-header nil)))
+   (mock (ecukes-print-table) :times 1)
+   (with-messages
+    (lambda (messages)
+      (let ((step
+             (mock-step "Given this:" :type 'table)))
+        (ecukes-print-step step 'success))))))
+
+(ert-deftest print-step-py-string ()
+  "Should print py-string if step is py-string step."
+  (with-mock
+   (mock (ecukes-print-py-string) :times 1)
+   (with-messages
+    (lambda (messages)
+      (let ((step
+             (mock-step "Given this:" :type 'py-string)))
+        (ecukes-print-step step 'success))))))
+
+(ert-deftest print-step-table-success ()
+  "Should print table if step is table step when success."
+  (with-messages
+   (lambda (messages)
+     (let ((step (mock-step "Given this:" :type 'table :arg '(("x" "y") ("x1" "y1") ("x2" "y2"))))
+           (expected
+            (list
+             (format "      | %s  | %s  |" (ansi-green "x") (ansi-green "y"))
+             (format "      | %s | %s |" (ansi-green "x1") (ansi-green "y1"))
+             (format "      | %s | %s |" (ansi-green "x2") (ansi-green "y2")))))
+       (ecukes-print-table step 'success)
+       (should (equal messages expected))))))
+
+(ert-deftest print-step-table-failure ()
+  "Should print table if step is table step when failure."
+  (with-messages
+   (lambda (messages)
+     (let ((step (mock-step "Given this:" :type 'table :arg '(("x" "y") ("x1" "y1") ("x2" "y2"))))
+           (expected
+            (list
+             (format "      | %s  | %s  |" (ansi-red "x") (ansi-red "y"))
+             (format "      | %s | %s |" (ansi-red "x1") (ansi-red "y1"))
+             (format "      | %s | %s |" (ansi-red "x2") (ansi-red "y2")))))
+       (ecukes-print-table step 'failure)
+       (should (equal messages expected))))))
+
+(ert-deftest print-step-table-skipped ()
+  "Should print table if step is table step when skipped."
+  (with-messages
+   (lambda (messages)
+     (let ((step (mock-step "Given this:" :type 'table :arg '(("x" "y") ("x1" "y1") ("x2" "y2"))))
+           (expected
+            (list
+             (format "      | %s  | %s  |" (ansi-cyan "x") (ansi-cyan "y"))
+             (format "      | %s | %s |" (ansi-cyan "x1") (ansi-cyan "y1"))
+             (format "      | %s | %s |" (ansi-cyan "x2") (ansi-cyan "y2")))))
+       (ecukes-print-table step 'skipped)
+       (should (equal messages expected))))))
+
+(ert-deftest print-step-py-string-success ()
+  "Should print py-string if step is py-string step when success."
+  (with-messages
+   (lambda (messages)
+     (let ((step (mock-step "Given this:" :type 'table :arg "foo\nbar\nbaz\nqux"))
+           (expected
+            (list
+             (format "      %s" (ansi-green "\"\"\""))
+             (format "      %s" (ansi-green "foo"))
+             (format "      %s" (ansi-green "bar"))
+             (format "      %s" (ansi-green "baz"))
+             (format "      %s" (ansi-green "qux"))
+             (format "      %s" (ansi-green "\"\"\"")))))
+       (ecukes-print-py-string step 'success)
+       (should (equal messages expected))))))
+
+(ert-deftest print-step-py-string-failure ()
+  "Should print py-string if step is py-string step when failure."
+  (with-messages
+   (lambda (messages)
+     (let ((step (mock-step "Given this:" :type 'table :arg "foo\nbar\nbaz\nqux"))
+           (expected
+            (list
+             (format "      %s" (ansi-red "\"\"\""))
+             (format "      %s" (ansi-red "foo"))
+             (format "      %s" (ansi-red "bar"))
+             (format "      %s" (ansi-red "baz"))
+             (format "      %s" (ansi-red "qux"))
+             (format "      %s" (ansi-red "\"\"\"")))))
+       (ecukes-print-py-string step 'failure)
+       (should (equal messages expected))))))
+
+(ert-deftest print-step-py-string-skipped ()
+  "Should print py-string if step is py-string step when skipped."
+  (with-messages
+   (lambda (messages)
+     (let ((step (mock-step "Given this:" :type 'table :arg "foo\nbar\nbaz\nqux"))
+           (expected
+            (list
+             (format "      %s" (ansi-cyan "\"\"\""))
+             (format "      %s" (ansi-cyan "foo"))
+             (format "      %s" (ansi-cyan "bar"))
+             (format "      %s" (ansi-cyan "baz"))
+             (format "      %s" (ansi-cyan "qux"))
+             (format "      %s" (ansi-cyan "\"\"\"")))))
+       (ecukes-print-py-string step 'skipped)
+       (should (equal messages expected))))))
+
+(ert-deftest print-status-success ()
+  "Should print in green when success."
+  (with-mock
+   (mock (ansi-green "SUCCESS") :times 1)
+   (ecukes-print-status "SUCCESS" 'success)))
+
+(ert-deftest print-status-failure ()
+  "Should print in green when failure."
+  (with-mock
+   (mock (ansi-red "FAILURE") :times 1)
+   (ecukes-print-status "FAILURE" 'failure)))
+
+(ert-deftest print-status-skipped ()
+  "Should print in green when skipped."
+  (with-mock
+   (mock (ansi-cyan "SKIPPED") :times 1)
+   (ecukes-print-status "SKIPPED" 'skipped)))

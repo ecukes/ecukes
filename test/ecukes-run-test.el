@@ -1,146 +1,437 @@
-(defmacro with-run (&rest body)
-  `(let ((ecukes-run-buffers))
-     (with-mock
-      (stub ecukes-run-set-up)
-      (stub ecukes-run-clean-up)
-      ,@body)))
+(require 'ecukes-run)
+(require 'ecukes-hooks)
+(require 'ecukes-stats)
 
 (ert-deftest run-features-should-run-setup-hooks ()
   "Should run setup hooks."
   (with-mock
+   (stub ecukes-run-feature)
+   (stub ecukes-print-stats-summary)
    (mock (setup-mock) :times 1)
    (with-hooks
     (Setup (setup-mock))
-    (ecukes-run-features ()))))
+    (with-parse-feature
+     "simple"
+     (lambda (feature intro scenarios background steps)
+       (ecukes-run-features (list feature)))))))
 
 (ert-deftest run-features-should-run-teardown-hooks ()
   "Should run teardown hooks."
   (with-mock
+   (stub ecukes-run-feature)
+   (stub ecukes-print-stats-summary)
    (mock (teardown-mock) :times 1)
    (with-hooks
     (Teardown (teardown-mock))
-    (ecukes-run-features ()))))
+    (with-parse-feature
+     "simple"
+     (lambda (feature intro scenarios background steps)
+       (ecukes-run-features (list feature)))))))
 
-(ert-deftest run-features-should-run-features ()
-  "Should run features."
+(ert-deftest run-features-print-summary-once ()
+  "Should print summary once."
   (with-mock
-   (mock (ecukes-run-feature) :times 2)
-   (ecukes-run-features '(0 0))))
+   (stub ecukes-run-feature)
+   (mock (ecukes-print-stats-summary) :times 1)
+   (let ((features
+          (list
+           (make-ecukes-feature)
+           (make-ecukes-feature))))
+     (ecukes-run-features features))))
 
-(ert-deftest run-feature-should-run-scenarios ()
-  "Should run scenarios."
+(ert-deftest run-feature-no-background ()
+  "Should run feature when no background."
+  (with-messages
+   (lambda (messages)
+     (with-parse-feature
+      "simple"
+      (lambda (feature intro scenarios background steps)
+        (with-mock
+         (stub ecukes-feature-background => nil)
+         (stub ecukes-feature-scenarios => nil)
+         (mock (ecukes-print-intro intro) :times 1)
+         (not-called ecukes-run-background)
+         (ecukes-run-feature feature)))))))
+
+(ert-deftest run-feature ()
+  "Should run feature."
+  (with-messages
+   (lambda (messages)
+     (with-parse-feature
+      "simple"
+      (lambda (feature intro scenarios background steps)
+        (with-mock
+         (mock (ecukes-print-intro intro) :times 1)
+         (mock (ecukes-run-background) :times 1)
+         (mock (ecukes-run-scenario) :times 1)
+         (ecukes-run-feature feature)))))))
+
+(ert-deftest run-feature-hooks-with-background ()
+  "Should run feature hooks with background."
+  (with-messages
+   (lambda (messages)
+     (with-mock
+      (stub ecukes-print-intro)
+      (mock (before-mock) :times 2)
+      (mock (after-mock) :times 2)
+      (with-hooks
+       (Before (before-mock))
+       (After (after-mock))
+       (let ((feature
+              (make-ecukes-feature
+               :background (make-ecukes-background)
+               :scenarios
+               (list
+                (make-ecukes-scenario)
+                (make-ecukes-scenario)))))
+         (ecukes-run-feature feature)))))))
+
+(ert-deftest run-feature-hooks-without-background ()
+  "Should run feature hooks without background."
+  (with-messages
+   (lambda (messages)
+     (with-mock
+      (stub ecukes-print-intro)
+      (mock (before-mock) :times 2)
+      (mock (after-mock) :times 2)
+      (with-hooks
+       (Before (before-mock))
+       (After (after-mock))
+       (let ((feature
+              (make-ecukes-feature
+               :scenarios
+               (list
+                (make-ecukes-scenario)
+                (make-ecukes-scenario)))))
+         (ecukes-run-feature feature)))))))
+
+(ert-deftest run-feature-no-intro ()
+  "Should run feature when no intro."
   (with-mock
-   (stub ecukes-feature-scenarios => '(0 0))
+   (not-called ecukes-print-intro)
+   (let ((feature
+          (make-ecukes-feature)))
+     (ecukes-run-feature feature))))
+
+(ert-deftest run-scenarios-with-tags ()
+  "Should run scenarios matching tags."
+  (with-messages
+   (lambda (messages)
+     (with-mock
+      (stub ecukes-print-intro)
+      (mock (ecukes-run-scenario) :times 1)
+      (let ((ecukes-tags (list "foo"))
+            (feature
+             (make-ecukes-feature
+              :background (make-ecukes-background)
+              :scenarios
+              (list
+               (make-ecukes-scenario :tags (list "foo"))
+               (make-ecukes-scenario :tags (list "bar"))))))
+        (ecukes-run-feature feature))))))
+
+(ert-deftest run-background ()
+  "Should run background."
+  (with-mock
+   (mock (ecukes-run-step) => t :times 2)
+   (with-messages
+    (lambda (messages)
+      (let ((success
+             (ecukes-run-background
+              (make-ecukes-background
+               :steps
+               (list
+                (mock-step "Given a known state")
+                (mock-step "Given an unknown state")))))
+            (expected
+             (list
+              "  Background:"
+              (s-concat "    " (ansi-green "Given a known state"))
+              (s-concat "    " (ansi-green "Given an unknown state"))
+              " ")))
+        (should (equal success t))
+        (should (equal expected messages)))))))
+
+(ert-deftest run-scenario ()
+  "Should run scenario."
+  (with-mock
+   (mock (ecukes-run-step) => t :times 2)
+   (with-messages
+    (lambda (messages)
+      (ecukes-run-scenario
+       (make-ecukes-scenario
+        :name "Simple"
+        :steps
+        (list
+         (mock-step "Given a known state")
+         (mock-step "Given an unknown state")))
+       t)
+      (let ((expected
+             (list
+              "  Scenario: Simple"
+              (s-concat "    " (ansi-green "Given a known state"))
+              (s-concat "    " (ansi-green "Given an unknown state"))
+              " ")))
+        (should (equal expected messages)))))))
+
+(ert-deftest run-background-before-scenarios ()
+  "Should run background before each scenario."
+  (with-mock
+   (stub ecukes-print-intro)
+   (stub ecukes-run-background => t)
    (mock (ecukes-run-scenario) :times 2)
-   (ecukes-run-feature nil)))
+   (mock (ecukes-run-background-steps) :times 1)
+   (with-messages
+    (lambda (messages)
+      (with-steps
+       (with-stats
+        (let ((feature
+               (make-ecukes-feature
+                :background (make-ecukes-background)
+                :scenarios
+                (list
+                 (make-ecukes-scenario)
+                 (make-ecukes-scenario)))))
+          (ecukes-run-feature feature))))))))
 
-(ert-deftest run-scenario-should-run-before-hooks ()
-  "Should run before hooks."
-  (with-run
-   (mock (before-mock) :times 1)
-   (stub ecukes-scenario-steps)
-   (with-hooks
-    (Before (before-mock))
-    (ecukes-run-scenario nil))))
-
-(ert-deftest run-scenario-should-run-after-hooks ()
-  "Should run after hooks."
-  (with-run
-   (mock (after-mock) :times 1)
-   (stub ecukes-scenario-steps)
-   (with-hooks
-    (After (after-mock))
-    (ecukes-run-scenario nil))))
-
-(ert-deftest run-scenario-should-clean-up ()
-  "Should clean up."
-  (with-mock
-   (mock (ecukes-run-clean-up) :times 1)
-   (stub ecukes-run-set-up)
-   (stub ecukes-scenario-steps)
-   (ecukes-run-scenario nil)))
-
-(ert-deftest run-scenario-should-set-up ()
-  "Should set up."
-  (with-mock
-   (mock (ecukes-run-set-up) :times 1)
-   (stub ecukes-run-clean-up)
-   (stub ecukes-scenario-steps)
-   (ecukes-run-scenario nil)))
-
-(ert-deftest run-scenario-should-run-steps ()
-  "Should run steps."
-  (with-run
-   (mock (ecukes-run-step) :times 2)
-   (stub ecukes-scenario-steps => '(0 0))
-   (ecukes-run-scenario nil)))
-
-(ert-deftest run-background-should-run-steps ()
-  "Should run steps."
+(ert-deftest run-background-steps ()
+  "Should run background steps."
   (with-mock
    (mock (ecukes-run-step) :times 2)
-   (stub ecukes-background-steps => '(0 0))
-   (ecukes-run-background nil)))
+   (let ((background
+          (make-ecukes-background
+           :steps
+           (list
+            (make-ecukes-step)
+            (make-ecukes-step)))))
+     (ecukes-run-background-steps background))))
 
-(ert-deftest run-set-up-should-store-all-buffers ()
-  "Should store all buffers."
-  (with-mock
-   (let ((buffers '("foo" "bar")))
-     (stub buffer-list => buffers)
-     (let ((ecukes-run-buffers))
-       (ecukes-run-set-up)
-       (should (equal ecukes-run-buffers buffers))))))
+(ert-deftest run-background-with-successful-steps-stats ()
+  "Should update step stats count when successful steps."
+  (with-messages
+   (lambda (messages)
+     (with-steps
+      (with-stats
+       (Given "a known state" 'ignore)
+       (Given "an unknown state" 'ignore)
+       (ecukes-run-background
+        (make-ecukes-background
+         :steps
+         (list
+          (mock-step "Given a known state")
+          (mock-step "Given an unknown state"))))
+       (should (equal ecukes-stats-steps 2))
+       (should (equal ecukes-stats-steps-passed 2))
+       (should (equal ecukes-stats-steps-failed 0))
+       (should (equal ecukes-stats-steps-skipped 0)))))))
 
-(ert-deftest run-clean-up-should-kill-all-buffers ()
-  "Should kill all buffers."
-  (with-mock
-   (let ((ecukes-run-buffers '("foo" "bar")))
-     (mock (kill-buffer) :times 2)
-     (stub buffer-list => '("foo" "bar" "baz" "qux"))
-     (ecukes-run-clean-up)
-     (should (equal ecukes-run-buffers '("foo" "bar"))))))
+(ert-deftest run-background-with-failing-step-stats ()
+  "Should update step stats count when failing steps."
+  (with-messages
+   (lambda (messages)
+     (with-steps
+      (with-stats
+       (Given "a known state" (lambda () (error "ERROR")))
+       (Given "an unknown state" 'ignore)
+       (ecukes-run-background
+        (make-ecukes-background
+         :steps
+         (list
+          (mock-step "Given a known state")
+          (mock-step "Given an unknown state"))))
+       (should (equal ecukes-stats-steps 2))
+       (should (equal ecukes-stats-steps-passed 0))
+       (should (equal ecukes-stats-steps-failed 1))
+       (should (equal ecukes-stats-steps-skipped 1)))))))
 
-(ert-deftest run-step-no-arguments ()
-  "Should run step with no arguments."
-  (with-mock
-   (with-steps
-    (mock (step-mock) :times 1)
-    (Given "a known state" (lambda () (step-mock)))
-    (ecukes-run-step
-     (make-ecukes-step :name "a known state")))))
+(ert-deftest run-scenario-stats ()
+  "Should update scenario stats count."
+  (with-messages
+   (lambda (messages)
+     (with-stats
+      (ecukes-run-scenario (make-ecukes-scenario) t)
+      (should (equal ecukes-stats-scenarios 1))
+      (should (equal ecukes-stats-scenarios-passed 1))
+      (should (equal ecukes-stats-scenarios-failed 0))))))
 
-(ert-deftest run-step-single-argument ()
-  "Should run step with single argument."
-  (with-mock
-   (with-steps
-    (mock (step-mock "known") :times 1)
-    (Given "a \\(.+\\) state" (lambda (state) (step-mock state)))
-    (ecukes-run-step
-     (make-ecukes-step :name "a known state")))))
+(ert-deftest run-scenario-with-successful-steps-stats ()
+  "Should update scenario and step stats count when successful steps."
+  (with-messages
+   (lambda (messages)
+     (with-steps
+      (with-stats
+       (Given "a known state" 'ignore)
+       (Given "an unknown state" 'ignore)
+       (ecukes-run-scenario
+        (make-ecukes-scenario
+         :steps
+         (list
+          (mock-step "Given a known state")
+          (mock-step "Given an unknown state")))
+        t)
+       (should (equal ecukes-stats-scenarios 1))
+       (should (equal ecukes-stats-scenarios-passed 1))
+       (should (equal ecukes-stats-scenarios-failed 0))
+       (should (equal ecukes-stats-steps 2))
+       (should (equal ecukes-stats-steps-passed 2))
+       (should (equal ecukes-stats-steps-failed 0))
+       (should (equal ecukes-stats-steps-skipped 0)))))))
 
-(ert-deftest run-step-multiple-arguments ()
-  "Should run step with multiple arguments."
-  (with-mock
-   (with-steps
-    (mock (step-mock "known" "unknown") :times 1)
-    (Given "state \\(.+\\) and \\(.+\\)"
-           (lambda (state-1 state-2) (step-mock state-1 state-2)))
-    (ecukes-run-step
-     (make-ecukes-step :name "state known and unknown")))))
+(ert-deftest run-scenario-with-failing-step-stats ()
+  "Should update scenario and step stats count when failing steps."
+  (with-messages
+   (lambda (messages)
+     (with-steps
+      (with-stats
+       (Given "a known state" (lambda () (error "ERROR")))
+       (Given "an unknown state" 'ignore)
+       (ecukes-run-scenario
+        (make-ecukes-scenario
+         :steps
+         (list
+          (mock-step "Given a known state")
+          (mock-step "Given an unknown state")))
+        t)
+       (should (equal ecukes-stats-scenarios 1))
+       (should (equal ecukes-stats-scenarios-passed 0))
+       (should (equal ecukes-stats-scenarios-failed 1))
+       (should (equal ecukes-stats-steps 2))
+       (should (equal ecukes-stats-steps-passed 0))
+       (should (equal ecukes-stats-steps-failed 1))
+       (should (equal ecukes-stats-steps-skipped 1)))))))
 
-(ert-deftest run-step-should-return-true-on-success ()
-  "Should return true on success."
+(ert-deftest run-feature-successful-steps-stats ()
+  "Should update stats count when running feature all successful."
   (with-mock
-   (with-steps
-    (stub ecukes-steps-find => (make-ecukes-step-def :fn 'ignore))
-    (let ((step (make-ecukes-step :name "a success")))
-      (should (ecukes-run-step step))))))
+   (stub ecukes-print-intro)
+   (with-messages
+    (lambda (messages)
+      (with-steps
+       (with-stats
+        (Given "a known state" 'ignore)
+        (Given "an unknown state" 'ignore)
+        (let* ((background
+                (make-ecukes-background
+                 :steps
+                 (list
+                  (mock-step "Given a known state"))))
+               (scenarios
+                (list
+                 (make-ecukes-scenario
+                  :steps
+                  (list
+                   (mock-step "Given an unknown state")))))
+               (feature
+                (make-ecukes-feature
+                 :background background
+                 :scenarios scenarios)))
+          (ecukes-run-feature feature))
+        (should (equal ecukes-stats-scenarios 1))
+        (should (equal ecukes-stats-scenarios-passed 1))
+        (should (equal ecukes-stats-scenarios-failed 0))
+        (should (equal ecukes-stats-steps 2))
+        (should (equal ecukes-stats-steps-passed 2))
+        (should (equal ecukes-stats-steps-failed 0))
+        (should (equal ecukes-stats-steps-skipped 0))))))))
 
-(ert-deftest run-step-should-return-false-on-failure ()
-  "Should return false on failure."
+(ert-deftest run-feature-with-failing-background-step-stats ()
+  "Should update stats count when running feature failing in background."
   (with-mock
-   (with-steps
-    (let ((fn (lambda () (/ 1 0))))
-      (stub ecukes-steps-find => (make-ecukes-step-def :fn fn))
-      (let ((step (make-ecukes-step :name "a failure")))
-        (should-not (ecukes-run-step step)))))))
+   (stub ecukes-print-intro)
+   (with-messages
+    (lambda (messages)
+      (with-steps
+       (with-stats
+        (Given "a known state" (lambda () (error "ERROR")))
+        (Given "an unknown state" 'ignore)
+        (let* ((background
+                (make-ecukes-background
+                 :steps
+                 (list
+                  (mock-step "Given a known state"))))
+               (scenarios
+                (list
+                 (make-ecukes-scenario
+                  :steps
+                  (list
+                   (mock-step "Given an unknown state")))))
+               (feature
+                (make-ecukes-feature
+                 :background background
+                 :scenarios scenarios)))
+          (ecukes-run-feature feature))
+        (should (equal ecukes-stats-scenarios 1))
+        (should (equal ecukes-stats-scenarios-passed 0))
+        (should (equal ecukes-stats-scenarios-failed 1))
+        (should (equal ecukes-stats-steps 2))
+        (should (equal ecukes-stats-steps-passed 0))
+        (should (equal ecukes-stats-steps-failed 1))
+        (should (equal ecukes-stats-steps-skipped 1))))))))
+
+(ert-deftest run-steps-success ()
+  "Should run steps and return t when all successful."
+  (with-mock
+   (mock (ecukes-print-step) :times 2)
+   (with-stats
+    (with-steps
+     (Given "a known state" 'ignore)
+     (Given "an unknown state" 'ignore)
+     (let ((steps
+            (list
+             (mock-step "Given a known state")
+             (mock-step "Given an unknown state"))))
+       (should (equal (ecukes-run-steps steps t) t)))))))
+
+(ert-deftest run-steps-failure ()
+  "Should run steps and return nil when failure."
+  (with-mock
+   (mock (ecukes-print-step) :times 2)
+   (with-stats
+    (with-steps
+     (Given "a known state" 'ignore)
+     (Given "an unknown state" (lambda () (error "ERROR")))
+     (let ((steps
+            (list
+             (mock-step "Given a known state")
+             (mock-step "Given an unknown state"))))
+       (should (equal (ecukes-run-steps steps t) nil)))))))
+
+(ert-deftest run-step-no-args ()
+  "Should run step when no args."
+  (with-steps
+   (with-mock
+    (mock (run-mock) :times 1)
+    (Given "a known state" 'run-mock)
+    (should
+     (ecukes-run-step
+      (mock-step "Given a known state"))))))
+
+(ert-deftest run-step-when-args ()
+  "Should run step when args."
+  (with-steps
+   (with-mock
+    (mock (run-mock "known" "unknown") :times 1)
+    (Given "state \"\\(.+\\)\" and \"\\(.+\\)\"" 'run-mock)
+    (should
+     (ecukes-run-step
+      (mock-step "Given state \"known\" and \"unknown\""))))))
+
+(ert-deftest run-step-error ()
+  "Should run failing step and set error."
+  (with-steps
+   (Given "a known state" (lambda () (error "ERROR")))
+   (let ((step (mock-step "Given a known state")))
+     (should-not
+      (ecukes-run-step step))
+     (should
+      (equal (ecukes-step-err step) "ERROR")))))
+
+(ert-deftest run-step-when-arg ()
+  "Should run step when arg."
+  (with-steps
+   (with-mock
+    (mock (run-mock "py-string") :times 1)
+    (Given "this:" 'run-mock)
+    (should
+     (ecukes-run-step
+      (mock-step "Given this:" :type 'table :arg "py-string"))))))

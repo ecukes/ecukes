@@ -1,3 +1,5 @@
+(require 'ecukes-parse)
+
 (ert-deftest parse-new-section-end-of-buffer ()
   (with-mock
    (stub eobp => t)

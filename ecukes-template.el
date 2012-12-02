@@ -18,14 +18,13 @@
 
 (defun ecukes-template-substitute (string substitutions)
   "Substitute all SUBSTITUTIONS in STRING."
-  (let ((result string))
-    (mapc
-     (lambda (substitution)
-       (let ((old (car substitution))
-             (new (cdr substitution)))
-         (setq result (replace-regexp-in-string (format "{%s}" old) new result t))))
-     substitutions)
-    result))
+  (-each
+   substitutions
+   (lambda (substitution)
+     (let ((old (car substitution))
+           (new (cdr substitution)))
+       (setq string (s-replace (format "{{%s}}" old) new string)))))
+  string)
 
 (defun ecukes-template-write (write-to template &optional substitutions)
   "Write TEMPLATE to WRITE-TO with SUBSTITUTIONS."

@@ -20,11 +20,11 @@ optional, but is conventionally included."
 
 (defstruct ecukes-step
   "A step is some kind of action."
-  name arg type err)
+  name head body arg type err)
 
 (defstruct ecukes-step-def
-  "A step definition"
-  fn args)
+  "A step definition."
+  regex fn)
 
 
 (provide 'ecukes-def)
