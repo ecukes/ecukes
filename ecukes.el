@@ -19,8 +19,9 @@
   (if ask-for-tags
       (setq
        ecukes-tags
-       (--map
-        (substring it 1)
+       (-map
+        (lambda (tag)
+          (substring tag 1))
         (split-string (read-string "Run tags: ") ","))))
   (let ((feature-files
          (if (s-matches? "\.feature$" (buffer-file-name))

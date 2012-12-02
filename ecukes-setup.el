@@ -101,8 +101,9 @@
                    ecukes-tags
                    (-concat
                     ecukes-tags
-                    (--map
-                     (substring it 1)
+                    (-map
+                     (lambda (tag)
+                       (substring tag 1))
                      (split-string arg ","))))
                   (setq is-tag nil)))))))
     (setq argv (-difference argv options))))

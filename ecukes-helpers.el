@@ -3,13 +3,24 @@
 (defun ecukes-feature-steps (features)
   "Return all steps in all FEATURES."
   (let* ((scenarios
-          (-flatten (--map (ecukes-feature-scenarios it) features)))
+          (-flatten
+           (-map
+            (lambda (feature)
+              (ecukes-feature-scenarios feature)) features)))
          (backgrounds
-          (-reject 'null (--map (ecukes-feature-background it) features)))
+          (-reject
+           'null
+           (-map
+            (lambda (feature)
+              (ecukes-feature-background feature)) features)))
          (scenario-steps
-          (--map (ecukes-scenario-steps it) scenarios))
+          (-map
+           (lambda (scenario)
+             (ecukes-scenario-steps scenario)) scenarios))
          (background-steps
-          (--map (ecukes-background-steps it) backgrounds)))
+          (-map
+           (lambda (background)
+             (ecukes-background-steps background)) backgrounds)))
     (-flatten (-concat background-steps scenario-steps))))
 
 (provide 'ecukes-helpers)

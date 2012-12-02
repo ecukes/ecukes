@@ -30,7 +30,9 @@
 
 (defun ecukes-steps-define (regex fn)
   "Define step."
-  (unless (--any? (equal regex it) ecukes-steps-definitions)
+  (unless (-any?
+           (lambda (step-def)
+             (equal regex step-def)) ecukes-steps-definitions)
     (add-to-list
      'ecukes-steps-definitions
      (make-ecukes-step-def :regex regex :fn fn))))
@@ -48,11 +50,16 @@
 
 (defun ecukes-steps-missing-definition (steps)
   "Return from STEPS those who have not been defined."
-  (--reject (ecukes-steps-find (ecukes-step-body it)) steps))
+  (-reject
+   (lambda (step)
+     (ecukes-steps-find (ecukes-step-body step))) steps))
 
 (defun ecukes-steps-find (name)
   "Find step by name."
-  (--first (s-matches? (ecukes-step-def-regex it) name) ecukes-steps-definitions))
+  (-first
+   (lambda (step-def)
+     (s-matches? (ecukes-step-def-regex step-def) name))
+   ecukes-steps-definitions))
 
 (defun ecukes-steps-args (step)
   "Return args from step BODY."

@@ -16,7 +16,10 @@
      (lambda (step)
        (let ((step-body (ecukes-print-step-body step))
              (step-string (ecukes-print-step-string step)))
-         (unless (--any? (equal step-body it) step-bodies)
+         (unless
+             (-any?
+              (lambda (body)
+                (equal step-body body)) step-bodies)
            (add-to-list 'step-bodies step-body)
            (ecukes-print-message "%s\n" step-string)))))))
 
@@ -77,7 +80,9 @@
     (ecukes-print-message "Feature: %s" header)
     (let ((ecukes-print-offset 2)
           (description (ecukes-intro-description intro)))
-      (--each description (ecukes-print-message it)))
+      (-each
+       description
+       (lambda (row) (ecukes-print-message row))))
     (ecukes-print-newline)))
 
 (defun ecukes-print-background-header ()
@@ -93,7 +98,7 @@
     (when tags
       (ecukes-print-message
        (ansi-cyan
-        (s-join " " (--map (s-concat "@" it) tags)))))
+        (s-join " " (-map (lambda (tag) (s-concat "@" tag)) tags)))))
     (ecukes-print-message "Scenario: %s" name)))
 
 (defun ecukes-print-step (step status)

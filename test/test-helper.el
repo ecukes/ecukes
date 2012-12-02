@@ -62,7 +62,10 @@
            (if background
                (ecukes-background-steps background))
            (if scenarios
-               (-flatten (--map (ecukes-scenario-steps it) scenarios))))))
+               (-flatten
+                (-map
+                 (lambda (scenario)
+                   (ecukes-scenario-steps scenario)) scenarios))))))
     (funcall fn feature intro scenarios background steps)))
 
 (defun with-messages (callback)

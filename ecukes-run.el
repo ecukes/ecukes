@@ -8,7 +8,9 @@
 (defun ecukes-run (feature-files)
   "Parse and run FEATURE-FILES if no steps are missing."
   (let* ((features
-          (--map (ecukes-parse-feature it) feature-files))
+          (-map
+           (lambda (feature-file)
+             (ecukes-parse-feature feature-file)) feature-files))
          (steps
           (ecukes-feature-steps features))
          (steps-missing
@@ -51,7 +53,7 @@
 (defun ecukes-run-background-steps (background)
   "Run BACKGROUND steps."
   (let ((steps (ecukes-background-steps background)))
-    (--each steps (ecukes-run-step it))))
+    (-each steps (lambda (step) (ecukes-run-step step)))))
 
 (defun ecukes-run-background (background)
   "Run BACKGROUND."
