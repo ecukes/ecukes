@@ -13,6 +13,14 @@
   "^[\t ]*Scenario:[\t ]*\\(.+?\\)[\t ]*$"
   "Regexp matching scenario header.")
 
+(defconst ecukes-parse-outline-re
+  "^[\t ]*Scenario Outline:[\t ]*\\(.+?\\)[\t ]*$"
+  "Regexp matching scenario outline header.")
+
+(defconst ecukes-parse-examples-re
+  "^[\t ]*Examples:"
+  "Regexp matching scenario outline examples header.")
+
 (defconst ecukes-parse-step-re
   "^\\s-*\\(Given\\|When\\|Then\\|And\\|But\\)\\s-+\\(.+[^ ]\\)\\s-*$"
   "Regexp matching step.")
@@ -35,10 +43,11 @@
   (with-temp-buffer
     (insert-file-contents-literally feature)
     (goto-char (point-min))
-    (let ((intro (ecukes-parse-intro))
-          (background (ecukes-parse-background))
-          (scenarios (ecukes-parse-scenarios)))
-      (make-ecukes-feature :intro intro :background background :scenarios scenarios))))
+    (let* ((intro (ecukes-parse-intro))
+           (background (ecukes-parse-background))
+           (outlines (ecukes-parse-outlines))
+           (scenarios (append (ecukes-parse-scenarios) (-mapcat 'ecukes-generate-outlined-scenarios outlines))))
+      (make-ecukes-feature :intro intro :background background :outlines outlines :scenarios scenarios))))
 
 (defun ecukes-parse-intro ()
   "Parse intro."
@@ -55,8 +64,81 @@
     (let ((steps (ecukes-parse-block-steps)))
       (make-ecukes-background :steps steps))))
 
+(defun ecukes-parse-outlines ()
+  "Parse all scenario outlines."
+  (goto-char (point-min))
+  (let ((outlines))
+    (while (re-search-forward ecukes-parse-outline-re nil t)
+      (add-to-list 'outlines (ecukes-parse-outline) t))
+    outlines))
+
+(defun ecukes-parse-outline ()
+  "Parse a single scenario outline."
+  (let ((name (ecukes-parse-outline-name))
+        (tags (ecukes-parse-scenario-tags))
+        (steps (ecukes-parse-block-steps))
+        (table (ecukes-parse-outline-table)))
+    (make-ecukes-outline :name name :tags tags :steps steps :table table)))
+
+(defun ecukes-parse-outline-name ()
+  "Parse scenario outline name."
+  (save-excursion
+    (let ((line (ecukes-parse-line)))
+      (nth 1 (s-match ecukes-parse-outline-re line)))))
+
+(defun ecukes-parse-outline-table ()
+  "Parse examples table for a scenario outline."
+  (save-excursion
+    (catch 'table
+      (let ((line (ecukes-parse-line)))
+        (while (and (not (s-matches? ecukes-parse-examples-re (or line "")))
+                    (not (ecukes-parse-new-section-p)))
+          (forward-line 1)
+          (setq line (ecukes-parse-line)))
+        (when (s-matches? ecukes-parse-examples-re (or line ""))
+          (throw 'table (ecukes-parse-table-step)))))))
+
+(defun ecukes-substitute-in-steps (steps subs)
+  (-map (lambda (step)
+          (let ((gen  (copy-ecukes-step step))
+                (type (ecukes-step-type step)))
+            (setf (ecukes-step-name gen) (ecukes-substitute-in-string (ecukes-step-name gen) subs)
+                  (ecukes-step-body gen) (ecukes-substitute-in-string (ecukes-step-body gen) subs))
+            (cond
+             ((eq type 'py-string)
+              (setf (ecukes-step-arg gen) (ecukes-substitute-in-string (ecukes-step-arg gen) subs)))
+             ((eq type 'table)
+              (setf (ecukes-step-arg gen) (ecukes-substitute-in-table (ecukes-step-arg gen) subs))))
+            gen))
+        steps))
+
+(defun ecukes-substitute-in-string (string subs)
+  (let ((new-s (copy-sequence string))
+        (reps  (copy-sequence subs)))
+    (while (not (zerop (length reps)))
+      (setq new-s (s-replace (format "<%s>" (car reps)) (cadr reps) new-s))
+      (setq reps (cddr reps)))
+    new-s))
+
+(defun ecukes-substitute-in-table (table subs)
+  (-map (lambda (row)
+          (-map (lambda (cell) (ecukes-substitute-in-string cell subs)) row))
+        table))
+
+(defun ecukes-generate-outlined-scenarios (outline)
+  "Generate scenarios from an outline."
+  (let* ((name  (ecukes-outline-name outline))
+         (steps (ecukes-outline-steps outline))
+         (tags  (ecukes-outline-tags outline))
+         (table (ecukes-outline-table outline))
+         (header (car table)))
+    (-map (lambda (row)
+            (make-ecukes-scenario :name name :tags tags :steps (ecukes-substitute-in-steps steps (-interleave header row))))
+          (cdr table))))
+
 (defun ecukes-parse-scenarios ()
   "Parse scenarios."
+  (goto-char (point-min))
   (let ((scenarios))
     (while (re-search-forward ecukes-parse-scenario-re nil t)
       (add-to-list 'scenarios (ecukes-parse-scenario) t))
@@ -179,6 +261,8 @@
     (or
      (eobp)
      (s-matches? ecukes-parse-background-re line)
+     (s-matches? ecukes-parse-outline-re line)
+     (s-matches? ecukes-parse-examples-re line)
      (s-matches? ecukes-parse-scenario-re line)
      (s-matches? ecukes-parse-tags-re line))))
 
