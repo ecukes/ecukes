@@ -174,6 +174,17 @@
       <pre><code>(Given "I am in buffer \"%s\"" buffer-name-variable)</code></pre>
       <p>Or like this:</p>
       <pre><code>(Given "I am in buffer \"buffer-name\"")</code></pre>
+      
+      <h3>Asynchronous steps</h3>
+      <p>
+        If you pass one extra parameter to a step definition, that is
+        used as a callback. Once called, the step is considered done.
+      </p>
+      
+      <pre><code>(When "^run command \\(.+\\)$"
+       (lambda (command callback)
+         (run-command command callback)
+         ))</code></pre>
     </div>
   </div>
 </div>
