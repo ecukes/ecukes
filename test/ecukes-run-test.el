@@ -435,3 +435,13 @@
     (should
      (ecukes-run-step
       (mock-step "Given this:" :type 'table :arg "py-string"))))))
+
+(ert-deftest run-step-with-callback ()
+  "Should run step with callback."
+  (with-steps
+   (Given "^command \\(.+\\)$"
+          (lambda (command callback)
+            (funcall callback)))
+   (should
+    (ecukes-run-step
+     (mock-step "Given command azmzz")))))

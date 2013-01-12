@@ -104,8 +104,21 @@
                  (args (ecukes-steps-args step))
                  (args (if arg (cons arg args) args))
                  (step-def (ecukes-steps-find body))
-                 (fn (ecukes-step-def-fn step-def)))
-            (apply fn args))
+                 (fn (ecukes-step-def-fn step-def))
+                 (fn-args-count
+                  (length
+                   (if (byte-code-function-p fn)
+                       (aref fn 0)
+                     (if (listp fn)
+                         (cadr fn))))))
+            (if (and (not (symbolp fn)) (> fn-args-count (length args)))
+                (progn
+                  (let ((wait t))
+                    (add-to-list 'args (lambda (&rest args) (setq wait nil)) t)
+                    (apply fn args)
+                    (while wait
+                      (accept-process-output nil 0.005))))
+              (apply fn args)))
           (setq success t))
       (error
        (setf (ecukes-step-err step) (error-message-string err)))
