@@ -1,4 +1,7 @@
 # Ecukes - Cucumber for Emacs
+
+[<img src="http://img.youtube.com/vi/4VcH4uAQJZI/0.jpg">](https://www.youtube.com/watch?v=4VcH4uAQJZI)
+
 There are plenty of unit/regression testing tools for Emacs, and even
 some for functional testing. What Emacs is missing though is a really
 good testing framework for integration testing. This is where
