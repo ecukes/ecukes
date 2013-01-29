@@ -149,6 +149,25 @@
                (make-ecukes-scenario :tags (list "baz"))))))
         (ecukes-run-feature feature))))))
 
+(ert-deftest run-scenarios-with-complex-tags ()
+  "Should run scenarios matching tags."
+  (with-messages
+   (lambda (messages)
+     (with-mock
+      (stub ecukes-print-intro)
+      (mock (ecukes-run-scenario) :times 1)
+      (let ((ecukes-include-tags (list "foo"))
+            (ecukes-exclude-tags (list "baz"))
+            (feature
+             (make-ecukes-feature
+              :background (make-ecukes-background)
+              :scenarios
+              (list
+               (make-ecukes-scenario :tags (list "foo"))
+               (make-ecukes-scenario :tags (list "foo" "baz"))
+               (make-ecukes-scenario :tags (list "bar" "baz"))))))
+        (ecukes-run-feature feature))))))
+
 (ert-deftest run-background ()
   "Should run background."
   (with-mock
