@@ -120,7 +120,7 @@
      (with-mock
       (stub ecukes-print-intro)
       (mock (ecukes-run-scenario) :times 1)
-      (let ((ecukes-tags (list "foo"))
+      (let ((ecukes-include-tags (list "foo"))
             (feature
              (make-ecukes-feature
               :background (make-ecukes-background)

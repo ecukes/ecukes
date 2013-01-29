@@ -18,7 +18,7 @@
   (ecukes-setup)
   (if ask-for-tags
       (setq
-       ecukes-tags
+       ecukes-include-tags
        (-map
         (lambda (tag)
           (substring tag 1))

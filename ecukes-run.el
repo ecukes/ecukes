@@ -41,7 +41,7 @@
        scenarios
        (lambda (scenario)
          (let ((tags (ecukes-scenario-tags scenario)))
-           (when (or (not ecukes-tags) (-intersection ecukes-tags tags))
+           (when (or (not ecukes-include-tags) (-intersection ecukes-include-tags tags))
              (if background-should-run
                  (ecukes-hooks-run-before))
              (when (and background background-success background-should-run)

@@ -13,7 +13,7 @@
 (require 'ecukes-helpers)
 
 
-(defvar ecukes-tags nil
+(defvar ecukes-include-tags nil
   "List of tags.")
 
 (defvar ecukes-verbose nil
@@ -98,9 +98,9 @@
                 (when is-tag
                   (push arg options)
                   (setq
-                   ecukes-tags
+                   ecukes-include-tags
                    (-concat
-                    ecukes-tags
+                    ecukes-include-tags
                     (-map
                      (lambda (tag)
                        (substring tag 1))
