@@ -14,7 +14,10 @@
 
 
 (defvar ecukes-include-tags nil
-  "List of tags.")
+  "List of tags to test.")
+
+(defvar ecukes-exclude-tags nil
+  "List of tags not to test.")
 
 (defvar ecukes-verbose nil
   "Show `message' output if true.")
