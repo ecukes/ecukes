@@ -106,14 +106,11 @@
 
 (defun ecukes-setup-tags (tags)
   "Parse comma separated TAGS and set `ecukes-include-tags'."
-  (setq
-   ecukes-include-tags
-   (-concat
-    ecukes-include-tags
-    (-map
-     (lambda (tag)
-       (substring tag 1))
-     (split-string tags ",")))))
+  (--map
+   (if (s-prefix-p "~" it)
+       (add-to-list 'ecukes-exclude-tags (substring it 2) t)
+     (add-to-list 'ecukes-include-tags (substring it 1) t))
+   (split-string tags ",")))
 
 (defun ecukes-setup-features-dir-exist ()
   "Print usage and quit if there's no features directory."
