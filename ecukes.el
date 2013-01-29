@@ -17,12 +17,7 @@
     (error "You are not visiting an Ecukes project."))
   (ecukes-setup)
   (if ask-for-tags
-      (setq
-       ecukes-include-tags
-       (-map
-        (lambda (tag)
-          (substring tag 1))
-        (split-string (read-string "Run tags: ") ","))))
+      (ecukes-setup-tags (read-string "Run tags: ")))
   (let ((feature-files
          (if (s-matches? "\.feature$" (buffer-file-name))
              (list (buffer-file-name))
