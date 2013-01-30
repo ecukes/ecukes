@@ -106,10 +106,11 @@
 
 (defun ecukes-setup-tags (tags)
   "Parse comma separated TAGS and set `ecukes-include-tags'."
-  (--map
-   (if (s-prefix-p "~" it)
-       (add-to-list 'ecukes-exclude-tags (substring it 2) t)
-     (add-to-list 'ecukes-include-tags (substring it 1) t))
+  (-map
+   (lambda (tag)
+     (if (s-prefix-p "~" tag)
+         (add-to-list 'ecukes-exclude-tags (substring tag 2) t)
+       (add-to-list 'ecukes-include-tags (substring tag 1) t)))
    (split-string tags ",")))
 
 (defun ecukes-setup-features-dir-exist ()
