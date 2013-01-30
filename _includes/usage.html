@@ -7,8 +7,7 @@
       
       <p>This is the Ecukes usage information:</p>
       
-      <pre><code>$ carton exec ecukes --help
-USAGE: ecukes [--script|--win] [file|dir] [options]
+      <pre><code>USAGE: ecukes [--script|--win] [file|dir] [options]
 
 OPTIONS:
  -h, --help             Display this help message
@@ -18,8 +17,9 @@ OPTIONS:
  --verbose              Show `message' output
  --dbg                  Run in debug mode (enable as much debug options in Emacs as possible)
  --tags TAG_EXPRESSION  Only execute the scenarios with tags matching TAG_EXPRESSION.
-                        TAG_EXPRESSION Examples: --tags @dev, --tags @dev,@local</code></pre>
-      
+                        TAG_EXPRESSION Examples: --tags @dev, --tags @dev,~@local
+                        A tag starting with ~ excluded from the scenarios.</code></pre>
+
       <p>
         Let's say you have a project
         called <strong>super-duper</strong> that you want to test with
@@ -137,6 +137,9 @@ create   super-duper.feature</code></pre>
 
       <p>Run all scenarios tagged with <strong>@super</strong> in script mode with debug.</p>
       <pre><code>$ carton exec ecukes --script features/super-duper.feature --dbg --tags @super</code></pre>
+
+      <p>Run all scenarios not tagged with <strong>@duper</strong>.</p>
+      <pre><code>$ carton exec ecukes features/super-duper.feature --tags ~@duper</code></pre>
       
       <p>Run all features in no win mode. Use Emacs binary installed via Homebrew.</p>
       <pre><code>ECUKES_EMACS="/usr/local/Cellar/emacs/24.2/Emacs.app/Contents/MacOS/Emacs" carton exec ~/Code/ecukes/ecukes</code></pre>
