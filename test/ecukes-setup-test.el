@@ -67,28 +67,54 @@
     (should (equal ecukes-verbose t))
     (should (equal argv (list "features/a.feature")))))
 
-(ert-deftest setup-argv-tags-single ()
+(ert-deftest setup-argv-tags-single-include ()
   "Should set tags when single."
-  (let ((ecukes-tags nil)
+  (let ((ecukes-include-tags nil)
+        (ecukes-exclude-tags nil)
         (argv (list "features/a.feature" "--tags" "@foo")))
     (ecukes-setup-argv)
-    (should (equal ecukes-tags (list "foo")))
+    (should (equal ecukes-include-tags (list "foo")))
+    (should (equal ecukes-exclude-tags nil))
+    (should (equal argv (list "features/a.feature")))))
+
+(ert-deftest setup-argv-tags-single-exclude ()
+  "Should set tags when single."
+  (let ((ecukes-include-tags nil)
+        (ecukes-exclude-tags nil)
+        (argv (list "features/a.feature" "--tags" "~@foo")))
+    (ecukes-setup-argv)
+    (should (equal ecukes-include-tags nil))
+    (should (equal ecukes-exclude-tags (list "foo")))
     (should (equal argv (list "features/a.feature")))))
 
 (ert-deftest setup-argv-tags-multiple ()
   "Should set tags when multiple."
-  (let ((ecukes-tags nil)
+  (let ((ecukes-include-tags nil)
+        (ecukes-exclude-tags nil)
         (argv (list "features/a.feature" "--tags" "@foo,@bar")))
     (ecukes-setup-argv)
-    (should (equal ecukes-tags (list "foo" "bar")))
+    (should (equal ecukes-include-tags (list "foo" "bar")))
+    (should (equal ecukes-exclude-tags nil))
+    (should (equal argv (list "features/a.feature")))))
+
+(ert-deftest setup-argv-tags-complex-multiple ()
+  "Should set tags when multiple."
+  (let ((ecukes-include-tags nil)
+        (ecukes-exclude-tags nil)
+        (argv (list "features/a.feature" "--tags" "@foo,~@bar")))
+    (ecukes-setup-argv)
+    (should (equal ecukes-include-tags (list "foo")))
+    (should (equal ecukes-exclude-tags (list "bar")))
     (should (equal argv (list "features/a.feature")))))
 
 (ert-deftest setup-argv-tags-double-multiple ()
   "Should set tags when double multiple."
-  (let ((ecukes-tags nil)
+  (let ((ecukes-include-tags nil)
+        (ecukes-exclude-tags nil)
         (argv (list "features/a.feature" "--tags" "@foo,@bar" "--verbose" "--tags" "@baz")))
     (ecukes-setup-argv)
-    (should (equal ecukes-tags (list "foo" "bar" "baz")))
+    (should (equal ecukes-include-tags (list "foo" "bar" "baz")))
+    (should (equal ecukes-exclude-tags nil))
     (should (equal argv (list "features/a.feature")))))
 
 (ert-deftest setup-argv-win ()
