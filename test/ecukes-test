@@ -1,4 +1,5 @@
-#!/usr/bin/env emacs --script
+#!/bin/sh
+":"; exec emacs "$@" --script "$0" # -*-emacs-lisp-*-
 
 (let ((current-directory (file-name-directory load-file-name)))
   (setq ecukes-test-path (expand-file-name "." current-directory))
