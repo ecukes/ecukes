@@ -13,8 +13,11 @@
 (require 'ecukes-helpers)
 
 
-(defvar ecukes-tags nil
-  "List of tags.")
+(defvar ecukes-include-tags nil
+  "List of tags to test.")
+
+(defvar ecukes-exclude-tags nil
+  "List of tags not to test.")
 
 (defvar ecukes-verbose nil
   "Show `message' output if true.")
@@ -97,16 +100,18 @@
                (t
                 (when is-tag
                   (push arg options)
-                  (setq
-                   ecukes-tags
-                   (-concat
-                    ecukes-tags
-                    (-map
-                     (lambda (tag)
-                       (substring tag 1))
-                     (split-string arg ","))))
+                  (ecukes-setup-tags arg)
                   (setq is-tag nil)))))))
     (setq argv (-difference argv options))))
+
+(defun ecukes-setup-tags (tags)
+  "Parse comma separated TAGS and set `ecukes-include-tags'."
+  (-map
+   (lambda (tag)
+     (if (s-prefix-p "~" tag)
+         (add-to-list 'ecukes-exclude-tags (substring tag 2) t)
+       (add-to-list 'ecukes-include-tags (substring tag 1) t)))
+   (split-string tags ",")))
 
 (defun ecukes-setup-features-dir-exist ()
   "Print usage and quit if there's no features directory."

@@ -113,21 +113,59 @@
           (make-ecukes-feature)))
      (ecukes-run-feature feature))))
 
-(ert-deftest run-scenarios-with-tags ()
+(ert-deftest run-scenarios-with-include-tags ()
   "Should run scenarios matching tags."
   (with-messages
    (lambda (messages)
      (with-mock
       (stub ecukes-print-intro)
       (mock (ecukes-run-scenario) :times 1)
-      (let ((ecukes-tags (list "foo"))
+      (let ((ecukes-include-tags (list "foo"))
             (feature
              (make-ecukes-feature
               :background (make-ecukes-background)
               :scenarios
               (list
                (make-ecukes-scenario :tags (list "foo"))
-               (make-ecukes-scenario :tags (list "bar"))))))
+               (make-ecukes-scenario :tags (list "bar"))
+               (make-ecukes-scenario :tags (list "baz"))))))
+        (ecukes-run-feature feature))))))
+
+(ert-deftest run-scenarios-with-exclude-tags ()
+  "Should run scenarios non-matching tags."
+  (with-messages
+   (lambda (messages)
+     (with-mock
+      (stub ecukes-print-intro)
+      (mock (ecukes-run-scenario) :times 2)
+      (let ((ecukes-exclude-tags (list "foo"))
+            (feature
+             (make-ecukes-feature
+              :background (make-ecukes-background)
+              :scenarios
+              (list
+               (make-ecukes-scenario :tags (list "foo"))
+               (make-ecukes-scenario :tags (list "bar"))
+               (make-ecukes-scenario :tags (list "baz"))))))
+        (ecukes-run-feature feature))))))
+
+(ert-deftest run-scenarios-with-complex-tags ()
+  "Should run scenarios matching tags."
+  (with-messages
+   (lambda (messages)
+     (with-mock
+      (stub ecukes-print-intro)
+      (mock (ecukes-run-scenario) :times 1)
+      (let ((ecukes-include-tags (list "foo"))
+            (ecukes-exclude-tags (list "baz"))
+            (feature
+             (make-ecukes-feature
+              :background (make-ecukes-background)
+              :scenarios
+              (list
+               (make-ecukes-scenario :tags (list "foo"))
+               (make-ecukes-scenario :tags (list "foo" "baz"))
+               (make-ecukes-scenario :tags (list "bar" "baz"))))))
         (ecukes-run-feature feature))))))
 
 (ert-deftest run-background ()

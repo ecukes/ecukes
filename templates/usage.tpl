@@ -8,4 +8,5 @@ OPTIONS:
  --verbose              Show `message' output
  --dbg                  Run in debug mode (enable as much debug options in Emacs as possible)
  --tags TAG_EXPRESSION  Only execute the scenarios with tags matching TAG_EXPRESSION.
-                        TAG_EXPRESSION Examples: --tags @dev, --tags @dev,@local
+                        TAG_EXPRESSION Examples: --tags @dev, --tags @dev,~@local
+                        A tag starting with ~ excluded from the scenarios.
