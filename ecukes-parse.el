@@ -43,10 +43,20 @@
   (with-temp-buffer
     (insert-file-contents-literally feature)
     (goto-char (point-min))
-    (let* ((intro (ecukes-parse-intro))
+    (let* ((tags)
+           (intro (ecukes-parse-intro))
            (background (ecukes-parse-background))
            (outlines (ecukes-parse-outlines))
            (scenarios (append (ecukes-parse-scenarios) (-mapcat 'ecukes-generate-outlined-scenarios outlines))))
+      (goto-char (point-min))
+      (when (re-search-forward ecukes-parse-intro-re nil t)
+        (setq tags (ecukes-parse-tags))
+        (-map
+         (lambda (scenario)
+           (setf
+            (ecukes-scenario-tags scenario)
+            (-concat tags (ecukes-scenario-tags scenario))))
+         scenarios))
       (make-ecukes-feature :intro intro :background background :outlines outlines :scenarios scenarios))))
 
 (defun ecukes-parse-intro ()
@@ -75,7 +85,7 @@
 (defun ecukes-parse-outline ()
   "Parse a single scenario outline."
   (let ((name (ecukes-parse-outline-name))
-        (tags (ecukes-parse-scenario-tags))
+        (tags (ecukes-parse-tags))
         (steps (ecukes-parse-block-steps))
         (table (ecukes-parse-outline-table)))
     (make-ecukes-outline :name name :tags tags :steps steps :table table)))
@@ -147,7 +157,7 @@
 (defun ecukes-parse-scenario ()
   "Parse scenario."
   (let ((name (ecukes-parse-scenario-name))
-        (tags (ecukes-parse-scenario-tags))
+        (tags (ecukes-parse-tags))
         (steps (ecukes-parse-block-steps)))
     (make-ecukes-scenario :name name :steps steps :tags tags)))
 
@@ -157,7 +167,7 @@
     (let ((line (ecukes-parse-line)))
       (nth 1 (s-match ecukes-parse-scenario-re line)))))
 
-(defun ecukes-parse-scenario-tags ()
+(defun ecukes-parse-tags ()
   "Parse tags."
   (save-excursion
     (forward-line -1)
