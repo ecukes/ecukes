@@ -1,5 +1,7 @@
 ;;; ecukes-print.el --- Print various stuff on screen
 
+(require 'ansi)
+
 (require 'ecukes-stats)
 (require 'ecukes-steps)
 (require 'ecukes-template)
