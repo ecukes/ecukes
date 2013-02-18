@@ -2,7 +2,11 @@
 
 all: test
 
-test: elpa
+test: clean-elc
+	$(MAKE) quick-test
+	$(MAKE) compile
+
+quick-test: elpa
 	carton exec ./test/ecukes-test
 
 elpa:
@@ -11,6 +15,8 @@ elpa:
 compile:
 	carton exec emacs -Q -batch -L . -f batch-byte-compile *.el
 
-clean:
+clean: clean-elc
 	rm -rf elpa
+
+clean-elc:
 	rm -rf *.elc test/*.elc
