@@ -1,5 +1,11 @@
 ;;; ecukes-template.el --- Template helpers
 
+(require 'dash)
+(require 's)
+
+(defvar ecukes-path
+  (file-name-directory load-file-name)
+  "Path to ecukes.")
 
 (defvar ecukes-template-path
   (expand-file-name "templates" ecukes-path)
