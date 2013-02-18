@@ -1,4 +1,6 @@
 .PHONY : all test clean
+SRC = $(filter-out %-pkg.el, $(wildcard *.el))
+ELC = $(SRC:.el=.elc)
 
 all: test
 
@@ -12,8 +14,9 @@ quick-test: elpa
 elpa:
 	carton install
 
-compile:
-	carton exec emacs -Q -batch -L . -f batch-byte-compile *.el
+compile: $(ELC)
+%.elc: %.el
+	carton exec emacs -Q -batch -L . -f batch-byte-compile $<
 
 clean: clean-elc
 	rm -rf elpa
