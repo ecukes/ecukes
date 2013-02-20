@@ -11,10 +11,13 @@
 (require 'ecukes-setup)
 (require 'ansi-color)
 
+(defun ecukes-assert-in-project ()
+  (unless (ecukes-project-path)
+    (error "You are not visiting an Ecukes project.")))
+
 (defun ecukes (&optional ask-for-tags)
   (interactive "P")
-  (unless (ecukes-project-path)
-    (error "You are not visiting an Ecukes project."))
+  (ecukes-assert-in-project)
   (ecukes-setup)
   (if ask-for-tags
       (ecukes-setup-tags (read-string "Run tags: ")))
@@ -52,6 +55,20 @@
          (unless (-contains? buffers buffer)
            (let ((buffer-modified-p nil))
              (kill-buffer buffer))))))))
+
+(defun ecukes-print-steps (&optional with-doc)
+  "Print all available steps defined for this project.
+Include docstring when WITH-DOC is non-nil."
+  (ecukes-assert-in-project)
+  (ecukes-setup)
+  (-map
+   (lambda (step-def)
+     (princ (ansi-green (ecukes-step-def-regex step-def)))
+     (princ "\n")
+     (when (and with-doc (ecukes-step-def-doc step-def))
+       (princ (ecukes-step-def-doc step-def))
+       (princ "\n")))
+   ecukes-steps-definitions))
 
 (provide 'ecukes)
 
