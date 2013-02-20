@@ -34,6 +34,7 @@
 # Boston, MA 02110-1301, USA.
 
 ECUKES_HOME=$(dirname $BASH_SOURCE)
+ECUKES_EL=$ECUKES_HOME/ecukes.el
 ECUKES_TERM_EL=$ECUKES_HOME/ecukes-term.el
 ECUKES_NEW=$ECUKES_HOME/ecukes-new.el
 
@@ -47,6 +48,8 @@ fi
 
 if [ "$1" == "-h" -o "$1" == "--help" ] ; then
   cat $ECUKES_HOME/templates/usage.tpl
+elif [ "$1" == "--list-steps" ] ; then
+  "$ECUKES_EMACS" --script "$ECUKES_EL" --eval "(ecukes-print-steps $2)"
 elif [ "$1" == "--new" ] ; then
   "$ECUKES_EMACS" --script "$ECUKES_NEW" --eval "(ecukes-new)"
 elif [ "$1" == "--script" ] ; then
