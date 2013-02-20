@@ -8,6 +8,24 @@
 
 (require 'ecukes)
 
+(defun ecukes-print-steps (&optional with-doc with-file)
+  "Print all available steps defined for this project.
+Include docstring when WITH-DOC is non-nil."
+  (ecukes-assert-in-project)
+  (ecukes-setup)
+  (-map
+   (lambda (step-def)
+     (when with-file
+       (let ((file (ecukes-step-file-name step-def t)))
+         (princ file)
+         (princ ": ")))
+     (princ (ansi-green (ecukes-step-def-regex step-def)))
+     (princ "\n")
+     (when (and with-doc (ecukes-step-def-doc step-def))
+       (princ (ecukes-step-def-doc step-def))
+       (princ "\n")))
+   ecukes-steps-definitions))
+
 (defun ecukes-cli-print-steps ()
   (let ((has (lambda (flag)
                (when (member flag command-line-args-left)
