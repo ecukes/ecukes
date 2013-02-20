@@ -3,10 +3,12 @@
 (ert-deftest steps-define-step ()
   "Should define step."
   (with-steps
-   (Given "^a known state$" 'ignore)
+   (let ((load-file-name "DUMMY/FILE/NAME.el"))
+     (Given "^a known state$" 'ignore))
    (should
     (equal
-     (make-ecukes-step-def :regex "^a known state$" :fn 'ignore)
+     (make-ecukes-step-def :regex "^a known state$" :fn 'ignore
+                           :file "DUMMY/FILE/NAME.el")
      (car ecukes-steps-definitions)))))
 
 (ert-deftest steps-define-same-step-twice ()
