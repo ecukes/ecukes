@@ -1,7 +1,8 @@
 ;;; ecukes-setup.el --- Common setup for drivers
 
 (eval-when-compile
-  (require 'cl))
+  (require 'cl)
+  (defvar debug-on-entry))
 (require 's)
 (require 'dash)
 (require 'ansi)

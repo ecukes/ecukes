@@ -1,5 +1,8 @@
 ;;; ecukes-helpers.el --- Misc helpers
 
+(require 'dash)
+(require 'ecukes-def)
+
 (defun ecukes-feature-steps (features)
   "Return all steps in all FEATURES."
   (let* ((scenarios

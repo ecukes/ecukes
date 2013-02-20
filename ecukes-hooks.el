@@ -1,5 +1,7 @@
 ;;; ecukes-hooks.el --- A number of hooks that allow us to run code at various points in the test cycle
 
+(require 'dash)
+
 (defvar ecukes-hooks-before ()
   "List of before hooks.")
 

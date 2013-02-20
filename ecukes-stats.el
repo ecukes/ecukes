@@ -1,5 +1,8 @@
 ;;; ecukes-stats.el --- Statistics about the passed and failed scenarios and steps
 
+(require 'ansi)
+(require 's)
+
 (defvar ecukes-stats-steps 0
   "Number of steps that have be runned.")
 
