@@ -11,10 +11,13 @@
 (require 'ecukes-setup)
 (require 'ansi-color)
 
+(defun ecukes-assert-in-project ()
+  (unless (ecukes-project-path)
+    (error "You are not visiting an Ecukes project.")))
+
 (defun ecukes (&optional ask-for-tags)
   (interactive "P")
-  (unless (ecukes-project-path)
-    (error "You are not visiting an Ecukes project."))
+  (ecukes-assert-in-project)
   (ecukes-setup)
   (if ask-for-tags
       (ecukes-setup-tags (read-string "Run tags: ")))
