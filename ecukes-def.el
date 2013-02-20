@@ -1,5 +1,6 @@
 ;;; ecukes-def.el --- Data structure definitions
 
+(eval-when-compile (require 'cl))
 
 (defstruct ecukes-feature
   "A feature is the top level structure for a feature file."

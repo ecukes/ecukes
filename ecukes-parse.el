@@ -1,5 +1,9 @@
 ;;; ecukes-parse.el --- Simple line by line parser for feature files
 
+(eval-when-compile (require 'cl))
+(require 'dash)
+(require 's)
+(require 'ecukes-def)
 
 (defconst ecukes-parse-intro-re
   "^\\s-*Feature:\\s-*\\(.+[^ ]\\)\\s-*$"

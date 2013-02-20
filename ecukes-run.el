@@ -1,9 +1,15 @@
 ;;; ecukes-run.el --- Run features, scenarios, steps etc...
 
+(eval-when-compile (defvar ecukes-include-tags)
+                   (defvar ecukes-exclude-tags))
+(require 'dash)
+
 (require 'ecukes-parse)
 (require 'ecukes-steps)
 (require 'ecukes-print)
 (require 'ecukes-stats)
+(require 'ecukes-helpers)
+(require 'ecukes-hooks)
 
 (defun ecukes-run (feature-files)
   "Parse and run FEATURE-FILES if no steps are missing."

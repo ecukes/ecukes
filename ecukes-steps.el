@@ -1,5 +1,9 @@
 ;;; ecukes-steps.el --- Functions to define and call step definitions
 
+(eval-when-compile (require 'cl))
+
+(require 'ansi)
+
 (require 'ecukes-parse)
 
 (defvar ecukes-steps-definitions nil
