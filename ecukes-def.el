@@ -28,7 +28,7 @@ optional, but is conventionally included."
 
 (defstruct ecukes-step-def
   "A step definition."
-  regex fn)
+  regex fn doc)
 
 
 (provide 'ecukes-def)

@@ -28,10 +28,22 @@
 
 ;;;###autoload
 (defun ecukes-steps-define-or-call-step (name &rest args)
-  "Define or call step."
-  (let ((arg (car args)))
-    (if (functionp arg)
-        (ecukes-steps-define name arg)
+  "Define or call step.
+
+When *defining* a step, argument takes the following form:
+    (STEP-REGEXP [DOC] FUNCTION)
+where STEP-REGEXP is a regular expression defining a step and
+FUNCTION is the definition of the step.  You can optionally
+give a docstring DOC as the second argument.
+
+When *calling* a step, argument takes the following form:
+    (STEP-NAME [ARG [ARG ..]])
+
+\(fn STEP-REGEXP [DOC] FUNCTION | STEP-NAME &optional ARGS)"
+  (let ((fn (car (last args)))
+        (doc (when (= (length args) 2) (car args))))
+    (if (functionp fn)
+        (ecukes-steps-define name fn doc)
       (ecukes-steps-call name args))))
 
 ;;;###autoload
@@ -39,14 +51,14 @@
 ;;;###autoload
 (put 'ecukes-steps-define-or-call-step 'doc-string-elt 2)
 
-(defun ecukes-steps-define (regex fn)
+(defun ecukes-steps-define (regex fn &optional doc)
   "Define step."
   (unless (-any?
            (lambda (step-def)
              (equal regex step-def)) ecukes-steps-definitions)
     (add-to-list
      'ecukes-steps-definitions
-     (make-ecukes-step-def :regex regex :fn fn))))
+     (make-ecukes-step-def :regex regex :fn fn :doc doc))))
 
 (defun ecukes-steps-call (name args)
   "Call step"
