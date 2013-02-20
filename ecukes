@@ -34,7 +34,7 @@
 # Boston, MA 02110-1301, USA.
 
 ECUKES_HOME=$(dirname $BASH_SOURCE)
-ECUKES_EL=$ECUKES_HOME/ecukes-term.el
+ECUKES_TERM_EL=$ECUKES_HOME/ecukes-term.el
 ECUKES_NEW=$ECUKES_HOME/ecukes-new.el
 
 if [ -z "$ECUKES_EMACS" ] ; then
@@ -50,14 +50,14 @@ if [ "$1" == "-h" -o "$1" == "--help" ] ; then
 elif [ "$1" == "--new" ] ; then
   "$ECUKES_EMACS" --script "$ECUKES_NEW" --eval "(ecukes-new)"
 elif [ "$1" == "--script" ] ; then
-  "$ECUKES_EMACS" --script "$ECUKES_EL" "${@:2}"
+  "$ECUKES_EMACS" --script "$ECUKES_TERM_EL" "${@:2}"
 else
   export ECUKES_OUTFILE=$(mktemp /tmp/ecukes.XXX)
   
   if [[ "$1" == "--win" ]]; then
-    "$ECUKES_EMACS" --load "$ECUKES_EL" -Q "$@"
+    "$ECUKES_EMACS" --load "$ECUKES_TERM_EL" -Q "$@"
   else
-    "$ECUKES_EMACS" -nw --load "$ECUKES_EL" -Q "$@"
+    "$ECUKES_EMACS" -nw --load "$ECUKES_TERM_EL" -Q "$@"
   fi
 
   STATUS=$?
