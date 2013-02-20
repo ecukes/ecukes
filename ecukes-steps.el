@@ -47,7 +47,9 @@ When *calling* a step, argument takes the following form:
   (let ((fn (car (last args)))
         (doc (when (= (length args) 2) (car args))))
     (if (functionp fn)
-        (ecukes-steps-define name fn doc)
+        ;; `buffer-file-name' is for the case evaluated interactively.
+        (ecukes-steps-define name fn doc
+                             (or load-file-name buffer-file-name))
       (ecukes-steps-call name args))))
 
 ;;;###autoload
@@ -55,14 +57,14 @@ When *calling* a step, argument takes the following form:
 ;;;###autoload
 (put 'ecukes-steps-define-or-call-step 'doc-string-elt 2)
 
-(defun ecukes-steps-define (regex fn &optional doc)
+(defun ecukes-steps-define (regex fn &optional doc file)
   "Define step."
   (unless (-any?
            (lambda (step-def)
              (equal regex step-def)) ecukes-steps-definitions)
     (add-to-list
      'ecukes-steps-definitions
-     (make-ecukes-step-def :regex regex :fn fn :doc doc))))
+     (make-ecukes-step-def :regex regex :fn fn :doc doc :file file))))
 
 (defun ecukes-steps-call (name args)
   "Call step"
