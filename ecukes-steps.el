@@ -6,21 +6,27 @@
   "All defined step definitions.")
 
 
+;;;###autoload
 (defalias 'Given 'ecukes-steps-define-or-call-step
   "Put the system in a known state.")
 
+;;;###autoload
 (defalias 'When 'ecukes-steps-define-or-call-step
   "Describe the key action.")
 
+;;;###autoload
 (defalias 'Then 'ecukes-steps-define-or-call-step
   "Observe outcomes.")
 
+;;;###autoload
 (defalias 'And 'ecukes-steps-define-or-call-step
   "Make Given/When/Then read more fluently.")
 
+;;;###autoload
 (defalias 'But 'ecukes-steps-define-or-call-step
   "Make Given/When/Then read more fluently.")
 
+;;;###autoload
 (defun ecukes-steps-define-or-call-step (name &rest args)
   "Define or call step."
   (let ((arg (car args)))
@@ -28,7 +34,9 @@
         (ecukes-steps-define name arg)
       (ecukes-steps-call name args))))
 
+;;;###autoload
 (put 'ecukes-steps-define-or-call-step 'lisp-indent-function 'defun)
+;;;###autoload
 (put 'ecukes-steps-define-or-call-step 'doc-string-elt 2)
 
 (defun ecukes-steps-define (regex fn)
