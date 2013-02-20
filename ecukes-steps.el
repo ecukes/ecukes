@@ -32,6 +32,9 @@
         (ecukes-steps-define name arg)
       (ecukes-steps-call name args))))
 
+(put 'ecukes-steps-define-or-call-step 'lisp-indent-function 'defun)
+(put 'ecukes-steps-define-or-call-step 'doc-string-elt 2)
+
 (defun ecukes-steps-define (regex fn)
   "Define step."
   (unless (-any?
