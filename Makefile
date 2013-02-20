@@ -1,4 +1,5 @@
 .PHONY : all test clean
+EMACS ?= emacs
 SRC = $(filter-out %-pkg.el, $(wildcard *.el))
 ELC = $(SRC:.el=.elc)
 
@@ -16,7 +17,7 @@ elpa:
 
 compile: $(ELC)
 %.elc: %.el
-	carton exec emacs -Q -batch -L . -f batch-byte-compile $<
+	carton exec $(EMACS) -Q -batch -L . -f batch-byte-compile $<
 
 clean: clean-elc
 	rm -rf elpa
