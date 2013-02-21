@@ -29,8 +29,21 @@ optional, but is conventionally included."
 
 (defstruct ecukes-step-def
   "A step definition."
-  regex fn)
+  regex fn doc file)
 
+(defun ecukes-step-file-name (step &optional relative)
+  "Return the file in which STEP is defined.
+File name is converted to \".el\" if it exists, otherwise
+\".elc\" file may be returned.  When the second argument RELATIVE
+is given, return relative path."
+  (let* ((file (ecukes-step-def-file step))
+         (el (when file
+               (replace-regexp-in-string "\\.elc\\'" ".el" file))))
+    (when (and el (file-exists-p el))
+      (setq file el))
+    (if (and file relative)
+        (file-relative-name file)
+      file)))
 
 (provide 'ecukes-def)
 

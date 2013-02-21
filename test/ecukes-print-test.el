@@ -371,6 +371,62 @@
        (ecukes-print-py-string step 'skipped)
        (should (equal messages expected))))))
 
+(ert-deftest print-steps-no-docs-or-file ()
+  "Should print list of steps with no docs or file."
+  (with-steps
+   (Given "^a known state$" 'ignore)
+   (Given "^an unknown state$" 'ignore)
+   (with-messages
+    (lambda (messages)
+      (let ((expected
+             (list
+              (ansi-green "^an unknown state$")
+              (ansi-green "^a known state$"))))
+        (ecukes-print-steps)
+        (should (equal messages expected)))))))
+
+(ert-deftest print-steps-with-docs ()
+  "Should print list of steps with docs but no file."
+  (with-steps
+   (Given "^a known state$" "Will be in a known state" 'ignore)
+   (Given "^an unknown state$" "Will be in an unknown state" 'ignore)
+   (with-messages
+    (lambda (messages)
+      (let ((expected
+             (list
+              (concat (ansi-green "^an unknown state$") "\nWill be in an unknown state")
+              (concat (ansi-green "^a known state$") "\nWill be in a known state"))))
+        (ecukes-print-steps t)
+        (should (equal messages expected)))))))
+
+(ert-deftest print-steps-with-file ()
+  "Should print list of steps with file but no docs."
+  (with-steps
+   (Given "^a known state$" "Will be in a known state" 'ignore)
+   (Given "^an unknown state$" "Will be in an unknown state" 'ignore)
+   (with-messages
+    (lambda (messages)
+      (let ((expected
+             (list
+              (concat "test/ecukes-test: " (ansi-green "^an unknown state$"))
+              (concat "test/ecukes-test: " (ansi-green "^a known state$")))))
+      (ecukes-print-steps nil t)
+      (should (equal messages expected)))))))
+
+(ert-deftest print-steps-with-file-and-docs ()
+  "Should print list of steps with file and docs."
+  (with-steps
+   (Given "^a known state$" "Will be in a known state" 'ignore)
+   (Given "^an unknown state$" "Will be in an unknown state" 'ignore)
+   (with-messages
+    (lambda (messages)
+      (let ((expected
+             (list
+              (concat "test/ecukes-test: " (ansi-green "^an unknown state$") "\nWill be in an unknown state")
+              (concat "test/ecukes-test: " (ansi-green "^a known state$") "\nWill be in a known state"))))
+      (ecukes-print-steps t t)
+      (should (equal messages expected)))))))
+
 (ert-deftest print-status-success ()
   "Should print in green when success."
   (with-mock
