@@ -10,10 +10,10 @@
 (require 'ecukes-setup)
 (require 'ecukes-project)
 (require 'ecukes-print)
-
-(ecukes-setup)
+(require 'ecukes-new)
 
 (defun ecukes-cli-print-steps ()
+  (ecukes-setup)
   (let ((has (lambda (flag)
                (when (member flag command-line-args-left)
                  (setq command-line-args-left
