@@ -193,7 +193,7 @@ Include docstring when WITH-DOC is non-nil."
        (when with-doc
          (let ((doc (ecukes-step-def-doc step-def)))
            (when doc
-             (setq row (s-concat row "\n" doc)))))
+             (setq row (s-concat row "\n" (ansi-cyan doc) "\n")))))
        (ecukes-print-message row)))
    ecukes-steps-definitions))
 
