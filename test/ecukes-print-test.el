@@ -394,8 +394,8 @@
     (lambda (messages)
       (let ((expected
              (list
-              (concat (ansi-green "^an unknown state$") "\nWill be in an unknown state")
-              (concat (ansi-green "^a known state$") "\nWill be in a known state"))))
+              (concat (ansi-green "^an unknown state$") "\n" (ansi-cyan "Will be in an unknown state") "\n")
+              (concat (ansi-green "^a known state$") "\n" (ansi-cyan "Will be in a known state") "\n"))))
         (ecukes-print-steps t)
         (should (equal messages expected)))))))
 
@@ -422,8 +422,8 @@
     (lambda (messages)
       (let ((expected
              (list
-              (concat "test/ecukes-test: " (ansi-green "^an unknown state$") "\nWill be in an unknown state")
-              (concat "test/ecukes-test: " (ansi-green "^a known state$") "\nWill be in a known state"))))
+              (concat "test/ecukes-test: " (ansi-green "^an unknown state$") "\n" (ansi-cyan "Will be in an unknown state") "\n")
+              (concat "test/ecukes-test: " (ansi-green "^a known state$") "\n" (ansi-cyan "Will be in a known state") "\n"))))
       (ecukes-print-steps t t)
       (should (equal messages expected)))))))
 
