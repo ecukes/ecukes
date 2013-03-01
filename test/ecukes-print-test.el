@@ -141,7 +141,7 @@
       "simple"
       (lambda (feature intro scenarios background steps)
         (ecukes-print-intro intro)
-        (let ((expected (list "Feature: Simple" "  This" "  Is" "  Simple" " ")))
+        (let ((expected (list "Feature: Simple" "  This" "  Is" "  Simple")))
           (should (equal messages expected))))))))
 
 (ert-deftest print-stats-summary ()
@@ -193,8 +193,16 @@
   (with-messages
    (lambda (messages)
      (let ((scenario (make-ecukes-scenario :name "Simple")))
-       (ecukes-print-scenario-header scenario)
+       (ecukes-print-scenario-header scenario nil)
        (should (equal messages (list "  Scenario: Simple")))))))
+
+(ert-deftest print-scenario-header-successful ()
+  "Should print scenario header in green when successful."
+  (with-messages
+   (lambda (messages)
+     (let ((scenario (make-ecukes-scenario :name "Simple")))
+       (ecukes-print-scenario-header scenario t)
+       (should (equal messages (list (s-concat "  " (ansi-green "Scenario: Simple")))))))))
 
 (ert-deftest print-scenario-header-tags ()
   "Should print scenario header when tags."
@@ -204,7 +212,7 @@
             (make-ecukes-scenario :name "Simple" :tags (list "foo" "bar")))
            (expected
             (list (format "  %s" (ansi-cyan "@foo @bar")) "  Scenario: Simple")))
-       (ecukes-print-scenario-header scenario)
+       (ecukes-print-scenario-header scenario nil)
        (should (equal messages expected))))))
 
 (ert-deftest print-step-success ()

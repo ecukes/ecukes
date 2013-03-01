@@ -206,10 +206,7 @@
        t)
       (let ((expected
              (list
-              "  Scenario: Simple"
-              (s-concat "    " (ansi-green "Given a known state"))
-              (s-concat "    " (ansi-green "Given an unknown state"))
-              " ")))
+              (s-concat "  " (ansi-green "Scenario: Simple")))))
         (should (equal expected messages)))))))
 
 (ert-deftest run-background-before-scenarios ()

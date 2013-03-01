@@ -70,9 +70,8 @@
 
 (defun with-messages (callback)
   (let ((messages))
-    (flet ((ecukes-print-message
-            (format-string &rest args)
-            (add-to-list 'messages (apply 'ecukes-print-format (cons format-string args)) t 'eq)))
+    (flet ((ecukes-print-message1 (msg)
+            (add-to-list 'messages msg t 'eq)))
       (funcall callback messages))))
 
 (defmacro with-stats (&rest body)

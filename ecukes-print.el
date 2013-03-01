@@ -1,6 +1,8 @@
 ;;; ecukes-print.el --- Print various stuff on screen
 
 (require 'ansi)
+(require 'dash)
+(require 's)
 
 (require 'ecukes-stats)
 (require 'ecukes-def)
@@ -80,29 +82,31 @@
   "Print INTRO."
   (let ((ecukes-print-offset 0)
         (header (ecukes-intro-header intro)))
-    (ecukes-print-message "Feature: %s" header)
+    (ecukes-print-message "Feature: %s" (s-trim header))
     (let ((ecukes-print-offset 2)
           (description (ecukes-intro-description intro)))
       (-each
        description
-       (lambda (row) (ecukes-print-message row))))
-    (ecukes-print-newline)))
+       (lambda (row) (ecukes-print-message row))))))
 
 (defun ecukes-print-background-header ()
   "Print background header."
   (let ((ecukes-print-offset 2))
     (ecukes-print-message "Background:")))
 
-(defun ecukes-print-scenario-header (scenario)
+(defun ecukes-print-scenario-header (scenario success?)
   "Print SCENARIO header."
-  (let ((name (ecukes-scenario-name scenario))
+  (let ((title (format "Scenario: %s" (ecukes-scenario-name scenario)))
         (tags (ecukes-scenario-tags scenario))
         (ecukes-print-offset 2))
     (when tags
       (ecukes-print-message
        (ansi-cyan
         (s-join " " (-map (lambda (tag) (s-concat "@" tag)) tags)))))
-    (ecukes-print-message "Scenario: %s" name)))
+    (ecukes-print-message
+     (if success?
+         (ansi-green title)
+       title))))
 
 (defun ecukes-print-step (step status)
   "Print STEP in correct STATUS color."
@@ -205,10 +209,28 @@ Include docstring when WITH-DOC is non-nil."
   "Print newline."
   (ecukes-print-message " "))
 
+(defvar ecukes-print-buffer-output? nil
+  "Whether ecukes should buffer output, or not.")
+
+(defvar ecukes-print-buffer-output nil
+  "If ecukes is buffering output, this is a list of the buffered output.")
+
+(defun ecukes-print-buffered-output ()
+  "Print the buffered output, then clear the buffer."
+  (--each ecukes-print-buffer-output
+    (ecukes-print-message it))
+  (setq ecukes-print-buffer-output nil))
+
 (defun ecukes-print-message (format-string &rest args)
   "Print MESSAGE."
-  (let ((ecukes-message t))
-    (message (apply 'ecukes-print-format (cons format-string args)))))
+  (let ((ecukes-message t)
+        (formatted-message (apply 'ecukes-print-format (cons format-string args))))
+    (if ecukes-print-buffer-output?
+        (add-to-list 'ecukes-print-buffer-output formatted-message t)
+      (ecukes-print-message1 formatted-message))))
+
+(defun ecukes-print-message1 (msg)
+  (message msg))
 
 (defun ecukes-print-format (format-string &rest args)
   "Return formatted message."
