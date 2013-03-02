@@ -66,10 +66,15 @@
 
 (defun ecukes-run-background (background)
   "Run BACKGROUND."
-  (ecukes-print-background-header)
-  (let* ((steps (ecukes-background-steps background))
-         (success (ecukes-run-steps steps t)))
-    (ecukes-print-newline)
+  (let (ecukes-print-buffer-output success)
+    (let* ((ecukes-print-buffer-output? t)
+           (steps (ecukes-background-steps background)))
+      (setq success (ecukes-run-steps steps t))
+      (ecukes-print-newline))
+    (let ((successful-collapse (and success ecukes-hide-steps-for-successful-scenarios)))
+      (ecukes-print-background-header successful-collapse)
+      (unless successful-collapse
+        (ecukes-print-buffered-output)))
     success))
 
 (defvar ecukes-hide-steps-for-successful-scenarios t)

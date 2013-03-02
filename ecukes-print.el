@@ -89,14 +89,18 @@
        description
        (lambda (row) (ecukes-print-message row))))))
 
-(defun ecukes-print-background-header ()
+(defun ecukes-print-background-header (success?)
   "Print background header."
-  (let ((ecukes-print-offset 2))
-    (ecukes-print-message "Background:")))
+  (let ((ecukes-print-offset 2)
+        (header "Background:"))
+    (ecukes-print-message
+     (if success?
+         (ansi-green header)
+       header))))
 
 (defun ecukes-print-scenario-header (scenario success?)
   "Print SCENARIO header."
-  (let ((title (format "Scenario: %s" (ecukes-scenario-name scenario)))
+  (let ((header (format "Scenario: %s" (ecukes-scenario-name scenario)))
         (tags (ecukes-scenario-tags scenario))
         (ecukes-print-offset 2))
     (when tags
@@ -105,8 +109,8 @@
         (s-join " " (-map (lambda (tag) (s-concat "@" tag)) tags)))))
     (ecukes-print-message
      (if success?
-         (ansi-green title)
-       title))))
+         (ansi-green header)
+       header))))
 
 (defun ecukes-print-step (step status)
   "Print STEP in correct STATUS color."

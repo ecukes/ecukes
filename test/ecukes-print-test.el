@@ -185,8 +185,15 @@
   "Should print background header."
   (with-messages
    (lambda (messages)
-     (ecukes-print-background-header)
+     (ecukes-print-background-header nil)
      (should (equal messages (list "  Background:"))))))
+
+(ert-deftest print-background-header-successful ()
+  "Should print background header."
+  (with-messages
+   (lambda (messages)
+     (ecukes-print-background-header t)
+     (should (equal messages (list (concat "  " (ansi-green "Background:"))))))))
 
 (ert-deftest print-scenario-header ()
   "Should print scenario header."
