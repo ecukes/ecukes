@@ -54,10 +54,12 @@
 
 (defun ecukes-new-message (indent &rest objects)
   "Print message about created file."
-  (message
-   "create%s%s"
-   (s-repeat (1+ indent) " ")
-   (ansi-green (apply 's-concat objects))))
+  (let ((ecukes-verbose t))
+    (message
+     "create%s%s"
+     (s-repeat (1+ indent) " ")
+     (ansi-green (apply 's-concat objects)))))
+
 
 (provide 'ecukes-new)
 
