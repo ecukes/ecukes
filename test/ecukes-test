@@ -28,4 +28,4 @@
   (load test-file nil t))
 
 (let ((ecukes-verbose t))
-  (ert-run-tests-batch t))
+  (ert-run-tests-batch-and-exit t))
