@@ -44,7 +44,7 @@
   (with-messages
    (lambda (messages)
      (with-parse-feature
-      "simple"
+      "no-background"
       (lambda (feature intro scenarios background steps)
         (with-mock
          (stub ecukes-feature-background => nil)
