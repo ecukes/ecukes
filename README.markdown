@@ -1,4 +1,4 @@
-# Ecukes - Cucumber for Emacs
+# Ecukes - Cucumber for Emacs [![Build Status](https://secure.travis-ci.org/rejeep/ecukes.png)](http://travis-ci.org/rejeep/ecukes)
 
 [<img src="http://img.youtube.com/vi/4VcH4uAQJZI/0.jpg">](https://www.youtube.com/watch?v=4VcH4uAQJZI)
 

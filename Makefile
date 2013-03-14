@@ -10,7 +10,7 @@ test: clean-elc
 	$(MAKE) compile
 
 quick-test: elpa
-	carton exec ./test/ecukes-test
+	carton exec ${EMACS} --script ./test/ecukes-test -Q -nw
 
 elpa:
 	carton install
