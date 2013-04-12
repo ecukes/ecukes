@@ -110,7 +110,7 @@
           (let* ((body (ecukes-step-body step))
                  (arg (ecukes-step-arg step))
                  (args (ecukes-steps-args step))
-                 (args (if arg (cons arg args) args))
+                 (args (if arg (append args (list arg)) args))
                  (step-def (ecukes-steps-find body))
                  (fn (ecukes-step-def-fn step-def))
                  (fn-args-count

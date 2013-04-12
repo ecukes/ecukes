@@ -474,6 +474,15 @@
      (ecukes-run-step
       (mock-step "Given this:" :type 'table :arg "py-string"))))))
 
+(ert-deftest run-step-when-arg-and-args ()
+  "Should run step when arg and args (with arg last)."
+  (with-steps
+   (with-mock
+    (mock (run-mock "foo" "py-string") :times 1)
+    (Given "name \\(.+\\) and this:" 'run-mock)
+    (ecukes-run-step
+     (mock-step "Given name foo and this:" :type 'table :arg "py-string")))))
+
 (ert-deftest run-step-with-callback ()
   "Should run step with callback."
   (with-steps
