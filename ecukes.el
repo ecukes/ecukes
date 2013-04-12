@@ -35,6 +35,7 @@
       (ecukes-run feature-files)
       (save-excursion
         (set-buffer ecukes-buffer)
+        (read-only-mode -1)
         (erase-buffer)
         (-map
          (lambda (log)
@@ -44,7 +45,7 @@
                  (insert (ansi-color-apply message) "\n"))))
          ecukes-internal-message-log)
         (font-lock-mode t)
-        (toggle-read-only 1))
+        (read-only-mode 1))
       (display-buffer ecukes-buffer)
       (-each
        (buffer-list)
