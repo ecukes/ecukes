@@ -35,8 +35,7 @@
           (ecukes-stats-scenarios-passed 0)
           (ecukes-stats-scenarios-failed 0))
       (ecukes-run feature-files)
-      (save-excursion
-        (set-buffer ecukes-buffer)
+      (with-current-buffer ecukes-buffer
         (setq mode-line-process nil)
         (ecukes-mode)
         (read-only-mode -1)
@@ -56,7 +55,7 @@
                    ))))
          ecukes-internal-message-log)
         (font-lock-mode t)
-        (beginning-of-buffer)
+        (goto-char (point-min))
         (if (eq ecukes-stats-steps-failed 0)
             (setq mode-line-process '(:propertize  " [0 Failures] " face success))
           (setq mode-line-process `(:propertize ,(concat " ["
@@ -142,7 +141,9 @@
   "Defines the key mappings for ecukes-mode."
   (define-key ecukes-mode-map "g" 'ecukes)
   (define-key ecukes-mode-map "n" 'ecukes-goto-next-step-error)
-  (define-key ecukes-mode-map "p" 'ecukes-goto-previous-step-error))
+  (define-key ecukes-mode-map "p" 'ecukes-goto-previous-step-error)
+  (define-key ecukes-mode-map "q" 'quit-window)
+  (define-key ecukes-mode-map "z" 'kill-this-buffer))
 
 (defun ecukes-mode-define-menu ()
   "Defines the menu for ecukes-mode"
