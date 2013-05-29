@@ -40,8 +40,8 @@
     (unless ecukes-message
       (add-to-list 'ecukes-message-log message t 'eq))
     (when (or ecukes-message ecukes-verbose)
-      (add-to-list 'ecukes-internal-message-log `(message . ,message) t 'eq)
-      ad-do-it)))
+      (add-to-list 'ecukes-internal-message-log `(message . ,message) t 'eq))
+    ad-do-it))
 
 (defadvice print (around print-around activate)
   (add-to-list 'ecukes-internal-message-log `(print . ,ad-do-it) t 'eq))
