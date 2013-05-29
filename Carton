@@ -1,6 +1,6 @@
 (source "melpa" "http://melpa.milkbox.net/packages/")
 
-(package "ecukes" "0.4.5" "Cucumber for Emacs.")
+(package "ecukes" "0.4.6" "Cucumber for Emacs.")
 
 (depends-on "s" "1.3.0")
 (depends-on "dash" "1.0.1")
