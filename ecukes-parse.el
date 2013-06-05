@@ -240,7 +240,6 @@
 
 (defun ecukes-parse-py-string-step ()
   "Parse py string step."
-  (save-excursion
     (forward-line 1)
     (let ((whites
            (save-excursion
@@ -252,7 +251,7 @@
         (let ((line (ecukes-parse-line)))
           (push (if (<= whites (length line)) (substring line whites) nil) lines))
         (forward-line 1))
-      (s-join "\n" (nreverse lines)))))
+      (s-join "\n" (nreverse lines))))
 
 (defun ecukes-parse-line (&optional strip-whitespace)
   "Parse current line."

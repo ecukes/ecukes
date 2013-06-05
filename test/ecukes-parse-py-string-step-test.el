@@ -39,3 +39,11 @@
    (lambda (name head body type arg)
      (should (eq type 'py-string))
      (should (equal arg "abc\n\ndef\n")))))
+
+(ert-deftest parse-py-string-step-inside ()
+  "Should parse py string with step inside."
+  (with-parse-step
+   "py-string-step-inside"
+   (lambda (name head body type arg)
+     (should (eq type 'py-string))
+     (should (equal arg "And this thing\nAnd this thing")))))
