@@ -36,6 +36,15 @@
      (teardown-mock))
     (ecukes-hooks-run-teardown))))
 
+(ert-deftest hooks-fail ()
+  "Should run fail hooks."
+  (with-mock
+   (mock (fail-mock) :times 1)
+   (with-hooks
+    (Fail
+     (fail-mock))
+    (ecukes-hooks-run-fail))))
+
 (ert-deftest hooks-append ()
   "Should append hooks."
   (with-hooks
