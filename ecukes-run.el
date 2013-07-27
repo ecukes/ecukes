@@ -129,7 +129,8 @@
               (apply fn args)))
           (setq success t))
       (error
-       (setf (ecukes-step-err step) (error-message-string err)))
+       (setf (ecukes-step-err step) (error-message-string err))
+       (ecukes-hooks-run-fail))
       (quit))
     success))
 

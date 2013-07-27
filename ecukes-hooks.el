@@ -14,6 +14,9 @@
 (defvar ecukes-hooks-teardown ()
   "List of teardown hooks.")
 
+(defvar ecukes-hooks-fail ()
+  "List of fail hooks.")
+
 
 (defmacro define-hook (list body)
   `(add-to-list ,list (lambda () ,@body) t))
@@ -34,6 +37,10 @@
   "Run BODY in teardown hook."
   `(define-hook 'ecukes-hooks-teardown ,body))
 
+(defmacro Fail (&rest body)
+  "Run BODY in fail hook."
+  `(define-hook 'ecukes-hooks-fail ,body))
+
 
 (defun ecukes-hooks-run-before ()
   "Run all before hooks."
@@ -50,6 +57,10 @@
 (defun ecukes-hooks-run-teardown ()
   "Run all teardown hooks."
   (ecukes-hooks-run ecukes-hooks-teardown))
+
+(defun ecukes-hooks-run-fail ()
+  "Run all fail hooks."
+  (ecukes-hooks-run ecukes-hooks-fail))
 
 (defun ecukes-hooks-run (hooks)
   "Run HOOKS."

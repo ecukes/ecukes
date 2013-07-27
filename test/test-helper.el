@@ -8,7 +8,8 @@
   `(let ((ecukes-hooks-before)
          (ecukes-hooks-after)
          (ecukes-hooks-setup)
-         (ecukes-hooks-teardown))
+         (ecukes-hooks-teardown)
+         (ecukes-hooks-fail))
      ,@body))
 
 (defun mock-step (name &rest overrides)

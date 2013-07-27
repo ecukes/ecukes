@@ -105,6 +105,18 @@
                 (make-ecukes-scenario)))))
          (ecukes-run-feature feature)))))))
 
+(ert-deftest run-fail-hooks ()
+  "Should run fail hooks."
+  (with-mock
+   (stub ecukes-print-step)
+   (mock (fail-mock) :times 1)
+   (with-steps
+    (with-hooks
+     (Fail (fail-mock))
+     (Given "a known state" (lambda () (error "BooM")))
+     (let ((steps (list (mock-step "Given a known state"))))
+       (ecukes-run-steps steps t))))))
+
 (ert-deftest run-feature-no-intro ()
   "Should run feature when no intro."
   (with-mock
