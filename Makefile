@@ -10,14 +10,14 @@ test: clean-elc
 	$(MAKE) compile
 
 quick-test: elpa
-	carton exec ${EMACS} --script ./test/ecukes-test -Q -nw
+	cask exec ${EMACS} --script ./test/ecukes-test -Q -nw
 
 elpa:
-	carton install
+	cask install
 
 compile: $(ELC)
 %.elc: %.el
-	carton exec $(EMACS) -Q -batch -L . -f batch-byte-compile $<
+	cask exec $(EMACS) -Q -batch -L . -f batch-byte-compile $<
 
 clean: clean-elc
 	rm -rf elpa
