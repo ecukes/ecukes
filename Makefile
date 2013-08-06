@@ -1,7 +1,10 @@
-.PHONY : all test clean
+.PHONY : all test quick-test clean clean-elc
+
 EMACS ?= emacs
 SRC = $(filter-out %-pkg.el, $(wildcard *.el))
 ELC = $(SRC:.el=.elc)
+CASK ?= cask
+PKG_DIR := $(shell ${CASK} package-directory)
 
 all: test
 
@@ -12,8 +15,10 @@ test: clean-elc
 quick-test: elpa
 	cask exec ert-runner run -l test/ecukes-test.el
 
-elpa:
-	cask install
+elpa: ${PKG_DIR}
+${PKG_DIR}: Cask
+	${CASK} install
+	touch $@
 
 compile: $(ELC)
 %.elc: %.el
