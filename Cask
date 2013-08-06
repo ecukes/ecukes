@@ -1,3 +1,4 @@
+(source gnu) ; for cl-lib
 (source melpa)
 
 (package "ecukes" "0.5.1" "Cucumber for Emacs.")
@@ -7,4 +8,7 @@
 (depends-on "ansi" "0.0.2")
 
 (development
- (depends-on "el-mock"))
+ (depends-on "f")
+ (depends-on "ansi")
+ (depends-on "el-mock")
+ (depends-on "ert-runner"))

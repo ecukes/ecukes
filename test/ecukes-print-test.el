@@ -406,12 +406,11 @@
    (Given "^an unknown state$" "Will be in an unknown state" 'ignore)
    (with-messages
     (lambda (messages)
-      (let ((expected
-             (list
-              (concat "test/ecukes-test: " (ansi-green "^an unknown state$"))
-              (concat "test/ecukes-test: " (ansi-green "^a known state$")))))
       (ecukes-print-steps nil t)
-      (should (equal messages expected)))))))
+      (let ((known (nth 1 messages))
+            (unknown (nth 0 messages)))
+        (should (s-ends-with? (ansi-green "^a known state$") known))
+        (should (s-ends-with? (ansi-green "^an unknown state$") unknown)))))))
 
 (ert-deftest print-steps-with-file-and-docs ()
   "Should print list of steps with file and docs."
@@ -420,12 +419,11 @@
    (Given "^an unknown state$" "Will be in an unknown state" 'ignore)
    (with-messages
     (lambda (messages)
-      (let ((expected
-             (list
-              (concat "test/ecukes-test: " (ansi-green "^an unknown state$") "\n" (ansi-cyan "Will be in an unknown state") "\n")
-              (concat "test/ecukes-test: " (ansi-green "^a known state$") "\n" (ansi-cyan "Will be in a known state") "\n"))))
       (ecukes-print-steps t t)
-      (should (equal messages expected)))))))
+      (let ((known (nth 1 messages))
+            (unknown (nth 0 messages)))
+        (should (s-ends-with? (s-concat (ansi-green "^a known state$") "\n" (ansi-cyan "Will be in a known state") "\n") known))
+        (should (s-ends-with? (s-concat (ansi-green "^an unknown state$") "\n" (ansi-cyan "Will be in an unknown state") "\n") unknown)))))))
 
 (ert-deftest print-status-success ()
   "Should print in green when success."

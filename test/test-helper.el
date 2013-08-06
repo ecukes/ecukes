@@ -92,5 +92,5 @@
     ,@body))
 
 (defun fixture-file-path (category name)
-  (let ((category-path (expand-file-name category ecukes-fixtures-path)))
+  (let ((category-path (expand-file-name category ecukes-test/fixtures-path)))
     (expand-file-name (format "%s.feature" name) category-path)))

@@ -10,7 +10,7 @@ test: clean-elc
 	$(MAKE) compile
 
 quick-test: elpa
-	cask exec ${EMACS} --script ./test/ecukes-test -Q -nw
+	cask exec ert-runner run -l test/ecukes-test.el
 
 elpa:
 	cask install
