@@ -1,4 +1,4 @@
-(source "melpa" "http://melpa.milkbox.net/packages/")
+(source melpa)
 
 (package "ecukes" "0.5.1" "Cucumber for Emacs.")
 
