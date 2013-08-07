@@ -31,7 +31,7 @@ OPTIONS:
       
       <p>First, create all boilerplate files:</p>
 
-      <pre><code>$ carton exec ecukes --new
+      <pre><code>$ cask exec ecukes --new
 create features
 create   step-definition
 create     super-duper-steps.el
@@ -73,7 +73,7 @@ create   super-duper.feature</code></pre>
       </p>
       
       <p>Example:</p>
-      <pre><code>$ carton exec ecukes features</code></pre>
+      <pre><code>$ cask exec ecukes features</code></pre>
       
       <h4>Win</h4>
       <p>
@@ -83,7 +83,7 @@ create   super-duper.feature</code></pre>
       </p>
       
       <p>Example:</p>
-      <pre><code>$ carton exec ecukes --win features</code></pre>
+      <pre><code>$ cask exec ecukes --win features</code></pre>
       
       <h4>Script</h4>
       <p>
@@ -93,14 +93,14 @@ create   super-duper.feature</code></pre>
       </p>
       
       <p>Example:</p>
-      <pre><code>$ carton exec ecukes --script features</code></pre>
+      <pre><code>$ cask exec ecukes --script features</code></pre>
       
       <h4>Inline</h4>
       <p>
         You can also run features directly in your current Emacs
         session. To to that, make sure Ecukes and its dependencies are
         available in your <strong>load-path</strong>. If you are using
-        Carton for your Emacs setup, simply
+        Cask for your Emacs setup, simply
         add <strong>ecukes</strong> as a dependency and you are
         set. Then require ecukes.
       </p>
@@ -118,34 +118,34 @@ create   super-duper.feature</code></pre>
       <p>Here are a few ways to run Ecukes:</p>
 
       <p>Create boilerplate files for current project.</p>
-      <pre><code>$ carton exec ecukes --new</code></pre>
+      <pre><code>$ cask exec ecukes --new</code></pre>
       
       <p>Show usage information.</p>
-      <pre><code>$ carton exec ecukes --help</code></pre>
+      <pre><code>$ cask exec ecukes --help</code></pre>
       
       <p>Run all features in no win mode.</p>
-      <pre><code>$ carton exec ecukes</code></pre>
+      <pre><code>$ cask exec ecukes</code></pre>
 
       <p>Run all features in win mode.</p>
-      <pre><code>$ carton exec ecukes --win features</code></pre>
+      <pre><code>$ cask exec ecukes --win features</code></pre>
 
       <p>Run all features in script mode.</p>
-      <pre><code>$ carton exec ecukes --script</code></pre>
+      <pre><code>$ cask exec ecukes --script</code></pre>
 
       <p>Run one feature in no win mode.</p>
-      <pre><code>$ carton exec ecukes features/super-duper.feature</code></pre>
+      <pre><code>$ cask exec ecukes features/super-duper.feature</code></pre>
 
       <p>Run one feature in win mode with verbose output.</p>
-      <pre><code>$ carton exec ecukes --win features/super-duper.feature --verbose</code></pre>
+      <pre><code>$ cask exec ecukes --win features/super-duper.feature --verbose</code></pre>
 
       <p>Run all scenarios tagged with <strong>@super</strong> in script mode with debug.</p>
-      <pre><code>$ carton exec ecukes --script features/super-duper.feature --dbg --tags @super</code></pre>
+      <pre><code>$ cask exec ecukes --script features/super-duper.feature --dbg --tags @super</code></pre>
 
       <p>Run all scenarios not tagged with <strong>@duper</strong>.</p>
-      <pre><code>$ carton exec ecukes features/super-duper.feature --tags ~@duper</code></pre>
+      <pre><code>$ cask exec ecukes features/super-duper.feature --tags ~@duper</code></pre>
       
       <p>Run all features in no win mode. Use Emacs binary installed via Homebrew.</p>
-      <pre><code>ECUKES_EMACS="/usr/local/Cellar/emacs/24.2/Emacs.app/Contents/MacOS/Emacs" carton exec ~/Code/ecukes/ecukes</code></pre>
+      <pre><code>ECUKES_EMACS="/usr/local/Cellar/emacs/24.2/Emacs.app/Contents/MacOS/Emacs" cask exec ~/Code/ecukes/ecukes</code></pre>
     </div>
   </div>
 </div>

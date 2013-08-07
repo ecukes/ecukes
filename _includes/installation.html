@@ -5,16 +5,16 @@
         <h2>Installation</h2>
       </div>
 
-      <h3>Carton</h3>
+      <h3>Cask</h3>
 
       <p>
         It is highly recommended to install Ecukes is by
-        using <a href="https://github.com/rejeep/carton">Carton</a>. Install
-        Carton then add a <strong>Carton</strong> file looking something
+        using <a href="https://github.com/rejeep/cask.el">Cask</a>. Install
+        Cask then add a <strong>Cask</strong> file looking something
         like this.
       </p>
 
-      <pre><code>(source "melpa" "http://melpa.milkbox.net/packages/")
+      <pre><code>(source melpa)
 
 (package "super-duper" "0.0.1" "Super Duper.")
 
@@ -23,7 +23,7 @@
   (depends-on "espuds"))</code></pre>
 
       <p>
-        Next, run the <strong>carton</strong> command to install all
+        Next, run the <strong>cask</strong> command to install all
         dependencies.
       </p>
 
@@ -32,11 +32,8 @@
         a <strong>Makefile</strong>.
       </p>
 
-      <pre><code>ECUKES = $(shell find elpa/ecukes-*/ecukes | tail -1)
-
-all:
-	carton exec ${ECUKES} features
-</code></pre>
+      <pre><code>all:
+	cask exec ecukes features</code></pre>
     </div>
   </div>
 </div>
