@@ -49,3 +49,7 @@
 (Given "^feature \"\\([^\"]+\\)\":$"
   (lambda (name content)
     (f-write (f-expand (s-concat name ".feature") ecukes-project-features-path) content)))
+
+(Given "^step definition:$"
+  (lambda (code)
+    (f-write (f-expand "super-project-steps.el" ecukes-project-step-definitions-path) code)))

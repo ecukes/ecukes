@@ -15,6 +15,9 @@
 (defvar ecukes-project-features-path
   (f-expand "features" ecukes-project-path))
 
+(defvar ecukes-project-step-definitions-path
+  (f-expand "step-definitions" ecukes-project-features-path))
+
 (defvar ecukes-bin-path
   (f-expand "bin" ecukes-root-path))
 
