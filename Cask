@@ -12,4 +12,6 @@
  (depends-on "f")
  (depends-on "ansi")
  (depends-on "el-mock")
- (depends-on "ert-runner"))
+ (depends-on "ert-runner")
+ (depends-on "ecukes")
+ (depends-on "espuds"))
