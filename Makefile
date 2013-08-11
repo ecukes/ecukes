@@ -6,7 +6,7 @@ ELC = $(SRC:.el=.elc)
 CASK ?= cask
 PKG_DIR := $(shell ${CASK} package-directory)
 
-all: test
+all: test ecukes
 
 test: clean-elc
 	$(MAKE) quick-test
