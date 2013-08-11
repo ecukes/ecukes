@@ -1,5 +1,6 @@
 ;;; ecukes-def.el --- Data structure definitions
 
+(require 'f)
 (require 's)
 (eval-when-compile (require 'cl))
 
@@ -42,7 +43,7 @@ is given, return relative path."
     (when (and el (file-exists-p el))
       (setq file el))
     (if (and file relative)
-        (file-relative-name file)
+        (f-relative file)
       file)))
 
 (provide 'ecukes-def)

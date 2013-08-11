@@ -1,7 +1,8 @@
 ;;; ecukes-term.el --- Cucumber for Emacs
 
-(defvar ecukes-path
-  (file-name-directory load-file-name)
+(require 'f)
+
+(defvar ecukes-path (f-dirname load-file-name)
   "Path to ecukes.")
 
 (add-to-list 'load-path ecukes-path)
@@ -15,8 +16,8 @@
 (let ((feature-files
        (progn
          (or argv (setq argv (list "features")))
-         (if (file-directory-p (car argv))
-             (directory-files (ecukes-project-features-path) t "\\.feature$")
+         (if (f-dir? (car argv))
+             (f-glob "\\.feature$" (ecukes-project-features-path))
            argv))))
   (ecukes-run feature-files))
 

@@ -20,7 +20,7 @@
   (with-mock
    (stub getenv => "/tmp/ecukes.XYZ")
    (mock (kill-emacs 1) :times 1)
-   (mock (write-file "/tmp/ecukes.XYZ") :times 1)
+   (mock (f-write "/tmp/ecukes.XYZ") :times 1)
    (ecukes-quit)))
 
 (ert-deftest setup ()
@@ -145,7 +145,7 @@
    (with-project
     (stub expand-file-name => "/path/to/project/features/support/env.el")
     (stub
-     directory-files =>
+     f-glob =>
      '("/path/to/project/features/support/env.el"
        "/path/to/project/features/support/foo.el"
        "/path/to/project/features/support/bar.el"))
@@ -156,7 +156,7 @@
   "Should load all step definitions."
   (with-mock
    (stub
-    directory-files =>
+    f-glob =>
     '("/path/to/project/features/step-definitions/project-steps.el"
       "/path/to/project/features/step-definitions/misc-steps.el"))
    (mock (load) :times 2)

@@ -3,6 +3,7 @@
 (eval-when-compile
   (require 'cl)
   (defvar debug-on-entry))
+(require 'f)
 (require 's)
 (require 'dash)
 (require 'ansi)
@@ -60,9 +61,7 @@
                 message)))
           ecukes-internal-message-log)))
     (when outfile
-      (with-temp-buffer
-        (insert (s-join "\n" output) "\n")
-        (write-file outfile nil))))
+      (f-write outfile (s-concat (s-join "\n" output) "\n"))))
   (kill-emacs exit-code))
 
 (defun usage ()
@@ -116,7 +115,7 @@
 
 (defun ecukes-setup-features-dir-exist ()
   "Print usage and quit if there's no features directory."
-  (unless (file-directory-p (ecukes-project-features-path))
+  (unless (f-dir? (ecukes-project-features-path))
     (let ((ecukes-message t))
       (message
        (ansi-red "Missing `features` directory.")))
@@ -129,12 +128,12 @@
 
 (defun ecukes-setup-load-support ()
   "Load project support files."
-  (let* ((env-file (expand-file-name "env.el" (ecukes-project-support-path)))
+  (let* ((env-file (f-expand "env.el" (ecukes-project-support-path)))
          (support-files
           (-reject
            (lambda (support-file)
              (s-equals? support-file env-file))
-           (directory-files (ecukes-project-support-path) t "\\.el$"))))
+           (f-glob "*.el" (ecukes-project-support-path)))))
     (load env-file nil t)
     (-map
      (lambda (support-file)
@@ -143,7 +142,8 @@
 
 (defun ecukes-setup-load-step-definitions ()
   "Load project step definition files."
-  (let ((step-definition-files (directory-files (ecukes-project-step-definitions-path) t "-steps\\.el$")))
+  (let ((step-definition-files
+         (f-glob "*-steps.el" (ecukes-project-step-definitions-path))))
     (-map
      (lambda (step-definition-file)
        (load step-definition-file nil t))

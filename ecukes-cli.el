@@ -1,7 +1,8 @@
 ;;; ecukes-cli.el --- Cucumber for Emacs
 
-(defvar ecukes-path
-  (file-name-directory load-file-name)
+(require 'f)
+
+(defvar ecukes-path (f-dirname load-file-name)
   "Path to ecukes.")
 
 (add-to-list 'load-path ecukes-path)

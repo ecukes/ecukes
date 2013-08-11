@@ -4,7 +4,7 @@
   "Should return correct project path."
   (with-mock
    (stub file-directory-p => t)
-   (let ((default-directory "/path/to/project/"))
+   (let ((default-directory "/path/to/project"))
      (should (equal "/path/to/project" (ecukes-project-path))))))
 
 (ert-deftest project-name ()

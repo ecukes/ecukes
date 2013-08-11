@@ -1,7 +1,6 @@
 ;;; ecukes.el --- Cucumber for Emacs
 
-(defvar ecukes-path
-  (file-name-directory load-file-name)
+(defvar ecukes-path (f-dirname load-file-name)
   "Path to ecukes.")
 
 (add-to-list 'load-path ecukes-path)
@@ -23,7 +22,7 @@
   (let ((feature-files
          (if (and (buffer-file-name) (s-matches? "\.feature$" (buffer-file-name)))
              (list (buffer-file-name))
-           (directory-files (ecukes-project-features-path) t "\\.feature$"))))
+           (f-glob "\\.feature$" (ecukes-project-features-path)))))
     (let ((ecukes-buffer (get-buffer-create ecukes-buffer-name))
           (buffers (buffer-list))
           (ecukes-internal-message-log)
