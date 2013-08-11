@@ -194,13 +194,34 @@
                 (mock-step "Given a known state")
                 (mock-step "Given an unknown state")))))
             (expected
-             (list
-              "  Background:"
-              (s-concat "    " (ansi-green "Given a known state"))
-              (s-concat "    " (ansi-green "Given an unknown state"))
-              " ")))
+             (list (s-concat "  " (ansi-green "Background:")))))
         (should (equal success t))
         (should (equal expected messages)))))))
+
+(ert-deftest run-background-with-errors ()
+  "Should update step stats count when failing steps."
+  (with-messages
+   (lambda (messages)
+     (with-steps
+      (with-stats
+       (Given "a known state" (lambda () (error "ERROR")))
+       (Given "an unknown state" 'ignore)
+       (let ((success
+              (ecukes-run-background
+               (make-ecukes-background
+                :steps
+                (list
+                 (mock-step "Given a known state")
+                 (mock-step "Given an unknown state")))))
+             (expected
+              (list
+               "  Background:"
+               (s-concat "    " (ansi-red "Given a known state"))
+               (s-concat "      " (ansi-red "ERROR"))
+               (s-concat "    " (ansi-cyan "Given an unknown state"))
+               " ")))
+         (should (equal success nil))
+         (should (equal expected messages))))))))
 
 (ert-deftest run-scenario ()
   "Should run scenario."
@@ -218,11 +239,33 @@
        t)
       (let ((expected
              (list
-              "  Scenario: Simple"
-              (s-concat "    " (ansi-green "Given a known state"))
-              (s-concat "    " (ansi-green "Given an unknown state"))
-              " ")))
+              (s-concat "  " (ansi-green "Scenario: Simple")))))
         (should (equal expected messages)))))))
+
+(ert-deftest run-scenario-with-errors ()
+  "Should update scenario and step stats count when failing steps."
+  (with-messages
+   (lambda (messages)
+     (with-steps
+      (with-stats
+       (Given "a known state" (lambda () (error "ERROR")))
+       (Given "an unknown state" 'ignore)
+       (ecukes-run-scenario
+        (make-ecukes-scenario
+         :name "Simple"
+         :steps
+         (list
+          (mock-step "Given a known state")
+          (mock-step "Given an unknown state")))
+        t)
+       (let ((expected
+              (list
+               "  Scenario: Simple"
+               (s-concat "    " (ansi-red "Given a known state"))
+               (s-concat "      " (ansi-red "ERROR"))
+               (s-concat "    " (ansi-cyan "Given an unknown state"))
+               " ")))
+         (should (equal expected messages))))))))
 
 (ert-deftest run-background-before-scenarios ()
   "Should run background before each scenario."

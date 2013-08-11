@@ -56,7 +56,8 @@
                (ecukes-run-background-steps background))
              (ecukes-run-scenario scenario background-success)
              (ecukes-hooks-run-after)
-             (setq background-should-run t))))))))
+             (setq background-should-run t)))))
+      (ecukes-print-newline))))
 
 (defun ecukes-run-background-steps (background)
   "Run BACKGROUND steps."
@@ -65,21 +66,33 @@
 
 (defun ecukes-run-background (background)
   "Run BACKGROUND."
-  (ecukes-print-background-header)
-  (let* ((steps (ecukes-background-steps background))
-         (success (ecukes-run-steps steps t)))
-    (ecukes-print-newline)
+  (let (ecukes-print-buffer-output success)
+    (let* ((ecukes-print-buffer-output? t)
+           (steps (ecukes-background-steps background)))
+      (setq success (ecukes-run-steps steps t))
+      (ecukes-print-newline))
+    (let ((successful-collapse (and success ecukes-hide-steps-for-successful-scenarios)))
+      (ecukes-print-background-header successful-collapse)
+      (unless successful-collapse
+        (ecukes-print-buffered-output)))
     success))
+
+(defvar ecukes-hide-steps-for-successful-scenarios t)
 
 (defun ecukes-run-scenario (scenario background-success)
   "Run SCENARIO."
-  (ecukes-print-scenario-header scenario)
-  (let* ((steps (ecukes-scenario-steps scenario))
-         (success (ecukes-run-steps steps background-success)))
-    (if success
-        (ecukes-stats-scenario-pass)
-      (ecukes-stats-scenario-fail)))
-  (ecukes-print-newline))
+  (let (ecukes-print-buffer-output success)
+    (let* ((ecukes-print-buffer-output? t)
+           (steps (ecukes-scenario-steps scenario)))
+      (setq success (ecukes-run-steps steps background-success))
+      (if success
+          (ecukes-stats-scenario-pass)
+        (ecukes-stats-scenario-fail))
+      (ecukes-print-newline))
+    (let ((successful-collapse (and success ecukes-hide-steps-for-successful-scenarios)))
+      (ecukes-print-scenario-header scenario successful-collapse)
+      (unless successful-collapse
+        (ecukes-print-buffered-output)))))
 
 (defun ecukes-run-steps (steps success)
   "Run and print STEPS and return `t' if all was successful, `nil' otherwise."
