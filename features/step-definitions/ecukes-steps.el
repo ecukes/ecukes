@@ -68,3 +68,7 @@
     (setq ecukes-project-path (f-expand name ecukes-projects-path))
     (unless (f-dir? ecukes-project-path)
       (f-mkdir ecukes-project-path))))
+
+(Then "^the file \"\\([^\"]+\\)\" should contain:$"
+  (lambda (file content)
+    (ecukes-should-match content (f-read (f-expand file ecukes-project-path)))))

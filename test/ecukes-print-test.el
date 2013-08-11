@@ -34,33 +34,6 @@
     :times 1)
    (ecukes-print-missing-steps-header)))
 
-(ert-deftest print-step-string-no-args ()
-  "Should print step when no args."
-  (with-steps
-   (Given "^a state$" 'ignore)
-   (let ((step (mock-step "Given a state"))
-         (expected
-          (ansi-yellow "(Given \"^a state$\"\n       (lambda ()\n\n         ))")))
-     (should (equal (ecukes-print-step-string step) expected)))))
-
-(ert-deftest print-step-string-single-arg ()
-  "Should print step when single arg."
-  (with-steps
-   (Given "^state \"\\(known\\)\"$" 'ignore)
-   (let ((step (mock-step "Given state \"known\""))
-         (expected
-          (ansi-yellow "(Given \"^state \\\"\\\\([^\\\"]+\\\\)\\\"$\"\n       (lambda (arg)\n\n         ))")))
-     (should (equal (ecukes-print-step-string step) expected)))))
-
-(ert-deftest print-step-string-multiple-args ()
-  "Should print step when multiple args."
-  (with-steps
-   (Given "^state \"\\(known\\)\" and \"\\(unknown\\)\"$" 'ignore)
-   (let ((step (mock-step "Given state \"known\" and \"unknown\""))
-         (expected
-          (ansi-yellow "(Given \"^state \\\"\\\\([^\\\"]+\\\\)\\\" and \\\"\\\\([^\\\"]+\\\\)\\\"$\"\n       (lambda (arg-1 arg-2)\n\n         ))")))
-     (should (equal (ecukes-print-step-string step) expected)))))
-
 (ert-deftest print-step-args-no-args ()
   "Should be empty when no step args."
   (with-steps
