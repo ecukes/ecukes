@@ -30,8 +30,8 @@ clean: clean-elc
 clean-elc:
 	rm -rf *.elc test/*.elc
 
-ecukes: features/super-project/.cask
+ecukes: features/projects/super-project/.cask
 	cask exec ecukes --script --dbg --tags ~@exclude
 
-features/super-project/.cask:
-	cd features/super-project && cask
+features/projects/super-project/.cask:
+	cd features/projects/super-project && cask

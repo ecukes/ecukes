@@ -9,8 +9,11 @@
 (defvar ecukes-root-path
   (f-parent ecukes-features-path))
 
+(defvar ecukes-projects-path
+  (f-expand "projects" ecukes-features-path))
+
 (defvar ecukes-project-path
-  (f-expand "super-project" ecukes-features-path))
+  (f-expand "super-project" ecukes-projects-path))
 
 (defvar ecukes-project-features-path
   (f-expand "features" ecukes-project-path))
