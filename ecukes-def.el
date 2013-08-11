@@ -1,5 +1,6 @@
 ;;; ecukes-def.el --- Data structure definitions
 
+(require 's)
 (eval-when-compile (require 'cl))
 
 (defstruct ecukes-feature
@@ -37,8 +38,7 @@ File name is converted to \".el\" if it exists, otherwise
 \".elc\" file may be returned.  When the second argument RELATIVE
 is given, return relative path."
   (let* ((file (ecukes-step-def-file step))
-         (el (when file
-               (replace-regexp-in-string "\\.elc\\'" ".el" file))))
+         (el (when file (s-replace ".elc" ".el" file))))
     (when (and el (file-exists-p el))
       (setq file el))
     (if (and file relative)
