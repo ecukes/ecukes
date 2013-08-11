@@ -34,7 +34,7 @@
 (ert-deftest new-should-create-root ()
   "Should create features directory."
   (with-mock
-   (with-project
+   (with-new-project
     (mock (make-directory "/path/to/project/features") :times 1)
     (mock (ecukes-new-message) :times 1)
     (ecukes-new-create-root))))
@@ -42,7 +42,7 @@
 (ert-deftest new-should-create-step-definitions ()
   "Should create step definitions directory and step definition."
   (with-mock
-   (with-project
+   (with-new-project
     (mock (make-directory "/path/to/project/features/step-definitions") :times 1)
     (mock (ecukes-template-write) :times 1)
     (mock (ecukes-new-message) :times 2)
@@ -51,7 +51,7 @@
 (ert-deftest new-should-create-support ()
   "Should create support directory with env file."
   (with-mock
-   (with-project
+   (with-new-project
     (mock (make-directory "/path/to/project/features/support") :times 1)
     (mock (ecukes-template-write "/path/to/project/features/support/env.el") :times 1)
     (mock (ecukes-new-message) :times 2)
@@ -60,7 +60,7 @@
 (ert-deftest new-should-create-feature ()
   "Should create feature file."
   (with-mock
-   (with-project
+   (with-new-project
     (mock (ecukes-template-write "/path/to/project/features/project.feature") :times 1)
     (mock (ecukes-new-message) :times 1)
     (ecukes-new-create-feature))))

@@ -91,6 +91,11 @@
     (stub ecukes-project-path => "/path/to/project")
     ,@body))
 
+(defmacro with-new-project (&rest body)
+  `(let ((ecukes-new-features-path "/path/to/project/features")
+         (ecukes-new-project-name "project"))
+     ,@body))
+
 (defun fixture-file-path (category name)
   (let ((category-path (expand-file-name category ecukes-test/fixtures-path)))
     (expand-file-name (format "%s.feature" name) category-path)))
