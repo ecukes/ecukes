@@ -24,7 +24,8 @@
             (unless (equal command "")
               (s-split " " command)))
            (args (if (or (equal command "-h")
-                         (equal command "--help"))
+                         (equal command "--help")
+                         (equal command "--new"))
                      args
                    (cons "--script" args)))
            (exit-code
@@ -53,3 +54,17 @@
 (Given "^step definition:$"
   (lambda (code)
     (f-write (f-expand "super-project-steps.el" ecukes-project-step-definitions-path) code)))
+
+(Given "^these files should exist:$"
+  (lambda (table)
+    (let ((files (cdr table)))
+      (-each
+       files
+       (lambda (file)
+         (should (f-exists? (f-expand (car file) ecukes-project-path))))))))
+
+(When "^I visit project \"\\([^\"]+\\)\"$"
+  (lambda (name)
+    (setq ecukes-project-path (f-expand name ecukes-projects-path))
+    (unless (f-dir? ecukes-project-path)
+      (f-mkdir ecukes-project-path))))

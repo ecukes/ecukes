@@ -3,8 +3,13 @@
 (require 's)
 (require 'dash)
 (require 'ansi)
-(require 'ecukes-project)
 (require 'ecukes-template)
+
+(defvar ecukes-new-features-path
+  (expand-file-name "features" default-directory))
+
+(defvar ecukes-new-project-name
+  (file-name-nondirectory (directory-file-name default-directory)))
 
 (defun ecukes-new ()
   "Create new Ecukes setup for project."
@@ -18,39 +23,39 @@
 
 (defun ecukes-new-create-root ()
   "Create features directory."
-  (make-directory (ecukes-project-features-path))
+  (make-directory ecukes-new-features-path)
   (ecukes-new-message 0 "features"))
 
 (defun ecukes-new-create-step-definitions ()
   "Create step-definitions directory and step definition."
-  (let ((step-definitions-path (expand-file-name "step-definitions" (ecukes-project-features-path))))
+  (let ((step-definitions-path (expand-file-name "step-definitions" ecukes-new-features-path)))
     (make-directory step-definitions-path)
     (ecukes-new-message 2 "step-definition")
     (let ((step-definition
-           (expand-file-name (format "%s-steps.el" (ecukes-project-name)) step-definitions-path)))
-      (ecukes-template-write step-definition 'step-definition)))
-  (ecukes-new-message 4 (ecukes-project-name) "-steps.el"))
+           (expand-file-name (format "%s-steps.el" ecukes-new-project-name) step-definitions-path)))
+      (ecukes-template-write step-definition 'step-definition))
+    (ecukes-new-message 4 ecukes-new-project-name "-steps.el")))
 
 (defun ecukes-new-create-support ()
   "Create support directory."
-  (let ((support (expand-file-name "support" (ecukes-project-features-path))))
+  (let ((support (expand-file-name "support" ecukes-new-features-path)))
     (make-directory support)
     (ecukes-new-message 2 "support")
     (let ((env (expand-file-name "env.el" support)))
-      (ecukes-template-write env 'env `(("project-name" . ,(ecukes-project-name))))))
+      (ecukes-template-write env 'env `(("project-name" . ,ecukes-new-project-name)))))
   (ecukes-new-message 4 "env.el"))
 
 (defun ecukes-new-create-feature ()
   "Create feature file."
   (let ((feature
          (expand-file-name
-          (format "%s.feature" (ecukes-project-name)) (ecukes-project-features-path))))
+          (format "%s.feature" ecukes-new-project-name) ecukes-new-features-path)))
     (ecukes-template-write feature 'feature))
-  (ecukes-new-message 2 (format "%s.feature" (ecukes-project-name))))
+  (ecukes-new-message 2 (format "%s.feature" ecukes-new-project-name)))
 
 (defun ecukes-new-exists-p ()
   "Check if there already exist an Ecukes setup."
-  (file-directory-p (ecukes-project-features-path)))
+  (file-directory-p ecukes-new-features-path))
 
 (defun ecukes-new-message (indent &rest objects)
   "Print message about created file."
