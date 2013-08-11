@@ -1,4 +1,4 @@
-.PHONY : all test quick-test clean clean-elc
+.PHONY : all test quick-test clean clean-elc ecukes
 
 EMACS ?= emacs
 SRC = $(filter-out %-pkg.el, $(wildcard *.el))
@@ -29,3 +29,9 @@ clean: clean-elc
 
 clean-elc:
 	rm -rf *.elc test/*.elc
+
+ecukes: features/super-project/.cask
+	cask exec ecukes --script --dbg
+
+features/super-project/.cask:
+	cd features/super-project && cask
