@@ -10,9 +10,6 @@
 (defvar ecukes-test/root-path
   (f-parent ecukes-test/test-path))
 
-(defvar ecukes-test/root-path
-  (f-parent ecukes-test/test-path))
-
 (defvar ecukes-test/fixtures-path
   (f-expand "fixtures" ecukes-test/test-path))
 
