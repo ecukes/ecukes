@@ -9,6 +9,9 @@
 (defvar ecukes-root-path
   (f-parent ecukes-features-path))
 
+(defvar ecukes-vendor-path
+  (f-expand "vendor" ecukes-root-path))
+
 (defvar ecukes-projects-path)
 
 (defvar ecukes-project-path)
@@ -26,7 +29,8 @@
 (add-to-list 'load-path ecukes-root-path)
 
 (require 'espuds)
-(require 'ert)
+(unless (require 'ert nil 'noerror)
+  (require 'ert (f-expand "ert" ecukes-vendor-path)))
 (require 's)
 (require 'ansi)
 (require 'ansi-color)
