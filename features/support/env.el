@@ -12,6 +12,9 @@
 (defvar ecukes-project-path
   (f-expand "super-project" ecukes-features-path))
 
+(defvar ecukes-project-features-path
+  (f-expand "features" ecukes-project-path))
+
 (defvar ecukes-bin-path
   (f-expand "bin" ecukes-root-path))
 
@@ -24,6 +27,7 @@
 (require 'ert)
 (require 's)
 (require 'ansi)
+(require 'ansi-color)
 
 (Fail
  (unless (s-blank? ecukes-stdout)
