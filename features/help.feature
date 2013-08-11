@@ -4,7 +4,7 @@ Feature: Help
     When I run ecukes "<argument>"
     Then I should see command output:
       """
-      Usage: ecukes
+      USAGE: ecukes
       """
 
     Examples:
