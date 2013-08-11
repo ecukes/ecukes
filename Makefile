@@ -1,4 +1,4 @@
-.PHONY : all test quick-test clean clean-elc
+.PHONY : all test quick-test clean clean-elc ecukes
 
 EMACS ?= emacs
 SRC = $(filter-out %-pkg.el, $(wildcard *.el))
@@ -6,7 +6,7 @@ ELC = $(SRC:.el=.elc)
 CASK ?= cask
 PKG_DIR := $(shell ${CASK} package-directory)
 
-all: test
+all: test ecukes
 
 test: clean-elc
 	$(MAKE) quick-test
@@ -29,3 +29,9 @@ clean: clean-elc
 
 clean-elc:
 	rm -rf *.elc test/*.elc
+
+ecukes: features/projects/super-project/.cask
+	cask exec ecukes --script --dbg --tags ~@exclude
+
+features/projects/super-project/.cask:
+	cd features/projects/super-project && cask

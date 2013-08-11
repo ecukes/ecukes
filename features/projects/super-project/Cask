@@ -1,0 +1,7 @@
+(source melpa)
+
+(package "super-project" "0.0.1" "...")
+
+(development
+ (depends-on "ecukes")
+ (depends-on "espuds"))
