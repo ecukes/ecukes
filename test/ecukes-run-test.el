@@ -2,6 +2,9 @@
 (require 'ecukes-hooks)
 (require 'ecukes-stats)
 
+(setq ecukes-include-tags nil)
+(setq ecukes-exclude-tags nil)
+
 (ert-deftest run-features-should-run-setup-hooks ()
   "Should run setup hooks."
   (with-mock
