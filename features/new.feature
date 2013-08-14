@@ -2,7 +2,7 @@ Feature: New
 
   Scenario: Non existing
     When I visit project "new"
-    And I run ecukes "--new"
+    And I run ecukes "new"
     Then I should see command output:
       """
       create features
@@ -103,8 +103,8 @@ Feature: New
 
   Scenario: Already exists
     When I visit project "new"
-    And I run ecukes "--new"
-    And I run ecukes "--new"
+    And I run ecukes "new"
+    And I run ecukes "new"
     Then I should see command error:
       """
       Ecukes already exists for this project

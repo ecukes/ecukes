@@ -11,7 +11,7 @@
     (unless (s-contains? needle haystack)
       (should (s-contains? orig-needle orig-haystack)))))
 
-(When "^I run ecukes \"\\([^\"]+\\)\"$"
+(When "^I run ecukes \"\\([^\"]*\\)\"$"
   (lambda (command)
     (let* ((buffer-name "*ecukes-output*")
            (buffer
