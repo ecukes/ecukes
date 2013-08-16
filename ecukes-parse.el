@@ -191,9 +191,12 @@
         (add-to-list 'steps step t 'eq)))
     steps))
 
+(defun ecukes-unescape (string)
+  (s-replace "\\\"" "\"" string))
+
 (defun ecukes-parse-step ()
   "Parse step."
-  (let* ((name (ecukes-parse-line t))
+  (let* ((name (ecukes-unescape (ecukes-parse-line t)))
          (matches (s-match ecukes-parse-step-re name))
          (head (nth 1 matches))
          (body (nth 2 matches))
@@ -201,7 +204,7 @@
          (type))
     (cond
      ((ecukes-parse-py-string-step-p)
-      (setq arg (ecukes-parse-py-string-step))
+      (setq arg (ecukes-unescape (ecukes-parse-py-string-step)))
       (setq type 'py-string))
      ((ecukes-parse-table-step-p)
       (setq arg (ecukes-parse-table-step))

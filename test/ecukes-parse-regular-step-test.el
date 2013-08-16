@@ -44,3 +44,12 @@
      (should (eq type 'regular))
      (should (eq type 'regular))
      (should (equal name "But observe outcomes")))))
+
+(ert-deftest parse-regular-step-with-string ()
+  "Should parse but step."
+  (with-parse-step
+   "with-string"
+   (lambda (name head body type arg)
+     (should (eq type 'regular))
+     (should (equal name "Given I have \"a \"neat\"\" attitude"))
+     (should (equal body "I have \"a \"neat\"\" attitude")))))
