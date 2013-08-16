@@ -47,3 +47,27 @@
    (lambda (name head body type arg)
      (should (eq type 'py-string))
      (should (equal arg "And this thing\nAnd this thing")))))
+
+(ert-deftest parse-py-string-in-py-string ()
+  "Should parse py string in py string."
+  (with-parse-step
+   "py-string-in-py-string"
+   (lambda (name head body type arg)
+     (should (eq type 'py-string))
+     (should (equal arg "Given that py string:\n  \"\"\"\n  Given this step\n  \"\"\"")))))
+
+(ert-deftest parse-py-string-with-string ()
+  "Should parse py string with string."
+  (with-parse-step
+   "py-string-with-string"
+   (lambda (name head body type arg)
+     (should (eq type 'py-string))
+     (should (equal arg "some \" string")))))
+
+(ert-deftest wip-parse-py-string-with-backslash ()
+  "Should parse py string with backslash."
+  (with-parse-step
+   "py-string-with-backslash"
+   (lambda (name head body type arg)
+     (should (eq type 'py-string))
+     (should (equal arg "some \\ string")))))
