@@ -1,6 +1,3 @@
-(defvar ecukes-stderr "")
-(defvar ecukes-stdout "")
-
 (defun ecukes-should-match (needle haystack)
   (let ((orig-needle needle)
         (orig-haystack haystack)
