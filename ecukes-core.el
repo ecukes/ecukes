@@ -45,6 +45,12 @@
       (f-write outfile (s-concat (s-join "\n" output) "\n"))))
   (kill-emacs exit-code))
 
+(defun ecukes-fail (format-string &rest objects)
+  "Print error message and quit."
+  (let ((ecukes-message t))
+    (message (apply 'ansi-red (cons format-string objects)))
+    (ecukes-quit 1)))
+
 (provide 'ecukes-core)
 
 ;;; ecukes-core.el ends here
