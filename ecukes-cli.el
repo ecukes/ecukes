@@ -21,6 +21,9 @@
 
 
 
+(eval-when-compile
+  (defvar debug-on-entry))
+
 (defvar ecukes-include-tags nil
   "Scenario tags to include.")
 
