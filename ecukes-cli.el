@@ -73,7 +73,11 @@
        (let ((path (f-expand arg (ecukes-project-path))))
          (if (f-dir? path)
              (-each
-              (f-glob "*.feature" path)
+              (f-files
+               path
+               (lambda (file)
+                 (s-matches? "\.feature$" file))
+               'recursive)
               (lambda (feature-file)
                 (!cons feature-file feature-files)))
            (!cons path feature-files)))))
