@@ -17,6 +17,7 @@
 (require 'ecukes-project)
 (require 'ecukes-run)
 (require 'ecukes-stats)
+(require 'ecukes-reporter)
 
 
 
@@ -82,6 +83,20 @@
 (defun ecukes-cli/new ()
   (ecukes-new))
 
+(defun ecukes-cli/reporter (reporter)
+  (setq ecukes-cli-reporter reporter))
+
+(defun ecukes-cli/list-reporters ()
+  (let ((ecukes-message t))
+    (princ " ")
+    (-each
+     ecukes-reporters
+     (lambda (reporter)
+       (let ((name (car reporter))
+             (description (cdr reporter)))
+         (message "  %s - %s" name description))))
+    (princ "\n")))
+
 
 
 (commander
@@ -105,6 +120,7 @@
  (option "--no-win" "Run Ecukes without GUI window" ignore)
  (option "--win" "Run Ecukes with full GUI window" ignore)
 
+ (command "list-reporters" "Show list of reporters" ecukes-cli/list-reporters)
  (command "new" "Create new Ecukes setup for project" ecukes-cli/new))
 
 

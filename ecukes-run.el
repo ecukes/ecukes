@@ -10,6 +10,9 @@
 (require 'ecukes-stats)
 (require 'ecukes-helpers)
 (require 'ecukes-hooks)
+(require 'ecukes-reporter)
+
+
 
 (defun ecukes-run (feature-files)
   "Parse and run FEATURE-FILES if no steps are missing."
