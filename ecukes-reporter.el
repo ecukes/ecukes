@@ -18,6 +18,26 @@
     (gangsta . "gangsta talk"))
   "List of available reporters, with description.")
 
+(defconst ecukes-reporters-path
+  (f-expand "reporters" ecukes-path)
+  "Path to reporters directory.")
+
+
+
+
+
+(defun ecukes-reporter-valid? (reporter)
+  "Return if REPORTER is valid or not."
+  (let ((reporters (--map (symbol-name (car it)) ecukes-reporters)))
+    (-contains? reporters reporter)))
+
+(defun ecukes-reporter-use (reporter)
+  "Use REPORTER."
+  (unless (ecukes-reporter-valid? reporter)
+    (ecukes-fail "Invalid reporter: %s" reporter))
+  (let ((full-reporter (format "ecukes-reporter-%s" reporter)))
+    (require (intern full-reporter)
+             (f-expand full-reporter ecukes-reporters-path))))
 
 
 (provide 'ecukes-reporter)

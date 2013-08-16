@@ -30,6 +30,9 @@
 (defvar ecukes-exclude-tags nil
   "Scenario tags to exclude.")
 
+(defvar ecukes-cli-reporter "spec"
+  "Default reporter.")
+
 (defvar ecukes-cli-with-doc nil
   "If the list-steps command show doc or not.")
 
@@ -66,6 +69,7 @@
 
 (defun ecukes-cli/run (&rest args)
   (ecukes-load)
+  (ecukes-reporter-use ecukes-cli-reporter)
   (let ((feature-files))
     (-each
      args
@@ -128,6 +132,8 @@
  (option "--win" "Run Ecukes with full GUI window" ignore)
 
  (command "list-reporters" "Show list of reporters" ecukes-cli/list-reporters)
+ (option "--reporter <reporter>" "Select reporter (default: spec)" ecukes-cli/reporter) ;; todo: which is default?
+
  (command "new" "Create new Ecukes setup for project" ecukes-cli/new))
 
 
