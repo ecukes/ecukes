@@ -100,7 +100,9 @@
  (option "--tags <tag-string>" ("Only execute the scenarios with tags matching TAG_EXPRESSION."
                                 "TAG_EXPRESSION Examples: --tags @dev, --tags @dev,~@local"
                                 "A tag starting with ~ excluded from the scenarios.") ecukes-cli/tags)
- (option "--script" "Run Ecukes as a script/batch job" ignore)
+
+ (option "--script" "Run Ecukes as a script/batch job (default)" ignore)
+ (option "--no-win" "Run Ecukes without GUI window" ignore)
  (option "--win" "Run Ecukes with full GUI window" ignore)
 
  (command "new" "Create new Ecukes setup for project" ecukes-cli/new))

@@ -23,11 +23,6 @@
            (args
             (unless (equal command "")
               (s-split " " command)))
-           (args (if (or (equal command "-h")
-                         (equal command "--help")
-                         (equal command "--new"))
-                     args
-                   (cons "--script" args)))
            (exit-code
             (apply
              'call-process
