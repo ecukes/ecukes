@@ -6,7 +6,6 @@
 
 (require 'ecukes-parse)
 (require 'ecukes-steps)
-(require 'ecukes-print)
 (require 'ecukes-stats)
 (require 'ecukes-helpers)
 (require 'ecukes-hooks)
