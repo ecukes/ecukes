@@ -31,18 +31,18 @@
 (defun ecukes-quit (&optional exit-code)
   "Quit Emacs with EXIT-CODE and write to file if in graphical mode."
   (or exit-code (setq exit-code 1))
-  (let ((outfile (getenv "ECUKES_OUTFILE"))
-        (output
-         (-each
-          ecukes-internal-message-log
-          (lambda (log)
-            (let ((type (car log))
-                  (message (cdr log)))
-              (if (eq type 'print)
-                  (prin1-to-string message)
-                message))))))
+  (let ((outfile (getenv "ECUKES_OUTFILE")))
     (when outfile
-      (f-write outfile (s-concat (s-join "\n" output) "\n"))))
+      (let ((output
+             (-each
+              ecukes-internal-message-log
+              (lambda (log)
+                (let ((type (car log))
+                      (message (cdr log)))
+                  (if (or (eq type 'print) (eq type 'princ))
+                      (prin1-to-string message)
+                    message))))))
+        (f-write outfile (s-concat (s-join "\n" output) "\n")))))
   (kill-emacs exit-code))
 
 (defun ecukes-fail (format-string &rest objects)
