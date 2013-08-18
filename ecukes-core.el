@@ -1,5 +1,7 @@
 ;;; ecukes-core.el --- Core functionality common to all Ecukes components
 
+(require 'dash)
+
 (defvar ecukes-message nil
   "If true message is internal Ecukes message, otherwise external.")
 
