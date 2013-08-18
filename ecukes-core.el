@@ -44,7 +44,7 @@
                   (if (or (eq type 'print) (eq type 'princ))
                       (prin1-to-string message)
                     message))))))
-        (f-write outfile (s-concat (s-join "\n" output) "\n")))))
+        (f-write-text 'utf-8 (s-concat (s-join "\n" output) "\n") outfile))))
   (kill-emacs exit-code))
 
 (defun ecukes-fail (format-string &rest objects)
