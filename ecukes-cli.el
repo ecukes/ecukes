@@ -138,7 +138,7 @@
  (option "--win" "Run Ecukes with full GUI window" ignore)
 
  (command "list-reporters" "Show list of reporters" ecukes-cli/list-reporters)
- (option "--reporter <reporter>" "Select reporter (default: spec)" ecukes-cli/reporter) ;; todo: which is default?
+ (option "--reporter <reporter>" "Select reporter (default: dot)" ecukes-cli/reporter)
 
  (option "--timeout <seconds>" "..." ecukes-cli/timeout)
 
