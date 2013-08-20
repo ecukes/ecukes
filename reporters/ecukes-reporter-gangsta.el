@@ -3,7 +3,10 @@
 ;; NOTE: Someone with more street cred than me should probably look
 ;; this over.
 
+(require 'ansi)
+
 (require 'ecukes-core)
+(require 'ecukes-reporter)
 
 
 ;;;; Variables

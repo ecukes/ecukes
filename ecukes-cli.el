@@ -5,10 +5,9 @@
 (require 'dash)
 (require 'commander)
 
-(defvar ecukes-root (f-dirname load-file-name)
-  "Path to Ecukes root.")
+(defvar ecukes-path (f-dirname (f-this-file)))
 
-(add-to-list 'load-path ecukes-root)
+(add-to-list 'load-path ecukes-path)
 
 (require 'ecukes-core)
 (require 'ecukes-load)

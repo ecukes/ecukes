@@ -3,6 +3,8 @@
 (require 'f)
 (require 's)
 (require 'dash)
+(require 'ansi)
+
 (require 'ecukes-project)
 (require 'ecukes-core)
 

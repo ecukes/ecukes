@@ -1,5 +1,7 @@
 ;;; ecukes-core.el --- Core functionality common to all Ecukes components
 
+(require 'f)
+(require 's)
 (require 'dash)
 
 (defvar ecukes-message nil

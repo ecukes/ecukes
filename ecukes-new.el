@@ -4,6 +4,7 @@
 (require 's)
 (require 'dash)
 (require 'ansi)
+
 (require 'ecukes-template)
 
 (defvar ecukes-new-features-path

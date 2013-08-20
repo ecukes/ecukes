@@ -3,8 +3,12 @@
 (require 'f)
 (require 's)
 (require 'dash)
+(require 'ansi)
 
 (require 'ecukes-core)
+(require 'ecukes-def)
+(require 'ecukes-steps)
+(require 'ecukes-template)
 
 
 ;;;; Variables and constants
@@ -311,7 +315,36 @@ The rest of the arguments will be applied to `format'."
 
 ;;;; Missing steps
 
+(defun ecukes-reporter-print-missing-steps (steps)
+  "Print missing steps"
+  (ecukes-reporter-println
+   (ansi-yellow "Please implement the following step definitions"))
+  (ecukes-reporter-print-newline)
+  (let (step-bodies)
+    (-each
+     steps
+     (lambda (step)
+       (let ((step-body (ecukes-reporter--step-body step))
+             (step-string (ecukes-reporter--step-string step)))
+         (unless
+             (--any? (equal step-body it) step-bodies)
+           (add-to-list 'step-bodies step-body)
+           (ecukes-reporter-println step-string)))))))
+
+(defun ecukes-reporter--step-string (step)
+  "Return missing step string."
+  (let ((head (ecukes-step-head step))
+        (body (ecukes-reporter--step-body step))
+        (args (ecukes-reporter--step-args step)))
+    (ansi-yellow
+     (ecukes-template-get
+      'missing-step
+      `(("head" . ,head)
+        ("body" . ,body)
+        ("args" . ,args))))))
+
 (defun ecukes-reporter--step-args (step)
+  "Return args from STEP."
   (let* ((result)
          (arg (ecukes-step-arg step))
          (args (ecukes-steps-args step))
@@ -332,6 +365,7 @@ The rest of the arguments will be applied to `format'."
         (s-join " " result)))))
 
 (defun ecukes-reporter--step-body (step)
+  "Return body from STEP."
   (let* ((body (ecukes-step-body step))
          (args (ecukes-steps-args step))
          (result body))
@@ -342,20 +376,6 @@ The rest of the arguments will be applied to `format'."
          (setq result (s-replace (s-concat "\"" arg "\"") "\\\"\\\\([^\\\"]+\\\\)\\\"" result)))))
     result))
 
-(defun ecukes-reporter-print-missing-steps (steps)
-  "Print missing steps."
-  (ecukes-reporter-println
-   (ansi-yellow "Some steps does not have a matching definition. Please implement the following step definitions:"))
-  (ecukes-reporter-print-newline)
-  (let (step-bodies)
-    (-each
-     steps
-     (lambda (step)
-       (let ((step-body (ecukes-reporter--step-body step))
-             (step-string (ecukes-print-step-string step)))
-         (unless (--any? (equal step-body it) step-bodies)
-           (!cons 'step-bodies step-body)
-           (ecukes-reporter-println step-string)))))))
 
 (add-hook 'ecukes-reporter-steps-without-definition-hook
           (lambda (steps)
