@@ -70,7 +70,9 @@
           (background-should-run (not background)))
       (when background
         (ecukes-hooks-run-before)
-        (setq background-success (ecukes-run-background background)))
+        (run-hooks 'ecukes-reporter-before-background-hook)
+        (setq background-success (ecukes-run-background background))
+        (run-hooks 'ecukes-reporter-after-background-hook))
       (-each
        scenarios
        (lambda (scenario)

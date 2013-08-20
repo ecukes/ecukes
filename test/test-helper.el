@@ -127,5 +127,7 @@
          ecukes-reporter-after-step-failed-hook
          ecukes-reporter-after-step-skipped-hook
          ecukes-reporter-after-step-hook
-         ecukes-reporter-steps-without-definition-hook)
+         ecukes-reporter-steps-without-definition-hook
+         ecukes-reporter-before-background-hook
+         ecukes-reporter-after-background-hook)
      ,@body))

@@ -117,7 +117,12 @@ The stats alist contains these slots:
 (defvar ecukes-reporter-after-step-hook nil
   "Called after step, with step as argument.")
 
-;; todo: print missing steps ffs
+(defvar ecukes-reporter-before-background-hook nil
+  "Called before backgrund runs.")
+
+(defvar ecukes-reporter-after-background-hook nil
+  "Called after backgrund runs.")
+
 (defvar ecukes-reporter-steps-without-definition-hook nil
   "...")
 
@@ -204,7 +209,8 @@ The rest of the arguments will be applied to `format'."
   "Print summary of STATS."
   (ecukes-reporter-print-scenarios-summary stats)
   (ecukes-reporter-print-newline)
-  (ecukes-reporter-print-steps-summary stats))
+  (ecukes-reporter-print-steps-summary stats)
+  (ecukes-reporter-print-newline))
 
 (defun ecukes-reporter-print-feature-header (feature)
   "Print FEATURE and description if any."
@@ -212,10 +218,10 @@ The rest of the arguments will be applied to `format'."
          (header (ecukes-intro-header intro))
          (description (ecukes-intro-description intro))
          (scenarios (ecukes-feature-scenarios feature)))
-    (ecukes-reporter-print "Feature: %s" header)
-    (when (or scenarios description)
-      (ecukes-reporter-print-newline))
-    (--each description (ecukes-reporter-println 2 it))))
+    (ecukes-reporter-println "Feature: %s" header)
+    (--each description (ecukes-reporter-println 2 it))
+    (when description
+      (ecukes-reporter-print-newline))))
 
 (defun ecukes-reporter-print-scenario-header (scenario)
   "Print SCENARIO header."
@@ -291,6 +297,10 @@ The rest of the arguments will be applied to `format'."
          (ecukes-reporter-print-newline)
          (ecukes-reporter-print-scenario-header scenario)
          (-each steps 'ecukes-reporter-print-step))))))
+
+(defun ecukes-reporter-print-background-header ()
+  "Print background header."
+  (ecukes-reporter-println 2 "Background:"))
 
 ;; TODO: Maybe add hooks for these?
 ;;

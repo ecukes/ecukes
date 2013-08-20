@@ -251,6 +251,26 @@
       (should scenario-1-in-hook)
       (should scenario-2-in-hook)))))
 
+(ert-deftest ecukes-run-test/run-feature-before-background-hook ()
+  (with-mock
+   (with-reporter-hooks
+    (let* (hook-has-run (feature (make-ecukes-feature :background (make-ecukes-background))))
+      (add-hook 'ecukes-reporter-before-background-hook
+                (lambda ()
+                  (setq hook-has-run t)))
+      (ecukes-run-feature feature)
+      (should hook-has-run)))))
+
+(ert-deftest ecukes-run-test/run-feature-after-background-hook ()
+  (with-mock
+   (with-reporter-hooks
+    (let* (hook-has-run (feature (make-ecukes-feature :background (make-ecukes-background))))
+      (add-hook 'ecukes-reporter-after-background-hook
+                (lambda ()
+                  (setq hook-has-run t)))
+      (ecukes-run-feature feature)
+      (should hook-has-run)))))
+
 (ert-deftest ecukes-run-test/run-feature-before-hooks ()
   (with-mock
    (mock (ecukes-hooks-run-before) :times 1)
