@@ -25,7 +25,7 @@ compile: $(ELC)
 	cask exec $(EMACS) -Q -batch -L . -f batch-byte-compile $<
 
 clean: clean-elc
-	rm -rf elpa
+	rm -rf ${PKG_DIR}
 
 clean-elc:
 	rm -rf *.elc test/*.elc reporters/*.elc
