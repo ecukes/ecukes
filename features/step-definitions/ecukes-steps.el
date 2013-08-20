@@ -35,12 +35,12 @@
 (Given "^feature \"\\([^\"]+\\)\":$"
   (lambda (name content)
     (let ((path (f-expand (s-concat name ".feature") ecukes-project-features-path)))
-      (f-write path (s-concat content "\n")))))
+      (f-write-text (s-concat content "\n") 'utf-8 path))))
 
 (Given "^step definition:$"
   (lambda (code)
     (let ((path (f-expand "super-project-steps.el" ecukes-project-step-definitions-path)))
-      (f-write path (s-concat code "\n")))))
+      (f-write-text (s-concat code "\n") 'utf-8 path))))
 
 (Given "^these files should exist:$"
   (lambda (table)
