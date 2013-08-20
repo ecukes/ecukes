@@ -59,3 +59,10 @@
 (Then "^the file \"\\([^\"]+\\)\" should contain:$"
   (lambda (file content)
     (ecukes-should-match content (f-read (f-expand file ecukes-project-path)))))
+
+(Then "^I should see list of reporters:$"
+  (lambda ()
+    (-each
+     '("dot" "spec" "landing" "nyan" "progress" "magnars" "gangsta")
+     (lambda (reporter)
+       (Then "I should see command output:" (s-concat reporter " - "))))))
