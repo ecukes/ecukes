@@ -100,3 +100,34 @@
 (defun fixture-file-path (category name)
   (let ((category-path (f-expand category ecukes-test/fixtures-path)))
     (f-expand (format "%s.feature" name) category-path)))
+
+(defmacro with-reporter-hooks (&rest body)
+  `(let (ecukes-reporter-start-hook
+         ecukes-reporter-end-hook
+         ecukes-reporter-before-first-feature-hook
+         ecukes-reporter-before-last-feature-hook
+         ecukes-reporter-before-feature-hook
+         ecukes-reporter-after-first-feature-hook
+         ecukes-reporter-after-last-feature-hook
+         ecukes-reporter-after-feature-hook
+         ecukes-reporter-before-first-scenario-hook
+         ecukes-reporter-before-last-scenario-hook
+         ecukes-reporter-before-scenario-hook
+         ecukes-reporter-after-first-scenario-hook
+         ecukes-reporter-after-scenario-hook
+         ecukes-reporter-scenario-passed-hook
+         ecukes-reporter-scenario-failed-hook
+         ecukes-reporter-before-first-step-hook
+         ecukes-reporter-before-last-step-hook
+         ecukes-reporter-before-step-hook
+         ecukes-reporter-after-first-step-hook
+         ecukes-reporter-after-last-step-hook
+         ecukes-reporter-after-step-hook
+         ecukes-reporter-after-step-success-hook
+         ecukes-reporter-after-step-failed-hook
+         ecukes-reporter-after-step-skipped-hook
+         ecukes-reporter-after-step-hook
+         ecukes-reporter-steps-without-definition-hook
+         ecukes-reporter-before-background-hook
+         ecukes-reporter-after-background-hook)
+     ,@body))

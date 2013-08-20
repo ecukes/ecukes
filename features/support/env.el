@@ -26,6 +26,9 @@
 (defvar ecukes-executable
   (f-expand "ecukes" ecukes-bin-path))
 
+(defvar ecukes-stderr)
+(defvar ecukes-stdout)
+
 (add-to-list 'load-path ecukes-root-path)
 
 (require 'espuds)
@@ -44,6 +47,9 @@
    (princ (ansi-red "%s" ecukes-stderr))))
 
 (Before
+ (setq ecukes-stderr "")
+ (setq ecukes-stdout "")
+
  (setq ecukes-projects-path (f-expand "projects" ecukes-features-path))
  (setq ecukes-project-path (f-expand "super-project" ecukes-projects-path))
  (setq ecukes-project-features-path (f-expand "features" ecukes-project-path))

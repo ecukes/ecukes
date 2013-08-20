@@ -23,5 +23,6 @@
 (setq debug-on-error t)
 (setq ecukes-include-tags nil)
 (setq ecukes-verbose t)
+(setq ecukes-path ecukes-test/root-path)
 
 (add-to-list 'load-path ecukes-test/root-path)

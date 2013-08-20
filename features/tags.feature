@@ -4,16 +4,14 @@ Feature: Tags
     Given feature "foo":
       """
       Feature: Foo
-
         @wip
         Scenario: Bar
         Scenario: Baz
       """
-    When I run ecukes "features/foo.feature --tags @wip"
+    When I run ecukes "features/foo.feature --tags @wip --reporter spec"
     Then I should see command output:
       """
       Feature: Foo
-
 
         @wip
         Scenario: Bar
@@ -26,16 +24,14 @@ Feature: Tags
     Given feature "foo":
       """
       Feature: Foo
-
         @wip
         Scenario: Bar
         Scenario: Baz
       """
-    When I run ecukes "features/foo.feature --tags ~@wip"
+    When I run ecukes "features/foo.feature --tags ~@wip --reporter spec"
     Then I should see command output:
       """
       Feature: Foo
-
 
         Scenario: Baz
 
@@ -47,17 +43,15 @@ Feature: Tags
     Given feature "foo":
       """
       Feature: Foo
-
         @wip
         Scenario: Bar
         @tmp
         Scenario: Baz
       """
-    When I run ecukes "features/foo.feature --tags @wip,~@tmp"
+    When I run ecukes "features/foo.feature --tags @wip,~@tmp --reporter spec"
     Then I should see command output:
       """
       Feature: Foo
-
 
         @wip
         Scenario: Bar

@@ -17,8 +17,12 @@
 (require 'ecukes-project)
 (require 'ecukes-run)
 (require 'ecukes-stats)
+(require 'ecukes-reporter)
 
 
+
+(eval-when-compile
+  (defvar debug-on-entry))
 
 (defvar ecukes-include-tags nil
   "Scenario tags to include.")
@@ -26,11 +30,17 @@
 (defvar ecukes-exclude-tags nil
   "Scenario tags to exclude.")
 
+(defvar ecukes-cli-reporter "spec"
+  "Default reporter.")
+
 (defvar ecukes-cli-with-doc nil
   "If the list-steps command show doc or not.")
 
 (defvar ecukes-cli-with-file nil
   "If the list-steps command show definition file or not.")
+
+(defvar ecukes-async-timeout 10
+  "Timeout for async step definitions.")
 
 
 
@@ -62,6 +72,7 @@
 
 (defun ecukes-cli/run (&rest args)
   (ecukes-load)
+  (ecukes-reporter-use ecukes-cli-reporter)
   (let ((feature-files))
     (-each
      args
@@ -69,7 +80,11 @@
        (let ((path (f-expand arg (ecukes-project-path))))
          (if (f-dir? path)
              (-each
-              (f-glob "*.feature" path)
+              (f-files
+               path
+               (lambda (file)
+                 (s-matches? "\.feature$" file))
+               'recursive)
               (lambda (feature-file)
                 (!cons feature-file feature-files)))
            (!cons path feature-files)))))
@@ -81,6 +96,23 @@
 
 (defun ecukes-cli/new ()
   (ecukes-new))
+
+(defun ecukes-cli/reporter (reporter)
+  (setq ecukes-cli-reporter reporter))
+
+(defun ecukes-cli/list-reporters ()
+  (let ((ecukes-message t))
+    (princ " ")
+    (-each
+     ecukes-reporters
+     (lambda (reporter)
+       (let ((name (car reporter))
+             (description (cdr reporter)))
+         (message "  %s - %s" name description))))
+    (princ "\n")))
+
+(defun ecukes-cli/timeout (timeout)
+  (setq ecukes-async-timeout (string-to-number timeout)))
 
 
 
@@ -100,8 +132,15 @@
  (option "--tags <tag-string>" ("Only execute the scenarios with tags matching TAG_EXPRESSION."
                                 "TAG_EXPRESSION Examples: --tags @dev, --tags @dev,~@local"
                                 "A tag starting with ~ excluded from the scenarios.") ecukes-cli/tags)
- (option "--script" "Run Ecukes as a script/batch job" ignore)
+
+ (option "--script" "Run Ecukes as a script/batch job (default)" ignore)
+ (option "--no-win" "Run Ecukes without GUI window" ignore)
  (option "--win" "Run Ecukes with full GUI window" ignore)
+
+ (command "list-reporters" "Show list of reporters" ecukes-cli/list-reporters)
+ (option "--reporter <reporter>" "Select reporter (default: dot)" ecukes-cli/reporter)
+
+ (option "--timeout <seconds>" "..." ecukes-cli/timeout)
 
  (command "new" "Create new Ecukes setup for project" ecukes-cli/new))
 

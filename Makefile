@@ -13,7 +13,7 @@ test: clean-elc
 	$(MAKE) compile
 
 quick-test: elpa
-	cask exec ert-runner run -l test/ecukes-test.el
+	cask exec ert-runner -l test/ecukes-test.el
 
 elpa: ${PKG_DIR}
 ${PKG_DIR}: Cask
@@ -31,7 +31,8 @@ clean-elc:
 	rm -rf *.elc test/*.elc
 
 ecukes: features/projects/super-project/.cask
-	cask exec ecukes --script --dbg --tags ~@exclude
+	cask exec ecukes --script features --dbg --tags ~@exclude
+	cask exec ecukes --script features/reporters/* --dbg --tags ~@exclude
 
 features/projects/super-project/.cask:
 	cd features/projects/super-project && cask

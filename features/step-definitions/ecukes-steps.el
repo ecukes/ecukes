@@ -1,15 +1,5 @@
-(defvar ecukes-stderr "")
-(defvar ecukes-stdout "")
-
 (defun ecukes-should-match (needle haystack)
-  (let ((orig-needle needle)
-        (orig-haystack haystack)
-        (needle (s-replace "\n" "" needle))
-        (needle (s-replace " " "" needle))
-        (haystack (s-replace "\n" "" haystack))
-        (haystack (s-replace " " "" haystack)))
-    (unless (s-contains? needle haystack)
-      (should (s-contains? orig-needle orig-haystack)))))
+  (should (s-contains? needle haystack)))
 
 (When "^I run ecukes \"\\([^\"]*\\)\"$"
   (lambda (command)
@@ -23,11 +13,6 @@
            (args
             (unless (equal command "")
               (s-split " " command)))
-           (args (if (or (equal command "-h")
-                         (equal command "--help")
-                         (equal command "--new"))
-                     args
-                   (cons "--script" args)))
            (exit-code
             (apply
              'call-process
@@ -49,11 +34,13 @@
 
 (Given "^feature \"\\([^\"]+\\)\":$"
   (lambda (name content)
-    (f-write (f-expand (s-concat name ".feature") ecukes-project-features-path) content)))
+    (let ((path (f-expand (s-concat name ".feature") ecukes-project-features-path)))
+      (f-write-text (s-concat content "\n") 'utf-8 path))))
 
 (Given "^step definition:$"
   (lambda (code)
-    (f-write (f-expand "super-project-steps.el" ecukes-project-step-definitions-path) code)))
+    (let ((path (f-expand "super-project-steps.el" ecukes-project-step-definitions-path)))
+      (f-write-text (s-concat code "\n") 'utf-8 path))))
 
 (Given "^these files should exist:$"
   (lambda (table)
@@ -72,3 +59,10 @@
 (Then "^the file \"\\([^\"]+\\)\" should contain:$"
   (lambda (file content)
     (ecukes-should-match content (f-read (f-expand file ecukes-project-path)))))
+
+(Then "^I should see list of reporters:$"
+  (lambda ()
+    (-each
+     '("dot" "spec" "landing" "nyan" "progress" "magnars" "gangsta")
+     (lambda (reporter)
+       (Then "I should see command output:" (s-concat reporter " - "))))))

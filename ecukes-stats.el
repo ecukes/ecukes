@@ -44,7 +44,6 @@
      (setq ecukes-stats-scenarios (1+ ecukes-stats-scenarios))
      ,@body))
 
-
 (defun ecukes-stats-step-pass ()
   "Step passed."
   (ecukes-stats-step
@@ -69,36 +68,6 @@
   "Scenario failed."
   (ecukes-stats-scenario
    (setq ecukes-stats-scenarios-failed (1+ ecukes-stats-scenarios-failed))))
-
-(defun ecukes-stats-step-summary ()
-  "Return step summary as a string."
-  (if (zerop ecukes-stats-steps)
-      "0 steps"
-    (format
-     "%d steps (%s, %s, %s)"
-     ecukes-stats-steps
-     (ansi-red "%d failed" ecukes-stats-steps-failed)
-     (ansi-cyan "%d skipped" ecukes-stats-steps-skipped)
-     (ansi-green "%d passed" ecukes-stats-steps-passed))))
-
-(defun ecukes-stats-scenario-summary ()
-  "Return scenario summary as a string."
-  (if (zerop ecukes-stats-scenarios)
-      "0 scenarios"
-    (format
-     "%d scenarios (%s, %s)"
-     ecukes-stats-scenarios
-     (ansi-red "%d failed" ecukes-stats-scenarios-failed)
-     (ansi-green "%d passed" ecukes-stats-scenarios-passed))))
-
-(defun ecukes-stats-summary ()
-  "Return scenario and step summary."
-  (s-join
-   "\n"
-   (list
-    (ecukes-stats-scenario-summary)
-    (ecukes-stats-step-summary))))
-
 
 (provide 'ecukes-stats)
 

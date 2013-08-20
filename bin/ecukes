@@ -36,22 +36,23 @@
 ECUKES_HOME=$(dirname $(dirname $BASH_SOURCE))
 ECUKES_CLI=$ECUKES_HOME/ecukes-cli.el
 
-if [ -z "$ECUKES_EMACS" ] ; then
-  if [ -z "$EMACS" ] ; then
-    ECUKES_EMACS="emacs"
-  else
-    ECUKES_EMACS="$EMACS"
-  fi
+if [[ -n "$INSIDE_EMACS" ]]; then
+  ECUKES_EMACS="emacs"
+else
+  ECUKES_EMACS="${EMACS:-emacs}"
 fi
 
-if [ "$1" == "-h" -o "$1" == "--help"  -o "$1" == "new" ] ; then
-  "$ECUKES_EMACS" --script "$ECUKES_CLI" -- "${@}"
-elif [ "$1" == "--script" ] ; then
-  "$ECUKES_EMACS" --script "$ECUKES_CLI" -- "${@:2}"
-else
+function has_option {
+  for opt in "${@:2}"; do
+    [[ "$opt" == "$1" ]] && return 0;
+  done
+  return 1
+}
+
+if has_option "--win" $@ || has_option "--no-win" $@ ; then
   export ECUKES_OUTFILE=$(mktemp /tmp/ecukes.XXX)
 
-  if [[ "$1" == "--win" ]]; then
+  if has_option "--win" $@; then
     "$ECUKES_EMACS" --load "$ECUKES_CLI" -Q -- "${@}"
   else
     "$ECUKES_EMACS" -nw --load "$ECUKES_CLI" -Q -- "${@}"
@@ -63,4 +64,6 @@ else
   rm -f $ECUKES_OUTFILE
 
   exit $STATUS
+else
+  "$ECUKES_EMACS" --script "$ECUKES_CLI" -Q -- "${@}"
 fi

@@ -77,7 +77,7 @@ When *calling* a step, argument takes the following form:
                     (make-ecukes-step :body name))))
       (error (ansi-red "Step not defined: `%s`" query)))))
 
-(defun ecukes-steps-missing-definition (steps)
+(defun ecukes-steps-without-definition (steps)
   "Return from STEPS those who have not been defined."
   (-reject
    (lambda (step)
