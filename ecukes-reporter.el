@@ -215,7 +215,6 @@ The rest of the arguments will be applied to `format'."
         (ecukes-reporter-println 2 tags-string)))
     (ecukes-reporter-println 2 "Scenario: %s" name)))
 
-;; todo: refactor (needs better tests then)
 (defun ecukes-reporter-print-table (step)
   "Print STEP table."
   (let* (widths
