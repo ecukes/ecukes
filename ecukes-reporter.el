@@ -206,6 +206,17 @@ The rest of the arguments will be applied to `format'."
   (ecukes-reporter-print-newline)
   (ecukes-reporter-print-steps-summary stats))
 
+(defun ecukes-reporter-print-feature-header (feature)
+  "Print FEATURE and description if any."
+  (let* ((intro (ecukes-feature-intro feature))
+         (header (ecukes-intro-header intro))
+         (description (ecukes-intro-description intro))
+         (scenarios (ecukes-feature-scenarios feature)))
+    (ecukes-reporter-print "Feature: %s" header)
+    (when (or scenarios description)
+      (ecukes-reporter-print-newline))
+    (--each description (ecukes-reporter-println 2 it))))
+
 (defun ecukes-reporter-print-scenario-header (scenario)
   "Print SCENARIO header."
   (let ((name (ecukes-scenario-name scenario))
