@@ -142,7 +142,7 @@ The stats alist contains these slots:
             (add-to-list 'ecukes-reporter-failed-scenarios scenario t)))
 
 
-;;;; API functions
+;;;; Core functions
 
 (defun ecukes-reporter-use (reporter)
   "Use REPORTER."
@@ -180,6 +180,9 @@ The rest of the arguments will be applied to `format'."
   "Print newline."
   (ecukes-reporter-print "\n"))
 
+
+;;;; Summary
+
 (defun ecukes-reporter-print-scenarios-summary (stats)
   "Print scenario summary."
   (let ((scenarios (cdr (assoc 'scenarios stats))))
@@ -212,6 +215,9 @@ The rest of the arguments will be applied to `format'."
   (ecukes-reporter-print-steps-summary stats)
   (ecukes-reporter-print-newline))
 
+
+;;;; Spec style print functions
+
 (defun ecukes-reporter-print-feature-header (feature)
   "Print FEATURE and description if any."
   (let* ((intro (ecukes-feature-intro feature))
@@ -222,6 +228,10 @@ The rest of the arguments will be applied to `format'."
     (--each description (ecukes-reporter-println 2 it))
     (when description
       (ecukes-reporter-print-newline))))
+
+(defun ecukes-reporter-print-background-header ()
+  "Print background header."
+  (ecukes-reporter-println 2 "Background:"))
 
 (defun ecukes-reporter-print-scenario-header (scenario)
   "Print SCENARIO header."
@@ -298,32 +308,58 @@ The rest of the arguments will be applied to `format'."
          (ecukes-reporter-print-scenario-header scenario)
          (-each steps 'ecukes-reporter-print-step))))))
 
-(defun ecukes-reporter-print-background-header ()
-  "Print background header."
-  (ecukes-reporter-println 2 "Background:"))
+
+;;;; Missing steps
 
-;; TODO: Maybe add hooks for these?
-;;
-;; (defun ecukes-print-missing-steps (steps)
-;;   "Print missing steps"
-;;   (ecukes-print-missing-steps-header)
-;;   (let ((step-bodies))
-;;     (-each
-;;      steps
-;;      (lambda (step)
-;;        (let ((step-body (ecukes-print-step-body step))
-;;              (step-string (ecukes-print-step-string step)))
-;;          (unless
-;;              (-any?
-;;               (lambda (body)
-;;                 (equal step-body body)) step-bodies)
-;;            (add-to-list 'step-bodies step-body)
-;;            (ecukes-print-message "%s\n" step-string)))))))
-;; 
-;; (defun ecukes-print-missing-steps-header ()
-;;   "Print missing steps header."
-;;   (ecukes-print-message
-;;    (ansi-yellow "Some steps does not have a matching definition. Please implement the following step definitions:\n")))
+(defun ecukes-reporter--step-args (step)
+  (let* ((result)
+         (arg (ecukes-step-arg step))
+         (args (ecukes-steps-args step))
+         (type (ecukes-step-type step))
+         (args-count
+          (+
+           (length args)
+           (if (or
+                (equal type 'table)
+                (equal type 'py-string)) 1 0))))
+    (if (= args-count 1)
+        "arg"
+      (progn
+        (-dotimes
+         args-count
+         (lambda (n)
+           (add-to-list 'result (format "arg-%d" (1+ n)) t)))
+        (s-join " " result)))))
+
+(defun ecukes-reporter--step-body (step)
+  (let* ((body (ecukes-step-body step))
+         (args (ecukes-steps-args step))
+         (result body))
+    (when args
+      (-each
+       args
+       (lambda (arg)
+         (setq result (s-replace (s-concat "\"" arg "\"") "\\\"\\\\([^\\\"]+\\\\)\\\"" result)))))
+    result))
+
+(defun ecukes-reporter-print-missing-steps (steps)
+  "Print missing steps."
+  (ecukes-reporter-println
+   (ansi-yellow "Some steps does not have a matching definition. Please implement the following step definitions:"))
+  (ecukes-reporter-print-newline)
+  (let (step-bodies)
+    (-each
+     steps
+     (lambda (step)
+       (let ((step-body (ecukes-reporter--step-body step))
+             (step-string (ecukes-print-step-string step)))
+         (unless (--any? (equal step-body it) step-bodies)
+           (!cons 'step-bodies step-body)
+           (ecukes-reporter-println step-string)))))))
+
+(add-hook 'ecukes-reporter-steps-without-definition-hook
+          (lambda (steps)
+            (ecukes-reporter-print-missing-steps steps)))
 
 (provide 'ecukes-reporter)
 
