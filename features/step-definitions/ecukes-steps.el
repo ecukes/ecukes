@@ -1,12 +1,5 @@
 (defun ecukes-should-match (needle haystack)
-  (let ((orig-needle needle)
-        (orig-haystack haystack)
-        (needle (s-replace "\n" "" needle))
-        (needle (s-replace " " "" needle))
-        (haystack (s-replace "\n" "" haystack))
-        (haystack (s-replace " " "" haystack)))
-    (unless (s-contains? needle haystack)
-      (should (s-contains? orig-needle orig-haystack)))))
+  (should (s-contains? needle haystack)))
 
 (When "^I run ecukes \"\\([^\"]*\\)\"$"
   (lambda (command)
