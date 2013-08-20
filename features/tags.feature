@@ -12,7 +12,6 @@ Feature: Tags
     Then I should see command output:
       """
       Feature: Foo
-
         @wip
         Scenario: Bar
 
@@ -32,7 +31,6 @@ Feature: Tags
     Then I should see command output:
       """
       Feature: Foo
-
         Scenario: Baz
 
       1 scenarios (0 failed, 1 passed)
@@ -52,7 +50,6 @@ Feature: Tags
     Then I should see command output:
       """
       Feature: Foo
-
         @wip
         Scenario: Bar
 

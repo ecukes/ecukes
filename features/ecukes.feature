@@ -10,7 +10,6 @@ Feature: Ecukes
     Then I should see command output:
       """
       Feature: Foo
-
         Scenario: Bar
 
       1 scenarios (0 failed, 1 passed)
@@ -32,11 +31,9 @@ Feature: Ecukes
     Then I should see command output:
       """
       Feature: Bar
-
         Scenario: Baz
 
       Feature: Foo
-
         Scenario: Bar
 
       2 scenarios (0 failed, 2 passed)
@@ -58,11 +55,9 @@ Feature: Ecukes
     Then I should see command output:
       """
       Feature: Bar
-
         Scenario: Baz
 
       Feature: Foo
-
         Scenario: Bar
 
       2 scenarios (0 failed, 2 passed)
@@ -84,11 +79,9 @@ Feature: Ecukes
     Then I should see command output:
       """
       Feature: Bar
-
         Scenario: Baz
 
       Feature: Foo
-
         Scenario: Bar
 
       2 scenarios (0 failed, 2 passed)

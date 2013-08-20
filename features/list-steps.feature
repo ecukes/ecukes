@@ -6,7 +6,7 @@ Feature: List steps
       (Given "^hello world$" "Saying hello to the world" 'ignore)
       (Given "^sing hallelujah$" "Singing a song" 'ignore)
       """
-  
+
   Scenario: Names only
     When I run ecukes "list-steps"
     Then I should see command output:
@@ -21,7 +21,7 @@ Feature: List steps
       """
       ^sing hallelujah$
       Singing a song
-       
+
       ^hello world$
       Saying hello to the world
       """
@@ -40,7 +40,7 @@ Feature: List steps
       """
       features/step-definitions/super-project-steps.el: ^sing hallelujah$
       Singing a song
-       
+
       features/step-definitions/super-project-steps.el: ^hello world$
       Saying hello to the world
       """
