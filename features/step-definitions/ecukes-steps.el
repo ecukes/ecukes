@@ -58,7 +58,7 @@
 
 (Then "^the file \"\\([^\"]+\\)\" should contain:$"
   (lambda (file content)
-    (ecukes-should-match content (f-read (f-expand file ecukes-project-path)))))
+    (ecukes-should-match content (f-read-text (f-expand file ecukes-project-path) 'utf-8))))
 
 (Then "^I should see list of reporters:$"
   (lambda ()
