@@ -39,6 +39,9 @@
 (defvar ecukes-cli-with-file nil
   "If the list-steps command show definition file or not.")
 
+(defvar ecukes-async-timeout 10
+  "Timeout for async step definitions.")
+
 
 
 (defun ecukes-cli/list-steps ()
@@ -108,6 +111,9 @@
          (message "  %s - %s" name description))))
     (princ "\n")))
 
+(defun ecukes-cli/timeout (timeout)
+  (setq ecukes-async-timeout (string-to-number timeout)))
+
 
 
 (commander
@@ -133,6 +139,8 @@
 
  (command "list-reporters" "Show list of reporters" ecukes-cli/list-reporters)
  (option "--reporter <reporter>" "Select reporter (default: spec)" ecukes-cli/reporter) ;; todo: which is default?
+
+ (option "--timeout <seconds>" "..." ecukes-cli/timeout)
 
  (command "new" "Create new Ecukes setup for project" ecukes-cli/new))
 
