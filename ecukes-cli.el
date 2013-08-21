@@ -118,6 +118,7 @@
 (commander
  (name "ecukes")
  (description "Cucumber for Emacs")
+ (config ".ecukes")
 
  (default ecukes-cli/run "features")
 

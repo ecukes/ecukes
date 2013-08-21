@@ -1,3 +1,4 @@
 /.cask
 /features/*.feature
 /features/step-definitions/super-project-steps.el
+/.ecukes

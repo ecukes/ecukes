@@ -66,3 +66,8 @@
      '("dot" "spec" "landing" "nyan" "progress" "magnars" "gangsta")
      (lambda (reporter)
        (Then "I should see command output:" (s-concat reporter " - "))))))
+
+(When "^I create file \"\\([^\"]+\\)\" with content:$"
+  (lambda (file content)
+    (let ((path (f-expand file ecukes-project-path)))
+      (f-write-text content 'utf-8 path))))
