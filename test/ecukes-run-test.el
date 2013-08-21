@@ -404,14 +404,14 @@
        (ecukes-run-feature feature))
      (should scenario-1-in-hook))))
 
-(ert-deftest ecukes-run-test/run-feature-background-no-scenarios-foo ()
+(ert-deftest ecukes-run-test/run-feature-background-no-scenarios ()
   (with-mock
    (mock (ecukes-run-background) :times 1)
    (not-called ecukes-run-background-steps)
    (let ((feature (make-ecukes-feature :background (make-ecukes-background))))
      (ecukes-run-feature feature))))
 
-(ert-deftest ecukes-run-test/run-feature-background-single-scenario-foo ()
+(ert-deftest ecukes-run-test/run-feature-background-single-scenario ()
   (with-mock
    (stub ecukes-run-scenario => t)
    (mock (ecukes-run-background) :times 1)
@@ -421,7 +421,7 @@
                    :scenarios (list (make-ecukes-scenario)))))
      (ecukes-run-feature feature))))
 
-(ert-deftest ecukes-run-test/run-feature-background-multiple-scenarios-foo ()
+(ert-deftest ecukes-run-test/run-feature-background-multiple-scenarios ()
   (with-mock
    (stub ecukes-run-scenario => t)
    (stub ecukes-run-background => t)
