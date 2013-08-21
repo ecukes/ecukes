@@ -12,7 +12,8 @@
 (eval-when-compile
   (defvar ecukes-include-tags)
   (defvar ecukes-exclude-tags)
-  (defvar ecukes-async-timeout))
+  (defvar ecukes-async-timeout)
+  (defvar ecukes-patterns))
 
 (defun ecukes-run (feature-files)
   "Parse and run FEATURE-FILES if no steps are missing."
@@ -57,7 +58,7 @@
 
 (defun ecukes-run-feature (feature)
   "Run FEATURE."
-  (let ((background (ecukes-feature-background feature))
+  (let* ((background (ecukes-feature-background feature))
         (scenarios
          (-select
           (lambda (scenario)
@@ -65,7 +66,15 @@
               (and (or (not ecukes-include-tags)
                        (-intersection ecukes-include-tags tags))
                    (not (-intersection ecukes-exclude-tags tags)))))
-          (ecukes-feature-scenarios feature))))
+          (ecukes-feature-scenarios feature)))
+        (scenarios
+         (if ecukes-patterns
+             (-select
+              (lambda (scenario)
+                (let ((name (s-downcase (ecukes-scenario-name scenario))))
+                  (--any? (s-matches? it name) ecukes-patterns)))
+              scenarios)
+           scenarios)))
     (let ((background-success t)
           (background-should-run (not background)))
       (when background

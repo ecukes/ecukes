@@ -41,6 +41,9 @@
 (defvar ecukes-async-timeout 10
   "Timeout for async step definitions.")
 
+(defvar ecukes-patterns nil
+  "Run scenarios matching any of the patterns.")
+
 
 
 (defun ecukes-cli/list-steps ()
@@ -113,6 +116,9 @@
 (defun ecukes-cli/timeout (timeout)
   (setq ecukes-async-timeout (string-to-number timeout)))
 
+(defun ecukes-cli/patterns (&rest patterns)
+  (setq ecukes-patterns patterns))
+
 
 
 (commander
@@ -141,6 +147,8 @@
  (option "--reporter <reporter>" "Select reporter (default: dot)" ecukes-cli/reporter)
 
  (option "--timeout <seconds>" "How long to wait for async steps before quitting" ecukes-cli/timeout)
+
+ (option "-p <*>" "Run scenarios matching a pattern" ecukes-cli/patterns)
 
  (command "new" "Create new Ecukes setup for project" ecukes-cli/new))
 

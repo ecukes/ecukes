@@ -3,6 +3,7 @@
 (setq ecukes-async-timeout 0.1)
 (setq ecukes-include-tags nil)
 (setq ecukes-exclude-tags nil)
+(setq ecukes-patterns nil)
 
 
 ;;;; ecukes-run
@@ -338,6 +339,28 @@
            (ecukes-exclude-tags '(bar)))
        (ecukes-run-feature feature))
      (should scenario-2-in-hook))))
+
+(ert-deftest ecukes-run-test/run-feature-patterns ()
+  (with-reporter-hooks
+   (let* (scenario-1-in-hook
+          scenario-3-in-hook
+          (scenario-1 (make-ecukes-scenario :name "foo"))
+          (scenario-2 (make-ecukes-scenario :name "bar"))
+          (scenario-3 (make-ecukes-scenario :name "baz qux"))
+          (feature (make-ecukes-feature
+                    :scenarios (list scenario-1 scenario-2 scenario-3))))
+     (add-hook 'ecukes-reporter-before-scenario-hook
+               (lambda (scenario)
+                 (cond ((eq scenario scenario-1)
+                        (setq scenario-1-in-hook t))
+                       ((eq scenario scenario-2)
+                        (should-not "include scenario-2"))
+                       ((eq scenario scenario-3)
+                        (setq scenario-3-in-hook t)))))
+     (let ((ecukes-patterns '("foo" "baz")))
+       (ecukes-run-feature feature))
+     (should scenario-1-in-hook)
+     (should scenario-3-in-hook))))
 
 (ert-deftest ecukes-run-test/run-feature-background-no-scenarios-foo ()
   (with-mock
