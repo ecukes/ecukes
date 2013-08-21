@@ -44,6 +44,9 @@
 (defvar ecukes-patterns nil
   "Run scenarios matching any of the patterns.")
 
+(defvar ecukes-anti-patterns nil
+  "Do not run scenarios matching any of the patterns.")
+
 
 
 (defun ecukes-cli/list-steps ()
@@ -119,6 +122,9 @@
 (defun ecukes-cli/patterns (&rest patterns)
   (setq ecukes-patterns patterns))
 
+(defun ecukes-cli/anti-patterns (&rest patterns)
+  (setq ecukes-anti-patterns patterns))
+
 
 
 (commander
@@ -149,6 +155,7 @@
  (option "--timeout <seconds>" "How long to wait for async steps before quitting" ecukes-cli/timeout)
 
  (option "-p <*>" "Run scenarios matching a pattern" ecukes-cli/patterns)
+ (option "-a <*>" "Do not run scenarios matching a pattern" ecukes-cli/anti-patterns)
 
  (command "new" "Create new Ecukes setup for project" ecukes-cli/new))
 

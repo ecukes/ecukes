@@ -13,7 +13,8 @@
   (defvar ecukes-include-tags)
   (defvar ecukes-exclude-tags)
   (defvar ecukes-async-timeout)
-  (defvar ecukes-patterns))
+  (defvar ecukes-patterns)
+  (defvar ecukes-anti-patterns))
 
 (defun ecukes-run (feature-files)
   "Parse and run FEATURE-FILES if no steps are missing."
@@ -73,6 +74,14 @@
               (lambda (scenario)
                 (let ((name (s-downcase (ecukes-scenario-name scenario))))
                   (--any? (s-matches? it name) ecukes-patterns)))
+              scenarios)
+           scenarios))
+        (scenarios
+         (if ecukes-anti-patterns
+             (-reject
+              (lambda (scenario)
+                (let ((name (s-downcase (ecukes-scenario-name scenario))))
+                  (--any? (s-matches? it name) ecukes-anti-patterns)))
               scenarios)
            scenarios)))
     (let ((background-success t)
