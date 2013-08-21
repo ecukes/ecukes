@@ -140,7 +140,7 @@
  (command "list-reporters" "Show list of reporters" ecukes-cli/list-reporters)
  (option "--reporter <reporter>" "Select reporter (default: dot)" ecukes-cli/reporter)
 
- (option "--timeout <seconds>" "..." ecukes-cli/timeout)
+ (option "--timeout <seconds>" "How long to wait for async steps before quitting" ecukes-cli/timeout)
 
  (command "new" "Create new Ecukes setup for project" ecukes-cli/new))
 
