@@ -59,4 +59,9 @@
    (when (f-dir? new-path)
      (f-delete new-path 'force)))
 
- (-each (f-glob "*.feature" ecukes-project-features-path) 'f-delete))
+ (-each (f-glob "*.feature" ecukes-project-features-path) 'f-delete)
+ (-each
+  '(".ecukes")
+  (lambda (file)
+    (let ((path (f-expand file ecukes-project-path)))
+      (when (f-file? path) (f-delete path))))))
