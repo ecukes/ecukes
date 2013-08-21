@@ -159,14 +159,14 @@
  (option "--win" "Run Ecukes with full GUI window" ignore)
 
  (command "list-reporters" "Show list of reporters" ecukes-cli/list-reporters)
- (option "--reporter <reporter>" "Select reporter (default: dot)" ecukes-cli/reporter)
+ (option "--reporter <reporter>, -r <reporter>" "Select reporter (default: dot)" ecukes-cli/reporter)
 
- (option "--timeout <seconds>" "How long to wait for async steps before quitting" ecukes-cli/timeout)
+ (option "-t <seconds>, --timeout <seconds>" "How long to wait for async steps before quitting" ecukes-cli/timeout)
 
- (option "-p <*>" "Run scenarios matching a pattern" ecukes-cli/patterns)
- (option "-a <*>" "Do not run scenarios matching a pattern" ecukes-cli/anti-patterns)
+ (option "-p <*>, --patterns <*>" "Run scenarios matching a pattern" ecukes-cli/patterns)
+ (option "-a <*>, --anti-patterns <*>" "Do not run scenarios matching a pattern" ecukes-cli/anti-patterns)
 
- (option "-f" "Run only failing scenarios" ecukes-cli/only-failing)
+ (option "-f, --only-failing" "Run only failing scenarios" ecukes-cli/only-failing)
 
  (command "new" "Create new Ecukes setup for project" ecukes-cli/new))
 
