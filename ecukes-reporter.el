@@ -14,7 +14,8 @@
 ;;;; Variables and constants
 
 (eval-when-compile
-  (defvar ecukes-path))
+  (defvar ecukes-path)
+  (defvar ecukes-failing-scenarios-file))
 
 (defconst ecukes-reporters
   '((gangsta  . "gangsta talk")
@@ -380,6 +381,22 @@ The rest of the arguments will be applied to `format'."
 (add-hook 'ecukes-reporter-steps-without-definition-hook
           (lambda (steps)
             (ecukes-reporter-print-missing-steps steps)))
+
+
+;;;; Save list of failed scenarios to file
+
+(add-hook 'ecukes-reporter-end-hook
+          (lambda (stats)
+            (if ecukes-reporter-failed-scenarios
+                (let* ((scenario-names
+                        (-map
+                         (lambda (scenario)
+                           (s-downcase (ecukes-scenario-name scenario)))
+                         ecukes-reporter-failed-scenarios))
+                       (lines (s-join "\n" scenario-names)))
+                  (f-write-text lines 'utf-8 ecukes-failing-scenarios-file))
+              (when (f-file? ecukes-failing-scenarios-file)
+                (f-delete ecukes-failing-scenarios-file)))))
 
 (provide 'ecukes-reporter)
 

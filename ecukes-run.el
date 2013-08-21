@@ -1,5 +1,7 @@
 ;;; ecukes-run.el --- Run features, scenarios, steps etc...
 
+(require 'f)
+(require 's)
 (require 'dash)
 
 (require 'ecukes-parse)
@@ -14,7 +16,9 @@
   (defvar ecukes-exclude-tags)
   (defvar ecukes-async-timeout)
   (defvar ecukes-patterns)
-  (defvar ecukes-anti-patterns))
+  (defvar ecukes-anti-patterns)
+  (defvar ecukes-only-failing)
+  (defvar ecukes-failing-scenarios-file))
 
 (defun ecukes-run (feature-files)
   "Parse and run FEATURE-FILES if no steps are missing."
@@ -59,31 +63,38 @@
 
 (defun ecukes-run-feature (feature)
   "Run FEATURE."
+  (when (and ecukes-only-failing (f-file? ecukes-failing-scenarios-file))
+    (setq ecukes-patterns
+          (-map
+           (lambda (line)
+             (s-concat "\\`" line "\\'"))
+           (s-lines (f-read-text ecukes-failing-scenarios-file 'utf-8))))
+    (setq ecukes-anti-patterns nil))
   (let* ((background (ecukes-feature-background feature))
-        (scenarios
-         (-select
-          (lambda (scenario)
-            (let ((tags (ecukes-scenario-tags scenario)))
-              (and (or (not ecukes-include-tags)
-                       (-intersection ecukes-include-tags tags))
-                   (not (-intersection ecukes-exclude-tags tags)))))
-          (ecukes-feature-scenarios feature)))
-        (scenarios
-         (if ecukes-patterns
-             (-select
-              (lambda (scenario)
-                (let ((name (s-downcase (ecukes-scenario-name scenario))))
-                  (--any? (s-matches? it name) ecukes-patterns)))
-              scenarios)
-           scenarios))
-        (scenarios
-         (if ecukes-anti-patterns
-             (-reject
-              (lambda (scenario)
-                (let ((name (s-downcase (ecukes-scenario-name scenario))))
-                  (--any? (s-matches? it name) ecukes-anti-patterns)))
-              scenarios)
-           scenarios)))
+         (scenarios
+          (-select
+           (lambda (scenario)
+             (let ((tags (ecukes-scenario-tags scenario)))
+               (and (or (not ecukes-include-tags)
+                        (-intersection ecukes-include-tags tags))
+                    (not (-intersection ecukes-exclude-tags tags)))))
+           (ecukes-feature-scenarios feature)))
+         (scenarios
+          (if ecukes-patterns
+              (-select
+               (lambda (scenario)
+                 (let ((name (s-downcase (ecukes-scenario-name scenario))))
+                   (--any? (s-matches? it name) ecukes-patterns)))
+               scenarios)
+            scenarios))
+         (scenarios
+          (if ecukes-anti-patterns
+              (-reject
+               (lambda (scenario)
+                 (let ((name (s-downcase (ecukes-scenario-name scenario))))
+                   (--any? (s-matches? it name) ecukes-anti-patterns)))
+               scenarios)
+            scenarios)))
     (let ((background-success t)
           (background-should-run (not background)))
       (when background

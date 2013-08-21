@@ -5,6 +5,8 @@
 (setq ecukes-exclude-tags nil)
 (setq ecukes-patterns nil)
 (setq ecukes-anti-patterns nil)
+(setq ecukes-only-failing nil)
+(setq ecukes-failing-scenarios-file "non-existing-file")
 
 
 ;;;; ecukes-run
@@ -403,6 +405,36 @@
            (ecukes-anti-patterns '("bar")))
        (ecukes-run-feature feature))
      (should scenario-1-in-hook))))
+
+(ert-deftest ecukes-run-test/run-feature-only-failing-no-file ()
+  (with-mock
+   (stub f-file?)
+   (let ((ecukes-only-failing t))
+     (ecukes-run-feature (make-ecukes-feature)))))
+
+(ert-deftest ecukes-run-test/run-feature-only-failing-with-file ()
+  (with-mock
+   (stub f-file? => t)
+   (stub f-read-text => "scenario-1\nscenario-3")
+   (with-reporter-hooks
+    (let (scenario-1-in-hook
+          scenario-3-in-hook
+          (scenario-1 (make-ecukes-scenario :name "scenario-1"))
+          (scenario-2 (make-ecukes-scenario :name "scenario-2"))
+          (scenario-3 (make-ecukes-scenario :name "scenario-3")))
+      (add-hook 'ecukes-reporter-before-scenario-hook
+                (lambda (scenario)
+                  (cond ((eq scenario scenario-1)
+                         (setq scenario-1-in-hook t))
+                        ((eq scenario scenario-2)
+                         (should-not "include scenario-2"))
+                        ((eq scenario scenario-3)
+                         (setq scenario-3-in-hook t)))))
+      (let ((ecukes-only-failing t))
+        (ecukes-run-feature
+         (make-ecukes-feature :scenarios (list scenario-1 scenario-2 scenario-3))))
+      (should scenario-1-in-hook)
+      (should scenario-3-in-hook)))))
 
 (ert-deftest ecukes-run-test/run-feature-background-no-scenarios ()
   (with-mock

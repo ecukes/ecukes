@@ -47,6 +47,12 @@
 (defvar ecukes-anti-patterns nil
   "Do not run scenarios matching any of the patterns.")
 
+(defvar ecukes-only-failing nil
+  "Run only failing scenarios if true.")
+
+(defconst ecukes-failing-scenarios-file ".ecukes-failing-scenarios"
+  "File to save list of failing scenarios in.")
+
 
 
 (defun ecukes-cli/list-steps ()
@@ -125,6 +131,9 @@
 (defun ecukes-cli/anti-patterns (&rest patterns)
   (setq ecukes-anti-patterns patterns))
 
+(defun ecukes-cli/only-failing ()
+  (setq ecukes-only-failing t))
+
 
 
 (commander
@@ -156,6 +165,8 @@
 
  (option "-p <*>" "Run scenarios matching a pattern" ecukes-cli/patterns)
  (option "-a <*>" "Do not run scenarios matching a pattern" ecukes-cli/anti-patterns)
+
+ (option "-f" "Run only failing scenarios" ecukes-cli/only-failing)
 
  (command "new" "Create new Ecukes setup for project" ecukes-cli/new))
 

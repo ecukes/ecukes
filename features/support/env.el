@@ -61,7 +61,7 @@
 
  (-each (f-glob "*.feature" ecukes-project-features-path) 'f-delete)
  (-each
-  '(".ecukes")
+  '(".ecukes" ".ecukes-failing-scenarios")
   (lambda (file)
     (let ((path (f-expand file ecukes-project-path)))
       (when (f-file? path) (f-delete path))))))
