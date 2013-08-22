@@ -1,5 +1,8 @@
 (require 'ecukes-core)
 
+
+;;;; message
+
 (ert-deftest ecukes-core/message-internal ()
   (let (ecukes-message-log ecukes-internal-message-log ecukes-verbose (ecukes-message t))
     (message "foo")
@@ -34,12 +37,55 @@
     (should (equal (car (car ecukes-internal-message-log)) 'message))
     (should (equal (cdr (car ecukes-internal-message-log)) ""))))
 
+
+;;;;princ
+
+(ert-deftest ecukes-core/princ-internal ()
+  (let (ecukes-message-log ecukes-internal-message-log ecukes-verbose (ecukes-message t))
+    (princ "foo")
+    (should (equal (car (car ecukes-internal-message-log)) 'princ))
+    (should (equal (cdr (car ecukes-internal-message-log)) "foo"))
+    (should-not (-contains? ecukes-message-log "foo"))))
+
+(ert-deftest ecukes-core/princ-external ()
+  (let (ecukes-message-log ecukes-internal-message-log ecukes-verbose ecukes-message)
+    (princ "foo")
+    (should-not (equal (car (car ecukes-internal-message-log)) 'princ))
+    (should-not (equal (cdr (car ecukes-internal-message-log)) "foo"))
+    (should (-contains? ecukes-message-log "foo"))))
+
+(ert-deftest ecukes-core/princ-verbose ()
+  (let (ecukes-message-log ecukes-internal-message-log (ecukes-verbose t) ecukes-message)
+    (princ "foo")
+    (should (equal (car (car ecukes-internal-message-log)) 'princ))
+    (should (equal (cdr (car ecukes-internal-message-log)) "foo"))
+    (should (-contains? ecukes-message-log "foo"))))
+
+(ert-deftest ecukes-core/princ-non-verbose ()
+  (let (ecukes-message-log ecukes-internal-message-log ecukes-verbose ecukes-message)
+    (princ "foo")
+    (should-not (equal (car (car ecukes-internal-message-log)) 'princ))
+    (should-not (equal (cdr (car ecukes-internal-message-log)) "foo"))
+    (should (-contains? ecukes-message-log "foo"))))
+
+(ert-deftest ecukes-core/princ-nil ()
+  (let (ecukes-internal-message-log)
+    (princ nil)
+    (should (equal (car (car ecukes-internal-message-log)) 'princ))
+    (should (equal (cdr (car ecukes-internal-message-log)) ""))))
+
+
+;;;; print
+
 (ert-deftest ecukes-core/print ()
   (let (ecukes-message-log ecukes-internal-message-log (ecukes-message t))
     (print "foo")
     (should (equal (car (car ecukes-internal-message-log)) 'print))
     (should (equal (cdr (car ecukes-internal-message-log)) "foo"))
     (should-not (-contains? ecukes-message-log "foo"))))
+
+
+;;;; quit
 
 (require 'cl) ; for el-mock
 
@@ -59,5 +105,5 @@
   (with-mock
    (stub getenv => "/tmp/ecukes.XYZ")
    (mock (kill-emacs 1) :times 1)
-   (mock (f-write-text "\n" 'utf-8 "/tmp/ecukes.XYZ") :times 1)
+   (mock (f-write-text) :times 1)
    (ecukes-quit)))

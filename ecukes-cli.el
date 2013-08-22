@@ -102,7 +102,8 @@
     (ecukes-run feature-files)))
 
 (defun ecukes-cli/help ()
-  (commander-print-usage)
+  (let ((ecukes-message t))
+    (commander-print-usage))
   (ecukes-quit 0))
 
 (defun ecukes-cli/new ()

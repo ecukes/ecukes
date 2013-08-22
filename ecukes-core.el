@@ -26,8 +26,19 @@
     (unless ecukes-message
       (add-to-list 'ecukes-message-log message t 'eq))
     (when (or ecukes-message ecukes-verbose)
-      (add-to-list 'ecukes-internal-message-log `(message . ,message) t 'eq))
-    ad-do-it))
+      (add-to-list 'ecukes-internal-message-log `(message . ,message) t 'eq)
+      ad-do-it)))
+
+(defadvice princ (around princ-around activate)
+  (let ((message
+         (if (car (ad-get-args 0))
+             (apply 'format (ad-get-args 0))
+           "")))
+    (unless ecukes-message
+      (add-to-list 'ecukes-message-log message t 'eq))
+    (when (or ecukes-message ecukes-verbose)
+      (add-to-list 'ecukes-internal-message-log `(princ . ,message) t 'eq)
+      ad-do-it)))
 
 (defadvice print (around print-around activate)
   (add-to-list 'ecukes-internal-message-log `(print . ,ad-do-it) t 'eq))
@@ -38,15 +49,14 @@
   (let ((outfile (getenv "ECUKES_OUTFILE")))
     (when outfile
       (let ((output
-             (-each
-              ecukes-internal-message-log
+             (-map
               (lambda (log)
-                (let ((type (car log))
-                      (message (cdr log)))
-                  (if (or (eq type 'print) (eq type 'princ))
+                (let ((message (cdr log)))
+                  (if (eq (car log) 'print)
                       (prin1-to-string message)
-                    message))))))
-        (f-write-text (s-concat (s-join "\n" output) "\n") 'utf-8 outfile))))
+                    message)))
+              ecukes-internal-message-log)))
+        (f-write-text (s-join "" output) 'utf-8 outfile))))
   (kill-emacs exit-code))
 
 (defun ecukes-fail (format-string &rest objects)
