@@ -30,7 +30,7 @@
 (defvar ecukes-exclude-tags nil
   "Scenario tags to exclude.")
 
-(defvar ecukes-cli-reporter "spec"
+(defvar ecukes-cli-reporter "dot"
   "Default reporter.")
 
 (defvar ecukes-cli-with-doc nil
