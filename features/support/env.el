@@ -59,7 +59,13 @@
    (when (f-dir? new-path)
      (f-delete new-path 'force)))
 
- (-each (f-glob "*.feature" ecukes-project-features-path) 'f-delete)
+ (-each
+  (f-files
+   ecukes-project-features-path
+   (lambda (file)
+     (s-matches? ".feature$" file))
+   :recursive)
+  'f-delete)
  (-each
   '(".ecukes" ".ecukes-failing-scenarios")
   (lambda (file)
