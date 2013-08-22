@@ -34,7 +34,11 @@
 
 (Given "^feature \"\\([^\"]+\\)\":$"
   (lambda (name content)
-    (let ((path (f-expand (s-concat name ".feature") ecukes-project-features-path)))
+    (let ((dirs (-reject 's-blank? (s-split "/" (f-parent name))))
+          (path (f-expand (s-concat name ".feature") ecukes-project-features-path))
+          (default-directory ecukes-project-features-path))
+      (unless (f-dir? (f-parent name))
+        (apply 'f-mkdir dirs))
       (f-write-text (s-concat content "\n") 'utf-8 path))))
 
 (Given "^step definition:$"

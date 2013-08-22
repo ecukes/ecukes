@@ -87,3 +87,27 @@ Feature: Ecukes
       2 scenarios (0 failed, 2 passed)
       0 steps
       """
+
+  Scenario: Run all features, recursive
+    Given feature "foo":
+      """
+      Feature: Foo
+        Scenario: Bar
+      """
+    And feature "deep/bar":
+      """
+      Feature: Bar
+        Scenario: Baz
+      """
+    When I run ecukes "--reporter spec"
+    Then I should see command output:
+      """
+      Feature: Bar
+        Scenario: Baz
+
+      Feature: Foo
+        Scenario: Bar
+
+      2 scenarios (0 failed, 2 passed)
+      0 steps
+      """
