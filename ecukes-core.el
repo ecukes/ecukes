@@ -16,6 +16,9 @@
 (defvar ecukes-message-log nil
   "List with `message' output (only from external code).")
 
+(defvar ecukes-error-log-file nil
+  "Path to error log file.")
+
 
 
 (defadvice message (around message-around activate)
@@ -64,6 +67,27 @@
   (let ((ecukes-message t))
     (message (apply 'ansi-red (cons format-string objects)))
     (ecukes-quit 1)))
+
+(defun ecukes-debug (&rest debugger-args)
+  "This is called when an error occurs (value of the `debugger' variable)."
+  (when ecukes-error-log-file
+    (let ((backtrace
+           (with-temp-buffer
+             (set-buffer-multibyte t)
+             (let ((standard-output (current-buffer))
+                   (print-escape-newlines t)
+                   (print-level 8)
+                   (print-length 50))
+               (backtrace))
+             (goto-char (point-min))
+             (delete-region
+              (point)
+              (progn
+                (search-forward "\n  ecukes-debug(")
+                (forward-line 1)
+                (point)))
+             (buffer-string))))
+      (f-write-text backtrace 'utf-8 ecukes-error-log-file))))
 
 (provide 'ecukes-core)
 

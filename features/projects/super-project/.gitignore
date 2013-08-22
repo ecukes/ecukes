@@ -2,3 +2,5 @@
 /features/*.feature
 /features/step-definitions/super-project-steps.el
 /.ecukes
+/.ecukes-failing-scenarios
+/error.log

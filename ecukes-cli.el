@@ -21,7 +21,8 @@
 
 
 (eval-when-compile
-  (defvar debug-on-entry))
+  (defvar debug-on-entry)
+  (defvar ecukes-error-log-file))
 
 (defvar ecukes-include-tags nil
   "Scenario tags to include.")
@@ -135,6 +136,12 @@
 (defun ecukes-cli/only-failing ()
   (setq ecukes-only-failing t))
 
+(defun ecukes-cli/error-log (file)
+  (ecukes-cli/debug)
+  (setq debug-on-signal t)
+  (setq debugger 'ecukes-debug)
+  (setq ecukes-error-log-file file))
+
 
 
 (commander
@@ -168,6 +175,7 @@
  (option "-a <*>, --anti-patterns <*>" "Do not run scenarios matching a pattern" ecukes-cli/anti-patterns)
 
  (option "-f, --only-failing" "Run only failing scenarios" ecukes-cli/only-failing)
+ (option "-l <file>, --error-log <file>" "Log error backtrace to file" ecukes-cli/error-log)
 
  (command "new" "Create new Ecukes setup for project" ecukes-cli/new))
 
