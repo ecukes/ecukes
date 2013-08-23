@@ -49,13 +49,15 @@ function has_option {
   return 1
 }
 
+export ECUKES_ARGS="${@}"
+
 if has_option "--win" $@ || has_option "--no-win" $@ ; then
   export ECUKES_OUTFILE=$(mktemp /tmp/ecukes.XXX)
 
   if has_option "--win" $@; then
-    "$ECUKES_EMACS" --load "$ECUKES_CLI" -Q -- "${@}"
+    "$ECUKES_EMACS" --load "$ECUKES_CLI" -Q
   else
-    "$ECUKES_EMACS" -nw --load "$ECUKES_CLI" -Q -- "${@}"
+    "$ECUKES_EMACS" -nw --load "$ECUKES_CLI" -Q
   fi
 
   STATUS=$?
@@ -65,5 +67,5 @@ if has_option "--win" $@ || has_option "--no-win" $@ ; then
 
   exit $STATUS
 else
-  "$ECUKES_EMACS" --script "$ECUKES_CLI" -Q -- "${@}"
+  "$ECUKES_EMACS" --script "$ECUKES_CLI" -Q
 fi

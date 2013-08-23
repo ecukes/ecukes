@@ -144,6 +144,8 @@
 
 
 
+(setq commander-args (s-split " " (getenv "ECUKES_ARGS")))
+
 (commander
  (name "ecukes")
  (description "Cucumber for Emacs")
