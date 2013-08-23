@@ -22,7 +22,7 @@ ${PKG_DIR}: Cask
 
 compile: $(ELC)
 %.elc: %.el
-	cask exec $(EMACS) -Q -batch -L . -f batch-byte-compile $<
+	@cask exec $(EMACS) -Q --script ecukes-byte-compile.el $<
 
 clean: clean-elc
 	rm -rf ${PKG_DIR}
