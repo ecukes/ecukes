@@ -238,14 +238,16 @@ The rest of the arguments will be applied to `format'."
   "Print background header."
   (ecukes-reporter-println 2 "Background:"))
 
-(defun ecukes-reporter-print-scenario-header (scenario)
+(defun ecukes-reporter-print-scenario-header (scenario &optional color)
   "Print SCENARIO header."
-  (let ((name (ecukes-scenario-name scenario))
-        (tags (ecukes-scenario-tags scenario)))
+  (let* ((name (ecukes-scenario-name scenario))
+         (tags (ecukes-scenario-tags scenario))
+         (header (format "Scenario: %s" name))
+         (header (if color (ansi-apply color header) header)))
     (when tags
       (let ((tags-string (ansi-cyan (s-join " " (--map (s-concat "@" it) tags)))))
         (ecukes-reporter-println 2 tags-string)))
-    (ecukes-reporter-println 2 "Scenario: %s" name)))
+    (ecukes-reporter-println 2 header)))
 
 (defun ecukes-reporter-print-table (step)
   "Print STEP table."
