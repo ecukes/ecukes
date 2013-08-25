@@ -1,4 +1,4 @@
-.PHONY : all test quick-test clean clean-elc ecukes
+.PHONY : all test unit-test clean clean-elc ecukes
 
 EMACS ?= emacs
 SRC = $(filter-out %-pkg.el, $(wildcard *.el reporters/*.el))
@@ -7,13 +7,14 @@ CASK ?= cask
 PKG_DIR := $(shell ${CASK} package-directory)
 FEATURES = $(wildcard features/*.feature features/reporters/*.feature)
 
-all: test ecukes
+all: test
 
 test: clean-elc
-	$(MAKE) quick-test
+	$(MAKE) unit-test
+	$(MAKE) ecukes
 	$(MAKE) compile
 
-quick-test: elpa
+unit-test: elpa
 	cask exec ert-runner -l test/ecukes-test.el
 
 elpa: ${PKG_DIR}
