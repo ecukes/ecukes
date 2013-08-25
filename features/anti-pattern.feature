@@ -1,4 +1,4 @@
-Feature: Ansi Pattern
+Feature: Anti Pattern
 
   Scenario: No scenario matching anti pattern
     Given feature "foo":
