@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-echo "[NOTICE] The binary '/path/to/ecukes/ecukes' binary is deprecated in favour of '/path/to/ecukes/bin/ecukes'"
-
-$(dirname $0)/bin/ecukes $@
