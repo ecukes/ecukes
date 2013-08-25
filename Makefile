@@ -5,6 +5,7 @@ SRC = $(filter-out %-pkg.el, $(wildcard *.el reporters/*.el))
 ELC = $(SRC:.el=.elc)
 CASK ?= cask
 PKG_DIR := $(shell ${CASK} package-directory)
+FEATURES = $(wildcard features/*.feature features/reporters/*.feature)
 
 all: test ecukes
 
@@ -31,8 +32,7 @@ clean-elc:
 	rm -rf *.elc test/*.elc reporters/*.elc
 
 ecukes: features/projects/super-project/.cask
-	cask exec ecukes --script features --dbg --tags ~@exclude
-	cask exec ecukes --script features/reporters/* --dbg --tags ~@exclude
+	cask exec ecukes --script $(FEATURES) --dbg --tags ~@exclude
 
 features/projects/super-project/.cask:
 	cd features/projects/super-project && cask
