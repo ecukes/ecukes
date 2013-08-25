@@ -7,35 +7,35 @@
   (let (ecukes-message-log ecukes-internal-message-log ecukes-verbose (ecukes-message t))
     (message "foo")
     (should (equal (car (car ecukes-internal-message-log)) 'message))
-    (should (equal (cdr (car ecukes-internal-message-log)) "foo"))
-    (should-not (-contains? ecukes-message-log "foo"))))
+    (should (equal (cdr (car ecukes-internal-message-log)) "foo\n"))
+    (should-not (-contains? ecukes-message-log "foo\n"))))
 
 (ert-deftest ecukes-core/message-external ()
   (let (ecukes-message-log ecukes-internal-message-log ecukes-verbose ecukes-message)
     (message "foo")
     (should-not (equal (car (car ecukes-internal-message-log)) 'message))
-    (should-not (equal (cdr (car ecukes-internal-message-log)) "foo"))
-    (should (-contains? ecukes-message-log "foo"))))
+    (should-not (equal (cdr (car ecukes-internal-message-log)) "foo\n"))
+    (should (-contains? ecukes-message-log "foo\n"))))
 
 (ert-deftest ecukes-core/message-verbose ()
   (let (ecukes-message-log ecukes-internal-message-log (ecukes-verbose t) ecukes-message)
     (message "foo")
     (should (equal (car (car ecukes-internal-message-log)) 'message))
-    (should (equal (cdr (car ecukes-internal-message-log)) "foo"))
-    (should (-contains? ecukes-message-log "foo"))))
+    (should (equal (cdr (car ecukes-internal-message-log)) "foo\n"))
+    (should (-contains? ecukes-message-log "foo\n"))))
 
 (ert-deftest ecukes-core/message-non-verbose ()
   (let (ecukes-message-log ecukes-internal-message-log ecukes-verbose ecukes-message)
     (message "foo")
     (should-not (equal (car (car ecukes-internal-message-log)) 'message))
-    (should-not (equal (cdr (car ecukes-internal-message-log)) "foo"))
-    (should (-contains? ecukes-message-log "foo"))))
+    (should-not (equal (cdr (car ecukes-internal-message-log)) "foo\n"))
+    (should (-contains? ecukes-message-log "foo\n"))))
 
 (ert-deftest ecukes-core/message-nil ()
   (let (ecukes-internal-message-log)
     (message nil)
     (should (equal (car (car ecukes-internal-message-log)) 'message))
-    (should (equal (cdr (car ecukes-internal-message-log)) ""))))
+    (should (equal (cdr (car ecukes-internal-message-log)) "\n"))))
 
 
 ;;;;princ

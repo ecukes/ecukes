@@ -23,9 +23,11 @@
 
 (defadvice message (around message-around activate)
   (let ((message
-         (if (car (ad-get-args 0))
-             (apply 'format (ad-get-args 0))
-           "")))
+         (s-concat
+          (if (car (ad-get-args 0))
+              (apply 'format (ad-get-args 0))
+            "")
+          "\n")))
     (unless ecukes-message
       (add-to-list 'ecukes-message-log message t 'eq))
     (when (or ecukes-message ecukes-verbose)
