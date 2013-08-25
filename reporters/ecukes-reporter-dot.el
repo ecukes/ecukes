@@ -17,8 +17,7 @@
             (ecukes-reporter-print-newline)
             (ecukes-reporter-print-failing-scenarios-summary)
             (ecukes-reporter-print-newline)
-            (ecukes-reporter-print-summary stats)
-            (ecukes-reporter-print-newline)))
+            (ecukes-reporter-print-summary stats)))
 
 (provide 'ecukes-reporter-dot)
 
