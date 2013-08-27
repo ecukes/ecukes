@@ -15,7 +15,7 @@ test: clean-elc
 	$(MAKE) compile
 
 unit-test: elpa
-	cask exec ert-runner -l test/ecukes-test.el
+	cask exec ert-runner
 
 elpa: ${PKG_DIR}
 ${PKG_DIR}: Cask
