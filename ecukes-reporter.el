@@ -21,7 +21,6 @@
   '((gangsta  . "gangsta talk")
     (landing  . "landing plane (not yet implemented)")
     (magnars  . "@magnars stripped spec")
-    (nyan     . "nyan cat (not yet implemented)")
     (progress . "progress bar (not yet implemented)")
     (spec     . "full blown spec")
     (dot      . "one colored dot per scenario (default)"))
