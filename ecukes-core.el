@@ -35,10 +35,7 @@
       ad-do-it)))
 
 (defadvice princ (around princ-around activate)
-  (let ((message
-         (if (car (ad-get-args 0))
-             (apply 'format (ad-get-args 0))
-           "")))
+  (let ((message (or (car (ad-get-args 0)) "")))
     (unless ecukes-message
       (add-to-list 'ecukes-message-log message t 'eq))
     (when (or ecukes-message ecukes-verbose)
