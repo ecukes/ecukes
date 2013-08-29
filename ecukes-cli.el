@@ -12,7 +12,6 @@
 (require 'ecukes-core)
 (require 'ecukes-load)
 (require 'ecukes-new)
-(require 'ecukes-print)
 (require 'ecukes-project)
 (require 'ecukes-run)
 (require 'ecukes-stats)
