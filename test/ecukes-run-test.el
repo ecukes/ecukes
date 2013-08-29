@@ -34,8 +34,7 @@
     (let (hook-has-run)
       (add-hook 'ecukes-reporter-start-hook
                 (lambda (stats)
-                  (should (equal (cdr (assoc 'features stats)) 2))
-                  (should (equal (cdr (assoc 'scenarios stats)) 4))
+                  (should (equal stats '((features . 2) (scenarios . 4))))
                   (setq hook-has-run t)))
       (ecukes-run '(feature-file-1 feature-file-2))
       (should hook-has-run)))))
