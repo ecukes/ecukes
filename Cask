@@ -1,7 +1,7 @@
 (source gnu) ; for cl-lib
 (source melpa)
 
-(package "ecukes" "0.5.1" "Cucumber for Emacs.")
+(package "ecukes" "0.6.0" "Cucumber for Emacs.")
 
 (depends-on "f" "0.7.1")
 (depends-on "s" "1.6.2")
