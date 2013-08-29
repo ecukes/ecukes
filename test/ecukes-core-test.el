@@ -37,6 +37,12 @@
     (should (equal (car (car ecukes-internal-message-log)) 'message))
     (should (equal (cdr (car ecukes-internal-message-log)) "\n"))))
 
+(ert-deftest ecukes-core/format ()
+  (let (ecukes-internal-message-log)
+    (message "foo %s" "bar")
+    (should (equal (car (car ecukes-internal-message-log)) 'message))
+    (should (equal (cdr (car ecukes-internal-message-log)) "foo bar\n"))))
+
 
 ;;;;princ
 
