@@ -6,7 +6,7 @@
 (depends-on "f" "0.7.1")
 (depends-on "s" "1.6.2")
 (depends-on "dash" "2.1.0")
-(depends-on "ansi" "0.1.1")
+(depends-on "ansi" "0.3.0")
 (depends-on "espuds" "0.2.2")
 (depends-on "commander" "0.3.2")
 
