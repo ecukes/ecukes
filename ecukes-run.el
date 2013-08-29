@@ -28,7 +28,12 @@
     (cond (steps-without-definition
            (run-hook-with-args 'ecukes-reporter-steps-without-definition-hook steps-without-definition))
           (:else
-           (run-hooks 'ecukes-reporter-start-hook)
+           (let ((features (length features))
+                 (scenarios (length (-flatten (-map 'ecukes-feature-scenarios features)))))
+             (run-hook-with-args
+              'ecukes-reporter-start-hook
+              `((features . ,features)
+                (scenarios . ,scenarios))))
            (ecukes-hooks-run-setup)
            (ecukes-run-features features)
            (ecukes-hooks-run-teardown)

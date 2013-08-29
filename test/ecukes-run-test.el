@@ -27,11 +27,17 @@
   (with-mock
    (with-reporter-hooks
     (stub ecukes-steps-without-definition)
+    (stub ecukes-run-features)
+    (stub ecukes-parse-feature =>
+          (make-ecukes-feature
+           :scenarios (list (make-ecukes-scenario) (make-ecukes-scenario))))
     (let (hook-has-run)
       (add-hook 'ecukes-reporter-start-hook
-                (lambda ()
+                (lambda (stats)
+                  (should (equal (cdr (assoc 'features stats)) 2))
+                  (should (equal (cdr (assoc 'scenarios stats)) 4))
                   (setq hook-has-run t)))
-      (ecukes-run nil)
+      (ecukes-run '(feature-file-1 feature-file-2))
       (should hook-has-run)))))
 
 (ert-deftest ecukes-run-test/run-end-hook ()
