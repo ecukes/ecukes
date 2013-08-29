@@ -19,7 +19,7 @@
 
 (defconst ecukes-reporters
   '((gangsta  . "gangsta talk")
-    (landing  . "landing plane (not yet implemented)")
+    (landing  . "landing plane")
     (magnars  . "@magnars stripped spec")
     (progress . "progress bar")
     (spec     . "full blown spec")
