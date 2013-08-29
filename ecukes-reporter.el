@@ -21,7 +21,7 @@
   '((gangsta  . "gangsta talk")
     (landing  . "landing plane (not yet implemented)")
     (magnars  . "@magnars stripped spec")
-    (progress . "progress bar (not yet implemented)")
+    (progress . "progress bar")
     (spec     . "full blown spec")
     (dot      . "one colored dot per scenario (default)"))
   "List of available reporters, with description.")
@@ -90,6 +90,12 @@ The stats alist contains these slots:
 
 (defvar ecukes-reporter-scenario-failed-hook nil
   "Called when scenario failed, with scenario as argument.")
+
+(defvar ecukes-reporter-pending-scenario-hook nil
+  "Called for pending scenarios.
+
+That is scenarios that will not run becuase of for example some
+pattern, anti-pattern or tags.")
 
 (defvar ecukes-reporter-before-first-step-hook nil
   "Called before first step runs, with step and status as arguments.")
