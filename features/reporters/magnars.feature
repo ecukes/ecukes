@@ -405,56 +405,29 @@ Feature: Magnars
       2 steps (0 failed, 0 skipped, 2 passed)
       """
 
-  # # Scenario: Failing table
-  # #   Given feature "foo":
-  # #     """
-  # #     Feature: Foo
-  # #       Scenario: Bar
-  # #         Given a failing table:
-  # #           | baz |
-  # #           | qux |
-  # #     """
-  # #   When I run ecukes "features/foo.feature --reporter magnars"
-  # #   Then I should see command error:
-  # #     """
-  # #     Feature: Foo
+  Scenario: Failing table
+    Given feature "foo":
+      """
+      Feature: Foo
+        Scenario: Bar
+          Given a failing table:
+            | baz |
+            | qux |
+      """
+    When I run ecukes "features/foo.feature --reporter magnars"
+    Then I should see command error:
+      """
+      Feature: Foo
+        Scenario: Bar
+          Given a failing table:
+            | baz |
+            | qux |
+            failing table
 
-  # #       Scenario: Bar
-  # #         Given a failing table:
-  # #           | baz |
-  # #           | qux |
-  # #           failing table
 
-  # #     1 scenarios (1 failed, 0 passed)
-  # #     1 steps (1 failed, 0 skipped, 0 passed)
-  # #     """
-
-  # # @exclude
-  # # Scenario: Failing py string
-  # #   Given feature "foo":
-  # #     """
-  # #     Feature: Foo
-  # #       Scenario: Bar
-  # #         Given a failing py string:
-  # #           """
-  # #           failing
-  # #           """
-  # #     """
-  # #   When I run ecukes "features/foo.feature --reporter magnars"
-  # #   Then I should see command error:
-  # #     """
-  # #     Feature: Foo
-
-  # #       Scenario: Bar
-  # #         Given a failing py string:
-  # #           """
-  # #           failing
-  # #           """
-  # #           failing py string
-
-  # #     1 scenarios (1 failed, 0 passed)
-  # #     1 steps (1 failed, 0 skipped, 0 passed)
-  # #     """
+      1 scenarios (1 failed, 0 passed)
+      1 steps (1 failed, 0 skipped, 0 passed)
+      """
 
   Scenario: Successful table
     Given feature "foo":
@@ -467,27 +440,6 @@ Feature: Magnars
       """
     When I run ecukes "features/foo.feature --reporter magnars"
     Then I should see command output:
-      """
-      Feature: Foo
-        Scenario: Bar
-
-      1 scenarios (0 failed, 1 passed)
-      1 steps (0 failed, 0 skipped, 1 passed)
-      """
-
-  @exclude
-  Scenario: Successful py string
-    Given feature "foo":
-      """
-      Feature: Foo
-        Scenario: Bar
-          Given a successful py string:
-            """
-            successful
-            """
-      """
-    When I run ecukes "features/foo.feature --reporter magnars"
-    Then I should see command error:
       """
       Feature: Foo
         Scenario: Bar
