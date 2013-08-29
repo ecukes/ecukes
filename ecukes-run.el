@@ -108,26 +108,28 @@
         (setq background-success (ecukes-run-background background))
         (run-hooks 'ecukes-reporter-after-background-hook))
       (-each
-       scenarios
+       (ecukes-feature-scenarios feature)
        (lambda (scenario)
-         (let ((first (equal (-first-item scenarios) scenario))
-               (last (equal (-last-item scenarios) scenario)))
-           (when background-should-run (ecukes-hooks-run-before))
-           (when (and background background-success background-should-run)
-             (ecukes-run-background-steps background))
-           (when first
-             (run-hook-with-args 'ecukes-reporter-before-first-scenario-hook scenario))
-           (when last
-             (run-hook-with-args 'ecukes-reporter-before-last-scenario-hook scenario))
-           (run-hook-with-args 'ecukes-reporter-before-scenario-hook scenario)
-           (ecukes-run-scenario scenario background-success)
-           (when first
-             (run-hook-with-args 'ecukes-reporter-after-first-scenario-hook scenario))
-           (when last
-             (run-hook-with-args 'ecukes-reporter-after-last-scenario-hook scenario))
-           (run-hook-with-args 'ecukes-reporter-after-scenario-hook scenario)
-           (ecukes-hooks-run-after)
-           (setq background-should-run t)))))))
+         (if (-contains? scenarios scenario)
+             (let ((first (equal (-first-item scenarios) scenario))
+                   (last (equal (-last-item scenarios) scenario)))
+               (when background-should-run (ecukes-hooks-run-before))
+               (when (and background background-success background-should-run)
+                 (ecukes-run-background-steps background))
+               (when first
+                 (run-hook-with-args 'ecukes-reporter-before-first-scenario-hook scenario))
+               (when last
+                 (run-hook-with-args 'ecukes-reporter-before-last-scenario-hook scenario))
+               (run-hook-with-args 'ecukes-reporter-before-scenario-hook scenario)
+               (ecukes-run-scenario scenario background-success)
+               (when first
+                 (run-hook-with-args 'ecukes-reporter-after-first-scenario-hook scenario))
+               (when last
+                 (run-hook-with-args 'ecukes-reporter-after-last-scenario-hook scenario))
+               (run-hook-with-args 'ecukes-reporter-after-scenario-hook scenario)
+               (ecukes-hooks-run-after)
+               (setq background-should-run t))
+           (run-hook-with-args 'ecukes-reporter-pending-scenario-hook scenario)))))))
 
 (defun ecukes-run-background-steps (background)
   "Run BACKGROUND steps."

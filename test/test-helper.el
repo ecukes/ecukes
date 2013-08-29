@@ -104,6 +104,7 @@
 (defmacro with-reporter-hooks (&rest body)
   `(let (ecukes-reporter-start-hook
          ecukes-reporter-end-hook
+         ecukes-reporter-pending-scenario-hook
          ecukes-reporter-before-first-feature-hook
          ecukes-reporter-before-last-feature-hook
          ecukes-reporter-before-feature-hook

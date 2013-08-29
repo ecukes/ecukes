@@ -850,3 +850,39 @@
      (let ((expected "Did not callback async step within 0.1 seconds")
            (actual (ecukes-step-err step)))
        (should (equal expected actual))))))
+
+(ert-deftest ecukes-run-test/pending-hook ()
+  (with-mock
+   (with-reporter-hooks
+    (let ((feature
+           (make-ecukes-feature
+            :scenarios
+            (list
+             (make-ecukes-scenario :name "foo")
+             (make-ecukes-scenario :name "bar")
+             (make-ecukes-scenario :name "baz" :tags '("wip"))
+             (make-ecukes-scenario :name "qux" :tags '("wip" "wap")))))
+          (ecukes-patterns '("foo" "bar" "baz" "qux"))
+          (ecukes-anti-patterns '("foo"))
+          (ecukes-include-tags '("wip"))
+          (ecukes-exclude-tags '("wap"))
+          (scenario-foo-in-hook)
+          (scenario-bar-in-hook)
+          (scenario-qux-in-hook))
+      (add-hook 'ecukes-reporter-pending-scenario-hook
+                (lambda (scenario)
+                  (cond ((equal (ecukes-scenario-name scenario) "foo")
+                         (setq scenario-foo-in-hook t))
+                        ((equal (ecukes-scenario-name scenario) "bar")
+                         (setq scenario-bar-in-hook t))
+                        ((equal (ecukes-scenario-name scenario) "baz")
+                         (should-not "include baz in pending hook"))
+                        ((equal (ecukes-scenario-name scenario) "qux")
+                         (setq scenario-qux-in-hook t)))))
+      (add-hook 'ecukes-reporter-before-scenario-hook
+                (lambda (scenario)
+                  (should (equal (ecukes-scenario-name scenario) "baz"))))
+      (ecukes-run-feature feature)
+      (should scenario-foo-in-hook)
+      (should scenario-bar-in-hook)
+      (should scenario-qux-in-hook)))))
