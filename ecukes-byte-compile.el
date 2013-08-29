@@ -1,3 +1,6 @@
+(eval-when-compile
+  (defvar ecukes-verbose))
+
 (require 'dash)
 
 ;; Avoid "Loading vc-git..." messages
