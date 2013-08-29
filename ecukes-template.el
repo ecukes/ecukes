@@ -1,25 +1,21 @@
 ;;; ecukes-template.el --- Template helpers
 
 (require 'dash)
+(require 'f)
 (require 's)
 
-(defvar ecukes-path
-  (file-name-directory load-file-name)
-  "Path to ecukes.")
+(defvar ecukes-path (f-dirname (f-this-file)))
 
 (defvar ecukes-template-path
-  (expand-file-name "templates" ecukes-path)
+  (f-expand "templates" ecukes-path)
   "Path to templates directory.")
-
 
 (defun ecukes-template-get (template &optional substitutions)
   "Return TEMPLATE with SUBSTITUTIONS as a string."
   (let ((template-file
-         (expand-file-name (format "%s.tpl" (symbol-name template)) ecukes-template-path)))
-    (if (file-exists-p template-file)
-        (with-temp-buffer
-          (insert-file-contents-literally template-file)
-          (ecukes-template-substitute (buffer-string) substitutions))
+         (f-expand (format "%s.tpl" (symbol-name template)) ecukes-template-path)))
+    (if (f-file? template-file)
+        (ecukes-template-substitute (f-read-text template-file 'utf-8) substitutions)
       (error "Missing template file %s" template-file))))
 
 (defun ecukes-template-substitute (string substitutions)
@@ -35,9 +31,7 @@
 (defun ecukes-template-write (write-to template &optional substitutions)
   "Write TEMPLATE to WRITE-TO with SUBSTITUTIONS."
   (let ((contents (ecukes-template-get template substitutions)))
-    (with-temp-file write-to
-      (insert contents))))
-
+    (f-write-text contents 'utf-8 write-to)))
 
 (provide 'ecukes-template)
 

@@ -1,29 +1,45 @@
 ;;; ecukes.el --- Cucumber for Emacs
 
-(defvar ecukes-path
-  (file-name-directory load-file-name)
-  "Path to ecukes.")
+(require 'f)
 
-(add-to-list 'load-path ecukes-path)
+(defvar ecukes-path (f-dirname (f-this-file)))
 
 (require 'ecukes-run)
 (require 'ecukes-stats)
-(require 'ecukes-setup)
+(require 'ecukes-core)
+(require 'ecukes-project)
+(require 'ecukes-load)
+(require 'ecukes-parse)
+
 (require 'ansi-color)
 
 (defvar ecukes-buffer-name "*ecukes*")
+(defvar ecukes-include-tags nil)
+(defvar ecukes-exclude-tags nil)
+(defvar ecukes-cli-reporter "spec")
+(defvar ecukes-async-timeout 10)
+(defvar ecukes-patterns nil)
+(defvar ecukes-anti-patterns nil)
+(defvar ecukes-only-failing nil)
+(defconst ecukes-failing-scenarios-file ".ecukes-failing-scenarios")
 
 (defun ecukes (&optional ask-for-tags)
   (interactive "P")
   (unless (ecukes-project-path)
     (error "You are not visiting an Ecukes project."))
-  (ecukes-setup)
-  (if ask-for-tags
-      (ecukes-setup-tags (read-string "Run tags: ")))
+  (ecukes-load)
+  (ecukes-reporter-use ecukes-cli-reporter)
+  (when ask-for-tags
+    (-each
+     (s-split "," (read-string "Run tags: "))
+     (lambda (tag)
+       (if (s-prefix-p "~" tag)
+           (!cons (s-chop-prefix "~@" tag) ecukes-exclude-tags)
+         (!cons (s-chop-prefix "@" tag) ecukes-include-tags)))))
   (let ((feature-files
          (if (and (buffer-file-name) (s-matches? "\.feature$" (buffer-file-name)))
              (list (buffer-file-name))
-           (directory-files (ecukes-project-features-path) t "\\.feature$"))))
+           (f-glob "\\.feature$" (ecukes-project-features-path)))))
     (let ((ecukes-buffer (get-buffer-create ecukes-buffer-name))
           (buffers (buffer-list))
           (ecukes-internal-message-log)
@@ -40,20 +56,17 @@
         (ecukes-mode)
         (read-only-mode -1)
         (erase-buffer)
-        (-map
+        (-each
+         ecukes-internal-message-log
          (lambda (log)
            (let ((type (car log))
                  (message (cdr log)))
-             (if (eq type 'message)
-                 (progn
-                   (let ((message-start (point)))
-                       (insert (ansi-color-apply message))
-                       (when (get-text-property (1- (point)) 'font-lock-face)
-                         (when (eq (elt ansi-color-names-vector 1) (cdr (get-text-property (1- (point)) 'font-lock-face)))
-                           (add-text-properties message-start (point) '(ecukes-step-error t)))))
-                   (insert "\n")
-                   ))))
-         ecukes-internal-message-log)
+             (when (or (eq type 'message) (eq type 'princ))
+               (let ((message-start (point)))
+                 (insert (ansi-color-apply message))
+                 (when (get-text-property (1- (point)) 'font-lock-face)
+                   (when (eq (elt ansi-color-names-vector 1) (cdr (get-text-property (1- (point)) 'font-lock-face)))
+                     (add-text-properties message-start (point) '(ecukes-step-error t)))))))))
         (font-lock-mode t)
         (goto-char (point-min))
         (if (eq ecukes-stats-steps-failed 0)

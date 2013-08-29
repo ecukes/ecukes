@@ -1,5 +1,7 @@
 ;;; ecukes-def.el --- Data structure definitions
 
+(require 'f)
+(require 's)
 (eval-when-compile (require 'cl))
 
 (defstruct ecukes-feature
@@ -25,7 +27,7 @@ optional, but is conventionally included."
 
 (defstruct ecukes-step
   "A step is some kind of action."
-  name head body arg type err)
+  name head body arg type err status)
 
 (defstruct ecukes-step-def
   "A step definition."
@@ -37,12 +39,11 @@ File name is converted to \".el\" if it exists, otherwise
 \".elc\" file may be returned.  When the second argument RELATIVE
 is given, return relative path."
   (let* ((file (ecukes-step-def-file step))
-         (el (when file
-               (replace-regexp-in-string "\\.elc\\'" ".el" file))))
+         (el (when file (s-replace ".elc" ".el" file))))
     (when (and el (file-exists-p el))
       (setq file el))
     (if (and file relative)
-        (file-relative-name file)
+        (f-relative file)
       file)))
 
 (provide 'ecukes-def)

@@ -10,9 +10,6 @@
 (defvar ecukes-test/root-path
   (f-parent ecukes-test/test-path))
 
-(defvar ecukes-test/root-path
-  (f-parent ecukes-test/test-path))
-
 (defvar ecukes-test/fixtures-path
   (f-expand "fixtures" ecukes-test/test-path))
 
@@ -25,5 +22,7 @@
 (setq debug-on-entry t)
 (setq debug-on-error t)
 (setq ecukes-include-tags nil)
+(setq ecukes-verbose t)
+(setq ecukes-path ecukes-test/root-path)
 
 (add-to-list 'load-path ecukes-test/root-path)

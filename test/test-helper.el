@@ -1,3 +1,4 @@
+(require 'f)
 (require 'ecukes-parse)
 
 (defmacro with-steps (&rest body)
@@ -91,6 +92,43 @@
     (stub ecukes-project-path => "/path/to/project")
     ,@body))
 
+(defmacro with-new-project (&rest body)
+  `(let ((ecukes-new-features-path "/path/to/project/features")
+         (ecukes-new-project-name "project"))
+     ,@body))
+
 (defun fixture-file-path (category name)
-  (let ((category-path (expand-file-name category ecukes-test/fixtures-path)))
-    (expand-file-name (format "%s.feature" name) category-path)))
+  (let ((category-path (f-expand category ecukes-test/fixtures-path)))
+    (f-expand (format "%s.feature" name) category-path)))
+
+(defmacro with-reporter-hooks (&rest body)
+  `(let (ecukes-reporter-start-hook
+         ecukes-reporter-end-hook
+         ecukes-reporter-pending-scenario-hook
+         ecukes-reporter-before-first-feature-hook
+         ecukes-reporter-before-last-feature-hook
+         ecukes-reporter-before-feature-hook
+         ecukes-reporter-after-first-feature-hook
+         ecukes-reporter-after-last-feature-hook
+         ecukes-reporter-after-feature-hook
+         ecukes-reporter-before-first-scenario-hook
+         ecukes-reporter-before-last-scenario-hook
+         ecukes-reporter-before-scenario-hook
+         ecukes-reporter-after-first-scenario-hook
+         ecukes-reporter-after-scenario-hook
+         ecukes-reporter-scenario-passed-hook
+         ecukes-reporter-scenario-failed-hook
+         ecukes-reporter-before-first-step-hook
+         ecukes-reporter-before-last-step-hook
+         ecukes-reporter-before-step-hook
+         ecukes-reporter-after-first-step-hook
+         ecukes-reporter-after-last-step-hook
+         ecukes-reporter-after-step-hook
+         ecukes-reporter-after-step-success-hook
+         ecukes-reporter-after-step-failed-hook
+         ecukes-reporter-after-step-skipped-hook
+         ecukes-reporter-after-step-hook
+         ecukes-reporter-steps-without-definition-hook
+         ecukes-reporter-before-background-hook
+         ecukes-reporter-after-background-hook)
+     ,@body))

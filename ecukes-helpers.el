@@ -26,6 +26,10 @@
              (ecukes-background-steps background)) backgrounds)))
     (-flatten (-concat background-steps scenario-steps))))
 
+(defun ecukes-format-quote (string)
+  "Quote percent signs in STRING."
+  (s-replace "%" "%%" string))
+
 (provide 'ecukes-helpers)
 
 ;;; ecukes-helpers.el ends here

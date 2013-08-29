@@ -78,48 +78,6 @@
     (mock (error (ansi-red "Step not defined: `state known and unknown`")) :times 1)
     (Given "state %s and %s" "known" "unknown"))))
 
-(ert-deftest steps-missing-definition-no-steps ()
-  "Should return nil when no steps."
-  (should-not (ecukes-steps-missing-definition nil)))
-
-(ert-deftest steps-missing-definition-no-definitions ()
-  "Should return all steps when all missing."
-  (let ((steps (list (mock-step "Given a known state"))))
-    (should (equal (ecukes-steps-missing-definition steps) steps))))
-
-(ert-deftest steps-missing-definition-have-definitions ()
-  "Should return nil when no steps missing."
-  (with-steps
-   (let ((steps (list (mock-step "Given a known state"))))
-     (Given "^a known state$" 'ignore)
-     (should-not (ecukes-steps-missing-definition steps)))))
-
-(ert-deftest steps-missing-definition-have-definitions-with-argument ()
-  "Should return nil when no steps missing with argument."
-  (with-steps
-   (let ((steps (list (mock-step "Given state \"known\""))))
-     (Given "^state \"known\"$" 'ignore)
-     (should-not (ecukes-steps-missing-definition steps)))))
-
-(ert-deftest steps-missing-definition-some-missing ()
-  "Should return missing steps when some missing."
-  (with-steps
-   (let* ((known
-           (mock-step "Given a known state"))
-          (unknown
-           (mock-step "Given an unknown state"))
-          (steps (list known unknown)))
-     (Given "^a known state$" 'ignore)
-     (should (equal (list unknown) (ecukes-steps-missing-definition steps))))))
-
-(ert-deftest steps-missing-definition-same-steps ()
-  "Should return uniq steps when same steps."
-  (with-steps
-   (let* ((step
-           (mock-step "Given a known state"))
-          (steps (list step step)))
-     (should (equal steps (ecukes-steps-missing-definition steps))))))
-
 (ert-deftest steps-args-no-args ()
   "Should return empty list when no args."
   (with-steps

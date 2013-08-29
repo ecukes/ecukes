@@ -42,10 +42,10 @@
   "Regexp matching table.")
 
 
-(defun ecukes-parse-feature (feature)
-  "Parse FEATURE."
+(defun ecukes-parse-feature (feature-file)
+  "Parse FEATURE-FILE."
   (with-temp-buffer
-    (insert-file-contents-literally feature)
+    (insert (f-read-text feature-file 'utf-8))
     (goto-char (point-min))
     (let* ((tags)
            (intro (ecukes-parse-intro))
