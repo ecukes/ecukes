@@ -57,7 +57,7 @@
 
 (defun ecukes-cli/list-steps ()
   (ecukes-load-step-definitions)
-  (ecukes-print-steps ecukes-cli-with-doc ecukes-cli-with-file))
+  (ecukes-reporter-print-steps ecukes-cli-with-doc ecukes-cli-with-file))
 
 (defun ecukes-cli/with-doc ()
   (setq ecukes-cli-with-doc t))
