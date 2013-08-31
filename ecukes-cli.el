@@ -73,6 +73,9 @@
 (defun ecukes-cli/verbose ()
   (setq ecukes-verbose t))
 
+(defun ecukes-cli/quiet ()
+  (setq ecukes-verbose nil))
+
 (defun ecukes-cli/tags (tag-string)
   (-each
    (s-split "," tag-string)
@@ -156,8 +159,10 @@
  (option "--with-doc" "Include docstring when printing steps with 'list-steps'." ecukes-cli/with-doc)
  (option "--with-file" "Include file name when printing steps with 'list-steps'." ecukes-cli/with-file)
 
+ (option "--verbose" "Show package output" ecukes-cli/verbose)
+ (option "--quiet" "Do not show package output" ecukes-cli/quiet)
+
  (option "-h, --help" "Display this help message" ecukes-cli/help)
- (option "--verbose" "Show `message' and `print' output" ecukes-cli/verbose)
  (option "--debug" "Run in debug mode (show all output and stacktraces)" ecukes-cli/debug)
  (option "--tags <tag-string>" ("Only execute the scenarios with tags matching TAG_EXPRESSION."
                                 "TAG_EXPRESSION Examples: --tags @dev, --tags @dev,~@local"

@@ -7,7 +7,7 @@
 (defvar ecukes-message nil
   "If true message is internal Ecukes message, otherwise external.")
 
-(defvar ecukes-verbose nil
+(defvar ecukes-verbose t
   "If true, show all message output, otherwise hide.")
 
 (defvar ecukes-internal-message-log nil
