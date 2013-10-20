@@ -201,7 +201,10 @@
                  (if (byte-code-function-p fn)
                      (aref fn 0)
                    (if (listp fn)
-                       (cadr fn))))))
+                       (cond ((eq (car fn) 'lambda)
+                              (cadr fn))
+                             ((eq (car fn) 'closure)
+                              (nth 2 fn))))))))
           (if (and (not (symbolp fn)) (> fn-args-count (length args)))
               (progn
                 (let ((wait t))
