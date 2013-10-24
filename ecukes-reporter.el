@@ -273,15 +273,15 @@ The rest of the arguments will be applied to `format'."
     (-dotimes
      rows
      (lambda (row)
-       (let ((col-strings))
+       (let (col-strings)
          (-dotimes
           cols
           (lambda (col)
             (let* ((orig (nth col (nth row table)))
                    (pad (- (nth col widths) (length orig)))
                    (col-string (s-concat orig (s-repeat pad " "))))
-              (add-to-list 'col-strings col-string t 'eq))))
-         (ecukes-reporter-println 6 "| %s |" (s-join " | " col-strings)))))))
+              (push col-string col-strings))))
+         (ecukes-reporter-println 6 "| %s |" (s-join " | " (nreverse col-strings))))))))
 
 (defun ecukes-reporter-print-py-string (step)
   "Print STEP py-string."
@@ -336,7 +336,7 @@ The rest of the arguments will be applied to `format'."
              (step-string (ecukes-reporter--step-string step)))
          (unless
              (--any? (equal step-body it) step-bodies)
-           (add-to-list 'step-bodies step-body)
+           (push step-body step-bodies)
            (ecukes-reporter-println step-string)))))))
 
 (defun ecukes-reporter--step-string (step)
@@ -353,7 +353,7 @@ The rest of the arguments will be applied to `format'."
 
 (defun ecukes-reporter--step-args (step)
   "Return args from STEP."
-  (let* ((result)
+  (let* (result
          (arg (ecukes-step-arg step))
          (args (ecukes-steps-args step))
          (type (ecukes-step-type step))
@@ -369,8 +369,8 @@ The rest of the arguments will be applied to `format'."
         (-dotimes
          args-count
          (lambda (n)
-           (add-to-list 'result (format "arg-%d" (1+ n)) t)))
-        (s-join " " result)))))
+           (push (format "arg-%d" (1+ n)) result)))
+        (s-join " " (nreverse result))))))
 
 (defun ecukes-reporter--step-body (step)
   "Return body from STEP."

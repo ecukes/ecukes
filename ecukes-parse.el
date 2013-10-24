@@ -66,11 +66,11 @@
 (defun ecukes-parse-intro ()
   "Parse intro."
   (when (re-search-forward ecukes-parse-intro-re nil t)
-    (let ((header (match-string 1)) (description))
+    (let (description (header (match-string 1)))
       (while (not (progn (forward-line 1) (ecukes-parse-new-section-p)))
         (let ((line (ecukes-parse-line t)))
-          (if line (add-to-list 'description line t))))
-      (make-ecukes-intro :header header :description description))))
+          (if line (push line description))))
+      (make-ecukes-intro :header header :description (nreverse description)))))
 
 (defun ecukes-parse-background ()
   "Parse background."
@@ -81,10 +81,10 @@
 (defun ecukes-parse-outlines ()
   "Parse all scenario outlines."
   (goto-char (point-min))
-  (let ((outlines))
+  (let (outlines)
     (while (re-search-forward ecukes-parse-outline-re nil t)
-      (add-to-list 'outlines (ecukes-parse-outline) t))
-    outlines))
+      (push (ecukes-parse-outline) outlines))
+    (nreverse outlines)))
 
 (defun ecukes-parse-outline ()
   "Parse a single scenario outline."
@@ -153,10 +153,10 @@
 (defun ecukes-parse-scenarios ()
   "Parse scenarios."
   (goto-char (point-min))
-  (let ((scenarios))
+  (let (scenarios)
     (while (re-search-forward ecukes-parse-scenario-re nil t)
-      (add-to-list 'scenarios (ecukes-parse-scenario) t))
-    scenarios))
+      (push (ecukes-parse-scenario) scenarios))
+    (nreverse scenarios)))
 
 (defun ecukes-parse-scenario ()
   "Parse scenario."
@@ -185,11 +185,11 @@
 
 (defun ecukes-parse-block-steps ()
   "Parse steps in block."
-  (let ((steps))
+  (let (steps)
     (while (ecukes-forward-step)
       (let ((step (ecukes-parse-step)))
-        (add-to-list 'steps step t 'eq)))
-    steps))
+        (push step steps)))
+    (nreverse steps)))
 
 (defun ecukes-parse-step ()
   "Parse step."
@@ -220,11 +220,11 @@
   "Parse table step."
   (save-excursion
     (forward-line 1)
-    (let ((rows))
+    (let (rows)
       (while (s-matches? ecukes-parse-table-re (ecukes-parse-line))
-        (add-to-list 'rows (ecukes-parse-table-step-row) t 'eq)
+        (push (ecukes-parse-table-step-row) rows)
         (forward-line 1))
-      rows)))
+      (nreverse rows))))
 
 (defun ecukes-parse-table-step-row ()
   "Parse row in table."
