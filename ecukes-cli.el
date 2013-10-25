@@ -146,7 +146,7 @@
 
 
 
-(setq commander-args (s-split " " (getenv "ECUKES_ARGS")))
+(setq commander-args (-reject 's-blank? (s-split " " (getenv "ECUKES_ARGS"))))
 
 (commander
  (name "ecukes")
