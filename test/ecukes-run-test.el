@@ -851,6 +851,17 @@
            (actual (ecukes-step-err step)))
        (should (equal expected actual))))))
 
+(ert-deftest ecukes-run-test/run-step-async-byte-compiled ()
+  (with-mock
+   (stub ecukes-steps-args)
+   (stub ecukes-steps-find =>
+         (make-ecukes-step-def
+          :fn
+          (byte-compile
+           (lambda (callback)
+             (funcall callback)))))
+   (should (ecukes-run-step (make-ecukes-step)))))
+
 (ert-deftest ecukes-run-test/pending-hook ()
   (with-mock
    (with-reporter-hooks

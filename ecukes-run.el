@@ -197,9 +197,9 @@
                (step-def (ecukes-steps-find body))
                (fn (ecukes-step-def-fn step-def))
                (fn-args-count
-                (length
-                 (if (byte-code-function-p fn)
-                     (aref fn 0)
+                (if (byte-code-function-p fn)
+                    (car (byte-compile-arglist-signature (aref fn 0)))
+                  (length
                    (if (listp fn)
                        (cond ((eq (car fn) 'lambda)
                               (cadr fn))
