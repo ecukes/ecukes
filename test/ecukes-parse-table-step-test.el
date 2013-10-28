@@ -39,12 +39,3 @@
    (lambda (name head body type arg)
      (should (eq type 'table))
      (should (equal arg '(("meal" "price") ("Hamburger" "") ("Pizza" "$5.30")))))))
-
-(ert-deftest parse-table-step-multiline-string ()
-  "Should parse table with multiline string."
-  (with-parse-step
-   "table-multi-line-string"
-   (lambda (name head body type arg)
-     (should (eq type 'table))
-     (should (equal arg '(("meal" "price") ("Ham
-burger" "$4.50")))))))

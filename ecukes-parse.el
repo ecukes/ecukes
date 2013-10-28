@@ -229,9 +229,7 @@
 (defun ecukes-parse-table-step-row ()
   "Parse row in table."
   (let ((row (ecukes-parse-line)))
-    (--map
-     (read (concat "\"" it "\""))
-     (butlast (cdr (split-string row "\\s-*|\\s-*"))))))
+    (butlast (cdr (split-string row "\\s-*|\\s-*")))))
 
 (defun ecukes-parse-py-string-step-p ()
   "Check if step is a py string step or not."
