@@ -19,7 +19,7 @@
 
 (defun ecukes-load-support ()
   "Load project support files."
-  (let* ((env-file (f-expand "env.el" (ecukes-project-support-path)))
+  (let* ((env-file (f-expand "env" (ecukes-project-support-path)))
          (support-files
           (f-files (ecukes-project-support-path)
                    (lambda (file)
@@ -30,8 +30,9 @@
 
 (defun ecukes-load-step-definitions ()
   "Load project step definition files."
-  (let ((step-definition-files
-         (f-glob "*-steps.el" (ecukes-project-step-definitions-path))))
+  (let* ((step-definition-files
+          (f-glob "*-steps.el" (ecukes-project-step-definitions-path)))
+         (step-definition-files (-map 'f-no-ext step-definition-files)))
     (--each step-definition-files (load it nil t))))
 
 (provide 'ecukes-load)
