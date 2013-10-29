@@ -3,6 +3,7 @@
 (require 'f)
 (require 's)
 (require 'dash)
+(require 'bytecomp)
 
 (require 'ecukes-parse)
 (require 'ecukes-steps)

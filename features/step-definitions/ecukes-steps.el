@@ -75,3 +75,7 @@
   (lambda (file content)
     (let ((path (f-expand file ecukes-project-path)))
       (f-write-text content 'utf-8 path))))
+
+(When "^I byte compile \"\\([^\"]+\\)\"$"
+  (lambda (file)
+    (byte-compile-file (f-expand file ecukes-project-path))))

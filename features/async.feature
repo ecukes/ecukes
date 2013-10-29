@@ -25,6 +25,29 @@ Feature: Async
       1 steps (0 failed, 0 skipped, 1 passed)
       """
 
+  Scenario: Byte compiled step definitions file
+    Given feature "async":
+      """
+      Feature: Sleep for
+        Scenario: Ten seconds
+          Given I sleep for "0" second
+      """
+    And step definition:
+      """
+      (Given "^I sleep for \"\\([0-9]+\\)\" seconds?$"
+        (lambda (seconds callback)
+          (funcall callback)))
+      """
+    When I byte compile "features/step-definitions/super-project-steps.el"
+    And I run ecukes "features/async.feature --reporter dot"
+    Then I should see command output:
+      """
+      .
+
+      1 scenarios (0 failed, 1 passed)
+      1 steps (0 failed, 0 skipped, 1 passed)
+      """
+
   Scenario: Not callbacked
     Given feature "async":
       """

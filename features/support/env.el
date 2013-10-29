@@ -66,6 +66,15 @@
      (s-matches? ".feature$" file))
    :recursive)
   'f-delete)
+
+ (-each
+  (f-files
+   ecukes-project-features-path
+   (lambda (file)
+     (equal (f-ext file) "elc"))
+   'recursive)
+  'f-delete)
+
  (-each
   '(".ecukes" ".ecukes-failing-scenarios")
   (lambda (file)
