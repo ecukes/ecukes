@@ -39,7 +39,7 @@
   (let ((feature-files
          (if (and (buffer-file-name) (s-matches? "\.feature$" (buffer-file-name)))
              (list (buffer-file-name))
-           (f-glob "\\.feature$" (ecukes-project-features-path)))))
+           (f-glob "*.feature" (ecukes-project-features-path)))))
     (let ((ecukes-buffer (get-buffer-create ecukes-buffer-name))
           (buffers (buffer-list))
           (ecukes-internal-message-log)
