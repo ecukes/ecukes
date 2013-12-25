@@ -54,29 +54,60 @@
   "File to save list of failing scenarios in.")
 
 
+;;;; Commands
+
+(defun ecukes-cli/new ()
+  "Create new Ecukes files for project."
+  (ecukes-new))
 
 (defun ecukes-cli/list-steps ()
+  "Print all available steps defined for this project."
   (ecukes-load-step-definitions)
   (ecukes-reporter-print-steps ecukes-cli-with-doc ecukes-cli-with-file))
 
+(defun ecukes-cli/list-reporters ()
+  "Show list of available reporters."
+  (let ((ecukes-message t))
+    (princ " ")
+    (-each
+     ecukes-reporters
+     (lambda (reporter)
+       (let ((name (car reporter))
+             (description (cdr reporter)))
+         (message "  %s - %s" name description))))
+    (princ "\n")))
+
+
+;;;; Options
+
 (defun ecukes-cli/with-doc ()
+  "Include docstring when printing steps with 'list-steps'."
   (setq ecukes-cli-with-doc t))
 
 (defun ecukes-cli/with-file ()
+  "Include file name when printing steps with 'list-steps'."
   (setq ecukes-cli-with-file t))
 
 (defun ecukes-cli/debug ()
+  "Run in debug mode (show all output and stacktraces)."
   (setq debug-on-error t)
   (setq debug-on-entry t)
   (setq ecukes-verbose t))
 
 (defun ecukes-cli/verbose ()
+  "Show output comming from the actual package."
   (setq ecukes-verbose t))
 
 (defun ecukes-cli/quiet ()
+  "Do not show output comming from the actual package."
   (setq ecukes-verbose nil))
 
 (defun ecukes-cli/tags (tag-string)
+  "Only execute the scenarios with tags matching TAG-STRING.
+
+Examples: --tags @dev, --tags @dev,~@local
+
+A tag starting with ~ excluded from the scenarios."
   (-each
    (s-split "," tag-string)
    (lambda (tag)
@@ -105,46 +136,49 @@
     (ecukes-run feature-files)))
 
 (defun ecukes-cli/help ()
+  "Display usage information."
   (let ((ecukes-message t))
     (commander-print-usage))
   (ecukes-quit 0))
 
-(defun ecukes-cli/new ()
-  (ecukes-new))
-
 (defun ecukes-cli/reporter (reporter)
+  "Select reporter (default: dot)."
   (setq ecukes-cli-reporter reporter))
 
-(defun ecukes-cli/list-reporters ()
-  (let ((ecukes-message t))
-    (princ " ")
-    (-each
-     ecukes-reporters
-     (lambda (reporter)
-       (let ((name (car reporter))
-             (description (cdr reporter)))
-         (message "  %s - %s" name description))))
-    (princ "\n")))
-
 (defun ecukes-cli/timeout (timeout)
+  "How long to wait for async steps before quitting."
   (setq ecukes-async-timeout (string-to-number timeout)))
 
 (defun ecukes-cli/patterns (&rest patterns)
+  "Run scenarios matching a pattern."
   (setq ecukes-patterns patterns))
 
 (defun ecukes-cli/anti-patterns (&rest patterns)
+  "Do not run scenarios matching a pattern."
   (setq ecukes-anti-patterns patterns))
 
 (defun ecukes-cli/only-failing ()
+  "Run only failing scenarios."
   (setq ecukes-only-failing t))
 
 (defun ecukes-cli/error-log (file)
+  "Log error backtrace to file."
   (ecukes-cli/debug)
   (setq debug-on-signal t)
   (setq debugger 'ecukes-debug)
   (setq ecukes-error-log-file file))
 
+(defun ecukes-cli/script ()
+  "Run Ecukes as a script/batch job (default).")
+
+(defun ecukes-cli/win ()
+  "Run Ecukes with full GUI window.")
+
+(defun ecukes-cli/no-win ()
+  "Run Ecukes without GUI window.")
+
 
+;;;; Commander schedule
 
 (setq commander-args (-reject 's-blank? (s-split " " (getenv "ECUKES_ARGS"))))
 
@@ -155,35 +189,33 @@
 
  (default ecukes-cli/run "features")
 
- (command "list-steps" "Print all available steps defined for this project." ecukes-cli/list-steps)
- (option "--with-doc" "Include docstring when printing steps with 'list-steps'." ecukes-cli/with-doc)
- (option "--with-file" "Include file name when printing steps with 'list-steps'." ecukes-cli/with-file)
+ (command "new" ecukes-cli/new)
+ (command "list-steps" ecukes-cli/list-steps)
+ (command "list-reporters" ecukes-cli/list-reporters)
 
- (option "--verbose" "Show package output" ecukes-cli/verbose)
- (option "--quiet" "Do not show package output" ecukes-cli/quiet)
+ (option "--with-doc" ecukes-cli/with-doc)
+ (option "--with-file" ecukes-cli/with-file)
 
- (option "-h, --help" "Display this help message" ecukes-cli/help)
- (option "--debug" "Run in debug mode (show all output and stacktraces)" ecukes-cli/debug)
- (option "--tags <tag-string>" ("Only execute the scenarios with tags matching TAG_EXPRESSION."
-                                "TAG_EXPRESSION Examples: --tags @dev, --tags @dev,~@local"
-                                "A tag starting with ~ excluded from the scenarios.") ecukes-cli/tags)
+ (option "--verbose" ecukes-cli/verbose)
+ (option "--quiet"  ecukes-cli/quiet)
 
- (option "--script" "Run Ecukes as a script/batch job (default)" ignore)
- (option "--no-win" "Run Ecukes without GUI window" ignore)
- (option "--win" "Run Ecukes with full GUI window" ignore)
+ (option "-h, --help" ecukes-cli/help)
+ (option "--debug" ecukes-cli/debug)
+ (option "--tags <tag-string>" ecukes-cli/tags)
 
- (command "list-reporters" "Show list of reporters" ecukes-cli/list-reporters)
- (option "--reporter <reporter>, -r <reporter>" "Select reporter (default: dot)" ecukes-cli/reporter)
+ (option "--script" ecukes-cli/script)
+ (option "--no-win" ecukes-cli/no-win)
+ (option "--win" ecukes-cli/win)
 
- (option "-t <seconds>, --timeout <seconds>" "How long to wait for async steps before quitting" ecukes-cli/timeout)
+ (option "--reporter <reporter>, -r <reporter>" ecukes-cli/reporter)
 
- (option "-p <*>, --patterns <*>" "Run scenarios matching a pattern" ecukes-cli/patterns)
- (option "-a <*>, --anti-patterns <*>" "Do not run scenarios matching a pattern" ecukes-cli/anti-patterns)
+ (option "-t <seconds>, --timeout <seconds>" ecukes-cli/timeout)
 
- (option "-f, --only-failing" "Run only failing scenarios" ecukes-cli/only-failing)
- (option "-l <file>, --error-log <file>" "Log error backtrace to file" ecukes-cli/error-log)
+ (option "-p <*>, --patterns <*>" ecukes-cli/patterns)
+ (option "-a <*>, --anti-patterns <*>" ecukes-cli/anti-patterns)
 
- (command "new" "Create new Ecukes setup for project" ecukes-cli/new))
+ (option "-f, --only-failing" ecukes-cli/only-failing)
+ (option "-l <file>, --error-log <file>" ecukes-cli/error-log))
 
 
 

@@ -8,7 +8,7 @@
 (depends-on "dash" "2.2.0")
 (depends-on "ansi" "0.3.0")
 (depends-on "espuds" "0.2.2")
-(depends-on "commander" "0.5.1")
+(depends-on "commander" "0.6.1")
 
 (development
  (depends-on "f")
