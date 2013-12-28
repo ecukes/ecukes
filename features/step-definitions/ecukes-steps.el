@@ -1,3 +1,10 @@
+(defun ecukes-ansi-clear (string)
+  "Like `ansi-color-filter-apply' with extension for movement."
+  (ansi-color-filter-apply
+   (->> string
+     (replace-regexp-in-string "\n\u001b\\[[0-9]+A" "")
+     (replace-regexp-in-string "\u001b\\[[0-9]+[BCD]" ""))))
+
 (defun ecukes-should-match (needle haystack)
   (should (s-contains? needle haystack)))
 
@@ -18,7 +25,7 @@
              'call-process
              (append (list ecukes-executable nil buffer nil) args))))
       (with-current-buffer buffer
-        (let ((content (ansi-color-filter-apply (buffer-string))))
+        (let ((content (ecukes-ansi-clear (buffer-string))))
           (cond ((= exit-code 0)
                  (setq ecukes-stdout content))
                 (t
