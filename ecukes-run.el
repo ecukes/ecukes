@@ -23,20 +23,20 @@
 
 (defun ecukes-run (feature-files)
   "Parse and run FEATURE-FILES if no steps are missing."
-  (let* ((features (-map 'ecukes-parse-feature feature-files))
+  (let* ((ecukes-features (-map 'ecukes-parse-feature feature-files))
          (steps-without-definition
-          (ecukes-steps-without-definition (ecukes-feature-steps features))))
+          (ecukes-steps-without-definition (ecukes-feature-steps ecukes-features))))
     (cond (steps-without-definition
            (run-hook-with-args 'ecukes-reporter-steps-without-definition-hook steps-without-definition))
           (:else
-           (let ((features (length features))
-                 (scenarios (length (-flatten (-map 'ecukes-feature-scenarios features)))))
+           (let ((ecukes-features (length ecukes-features))
+                 (scenarios (length (-flatten (-map 'ecukes-feature-scenarios ecukes-features)))))
              (run-hook-with-args
               'ecukes-reporter-start-hook
-              `((features . ,features)
+              `((ecukes-features . ,ecukes-features)
                 (scenarios . ,scenarios))))
            (ecukes-hooks-run-setup)
-           (ecukes-run-features features)
+           (ecukes-run-features ecukes-features)
            (ecukes-hooks-run-teardown)
            (run-hook-with-args
             'ecukes-reporter-end-hook
@@ -48,13 +48,13 @@
               (steps-failed     . ,ecukes-stats-steps-failed)
               (steps-skipped    . ,ecukes-stats-steps-skipped)))))))
 
-(defun ecukes-run-features (features)
+(defun ecukes-run-features (ecukes-features)
   "Run FEATURES."
   (-each
-   features
+   ecukes-features
    (lambda (feature)
-     (let ((first (eq (-first-item features) feature))
-           (last (eq (-last-item features) feature)))
+     (let ((first (eq (-first-item ecukes-features) feature))
+           (last (eq (-last-item ecukes-features) feature)))
        (when first
          (run-hook-with-args 'ecukes-reporter-before-first-feature-hook feature))
        (when last
