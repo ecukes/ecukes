@@ -3,19 +3,19 @@
 (require 'dash)
 (require 'ecukes-def)
 
-(defun ecukes-feature-steps (features)
+(defun ecukes-feature-steps (ecukes-features)
   "Return all steps in all FEATURES."
   (let* ((scenarios
           (-flatten
            (-map
             (lambda (feature)
-              (ecukes-feature-scenarios feature)) features)))
+              (ecukes-feature-scenarios feature)) ecukes-features)))
          (backgrounds
           (-reject
            'null
            (-map
             (lambda (feature)
-              (ecukes-feature-background feature)) features)))
+              (ecukes-feature-background feature)) ecukes-features)))
          (scenario-steps
           (-map
            (lambda (scenario)
