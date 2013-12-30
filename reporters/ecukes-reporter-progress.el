@@ -1,3 +1,5 @@
+(require 'ansi)
+
 (require 'ecukes-reporter)
 (require 'ecukes-helpers)
 
@@ -38,17 +40,23 @@
           (lambda (scenario)
             (ecukes-reporter-print (ansi-red "x"))))
 
+(add-hook 'ecukes-reporter-before-scenario-hook
+          (lambda (scenario)
+            (unless (zerop ecukes-reporter-scenarios-count)
+              (ecukes-reporter-print (ansi-up))
+              (ecukes-reporter-print (ansi-forward (1+ ecukes-reporter-scenarios-count))))))
+
 (add-hook 'ecukes-reporter-after-scenario-hook
           (lambda (scenario)
             (ecukes-reporter--inc)
-            (let ((s (format "%d%%" (* 100 (/ (* ecukes-reporter-scenarios-count 1.0) ecukes-reporter-total-scenarios)))))
+            (let ((progress-string (format "%d%%" (* 100 (/ (* ecukes-reporter-scenarios-count 1.0) ecukes-reporter-total-scenarios)))))
               (ecukes-reporter-print (ansi-forward (- ecukes-reporter-to-end 2)))
-              (ecukes-reporter-print (ecukes-format-quote s))
-              (ecukes-reporter-print (ansi-backward (+ (- (length s) 2) ecukes-reporter-to-end))))))
+              (ecukes-reporter-print (ecukes-format-quote progress-string))
+              (ecukes-reporter-print (ansi-backward (+ (- (length progress-string) 2) ecukes-reporter-to-end))))
+            (ecukes-reporter-print-newline)))
 
 (add-hook 'ecukes-reporter-end-hook
           (lambda (stats)
-            (ecukes-reporter-print-newline)
             (ecukes-reporter-print-failing-scenarios-summary)
             (ecukes-reporter-print-newline)
             (ecukes-reporter-print-summary stats)))
