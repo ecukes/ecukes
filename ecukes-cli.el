@@ -1,9 +1,10 @@
-;;; ecukes-cli.el --- Entry point when running Ecukes from terminal
+;;; ecukes-cli.el --- Entry point when running Ecukes from terminal -*- lexical-binding: t; -*-
 
 (require 'f)
 (require 's)
 (require 'dash)
 (require 'commander)
+(require 'debug)
 
 (defvar ecukes-path (f-dirname (f-this-file)))
 
@@ -20,8 +21,11 @@
 
 
 (eval-when-compile
-  (defvar debug-on-entry)
   (defvar ecukes-error-log-file))
+
+(setq debug-on-error t)
+(setq debug-on-signal t)
+(setq debugger 'ecukes-debug)
 
 (defvar ecukes-include-tags nil
   "Scenario tags to include.")
@@ -52,6 +56,9 @@
 
 (defconst ecukes-failing-scenarios-file ".ecukes-failing-scenarios"
   "File to save list of failing scenarios in.")
+
+(defconst ecukes-error-log "ecukes.err"
+  "Default file to log Ecukes error output to.")
 
 
 ;;;; Commands
@@ -87,12 +94,6 @@
 (defun ecukes-cli/with-file ()
   "Include file name when printing steps with 'list-steps'."
   (setq ecukes-cli-with-file t))
-
-(defun ecukes-cli/debug ()
-  "Run in debug mode (show all output and stacktraces)."
-  (setq debug-on-error t)
-  (setq debug-on-entry t)
-  (setq ecukes-verbose t))
 
 (defun ecukes-cli/verbose ()
   "Show output comming from the actual package."
@@ -161,12 +162,15 @@ A tag starting with ~ excluded from the scenarios."
   "Run only failing scenarios."
   (setq ecukes-only-failing t))
 
-(defun ecukes-cli/error-log (file)
+(defun ecukes-cli/debug ()
+  "Run in debug mode (show all output and stacktraces)."
+  (ecukes-on-debug 'princ))
+
+(defun ecukes-cli/error-log (&optional file)
   "Log error backtrace to file."
-  (ecukes-cli/debug)
-  (setq debug-on-signal t)
-  (setq debugger 'ecukes-debug)
-  (setq ecukes-error-log-file file))
+  (ecukes-on-debug
+   (lambda (backtrace)
+     (f-write-text backtrace 'utf-8 (or file ecukes-error-log)))))
 
 (defun ecukes-cli/script ()
   "Run Ecukes as a script/batch job (default).")
@@ -215,7 +219,7 @@ A tag starting with ~ excluded from the scenarios."
  (option "-a <*>, --anti-patterns <*>" ecukes-cli/anti-patterns)
 
  (option "-f, --only-failing" ecukes-cli/only-failing)
- (option "-l <file>, --error-log <file>" ecukes-cli/error-log))
+ (option "-l [file], --error-log [file]" ecukes-cli/error-log))
 
 
 

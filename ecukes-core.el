@@ -16,8 +16,8 @@
 (defvar ecukes-message-log nil
   "List with `message' output (only from external code).")
 
-(defvar ecukes-error-log-file nil
-  "Path to error log file.")
+(defvar ecukes-debug-callbacks nil
+  "List of functions to callback in debugger.")
 
 
 
@@ -67,26 +67,35 @@
     (message (apply 'ansi-red (cons format-string objects)))
     (ecukes-quit 1)))
 
+(defun ecukes-on-debug (callback)
+  "Call CALLBACK with backtrace from debug."
+  (add-to-list 'ecukes-debug-callbacks callback 'append))
+
 (defun ecukes-debug (&rest debugger-args)
-  "This is called when an error occurs (value of the `debugger' variable)."
-  (when ecukes-error-log-file
-    (let ((backtrace
-           (with-temp-buffer
-             (set-buffer-multibyte t)
-             (let ((standard-output (current-buffer))
-                   (print-escape-newlines t)
-                   (print-level 8)
-                   (print-length 50))
-               (backtrace))
-             (goto-char (point-min))
-             (delete-region
-              (point)
-              (progn
-                (search-forward "\n  ecukes-debug(")
-                (forward-line 1)
-                (point)))
-             (buffer-string))))
-      (f-write-text backtrace 'utf-8 ecukes-error-log-file))))
+  "Ecukes debugger.
+
+This is called when an error occurs. The function creates a
+decent backtrace and callbacks all functions in
+`ecukes-debug-callbacks' with the backtrace."
+  (let ((backtrace
+         (with-temp-buffer
+           (set-buffer-multibyte t)
+           (let ((standard-output (current-buffer))
+                 (print-escape-newlines t)
+                 (print-level 8)
+                 (print-length 50))
+             (backtrace))
+           (goto-char (point-min))
+           (delete-region
+            (point)
+            (progn
+              (search-forward "\n  ecukes-debug(")
+              (forward-line 1)
+              (point)))
+           (buffer-string))))
+    (-each ecukes-debug-callbacks
+           (lambda (callback)
+             (funcall callback backtrace)))))
 
 (provide 'ecukes-core)
 
