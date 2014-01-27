@@ -202,7 +202,7 @@ few different ways depending on your philosophical bent. To list all
 available reporters, run:
 
 ```bash
-$ cask exec list-reporters
+$ cask exec ecukes list-reporters
 ```
 
 To use a specific reporter, run:
