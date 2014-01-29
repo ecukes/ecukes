@@ -230,14 +230,15 @@ The rest of the arguments will be applied to `format'."
 
 (defun ecukes-reporter-print-feature-header (feature)
   "Print FEATURE and description if any."
-  (let* ((intro (ecukes-feature-intro feature))
-         (header (ecukes-intro-header intro))
-         (description (ecukes-intro-description intro))
-         (scenarios (ecukes-feature-scenarios feature)))
-    (ecukes-reporter-println "Feature: %s" header)
-    (--each description (ecukes-reporter-println 2 it))
-    (when description
-      (ecukes-reporter-print-newline))))
+  (let ((intro (ecukes-feature-intro feature)))
+    (when intro
+      (let* ((header (ecukes-intro-header intro))
+             (description (ecukes-intro-description intro))
+             (scenarios (ecukes-feature-scenarios feature)))
+        (ecukes-reporter-println "Feature: %s" header)
+        (--each description (ecukes-reporter-println 2 it))
+        (when description
+          (ecukes-reporter-print-newline))))))
 
 (defun ecukes-reporter-print-background-header ()
   "Print background header."
