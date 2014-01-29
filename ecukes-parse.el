@@ -42,9 +42,7 @@
   "Regexp matching table.")
 
 (defconst ecukes-concise-keywords-alist
-  '(("\"\\(.+\\)\"" . ("TEXT" "WORD" "FILENAME"
-                       "NAME" "KEYBINDING"))
-    ("\\(?: \"\\(.*\\)\"\\|:\\)" . (" CONTENTS"))
+  '(("\\(?: \"\\(.*\\)\"\\|:\\)" . (" CONTENTS"))
     ("\\([0-9]+\\)" . ("POSITION" "POS" "NUMBER" "NUM"))
     ("\\(.+\\)" . ("MODE" "VARIABLE" "VALUE")))
   "Keywords which could be a part of step definition body and
@@ -221,8 +219,11 @@
     (make-ecukes-step :name name :head head :body body :type type :arg arg)))
 
 (defun ecukes-parse-body-concise-keywords (body)
-  "Replaces keywords in a BODY by regexps. Keywords and regexps
-described in a `ecukes-concise-keywords-alist'."
+  "Replace keywords in a BODY by regexps. Keywords and regexps
+described in the `ecukes-concise-keywords-alist'. Keyword is a
+capitalized word or words separated by \"-\" character. If a
+keyword is not defined in the `ecukes-concise-keywords-alist'
+then it replaces by default regexp which matches any string."
   (setq case-fold-search nil)
   (dolist (concise-list ecukes-concise-keywords-alist)
     (let ((regexp (car concise-list))
@@ -233,7 +234,10 @@ described in a `ecukes-concise-keywords-alist'."
           (setq body (s-replace (nth 0 matches) regexp body)))
         (while (s-match keyword body)
           (setq body (s-replace keyword regexp body))))))
-  body)
+  (setq body (replace-regexp-in-string
+              "\\([[:upper:]-]\\{3,\\}\\)"
+              "\"\\\\(.+\\\\)\""
+              body)))
 
 (defun ecukes-parse-table-step-p ()
   "Check if step is a table step or not."

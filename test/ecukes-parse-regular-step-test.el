@@ -80,3 +80,12 @@
      (should (eq type 'regular))
      (should (equal name "And input CONTENTS and CONTENTS and CONTENTS with action"))
      (should (equal body "input\\(?: \"\\(.*\\)\"\\|:\\) and\\(?: \"\\(.*\\)\"\\|:\\) and\\(?: \"\\(.*\\)\"\\|:\\) with action")))))
+
+(ert-deftest parse-regular-step-concise-body-any-keyword ()
+  "Should parse concise body."
+  (with-parse-step
+   "body-any-keyword"
+   (lambda (name head body type arg)
+     (should (eq type 'regular))
+     (should (equal name "And input LANGUAGE and DIRECTION with action"))
+     (should (equal body "input \"\\(.+\\)\" and \"\\(.+\\)\" with action")))))
