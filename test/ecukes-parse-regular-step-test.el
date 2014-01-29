@@ -44,3 +44,39 @@
      (should (eq type 'regular))
      (should (eq type 'regular))
      (should (equal name "But observe outcomes")))))
+
+(ert-deftest parse-regular-step-concise-body-simple-keywords ()
+  "Should parse concise body."
+  (with-parse-step
+   "body-simple-keywords"
+   (lambda (name head body type arg)
+     (should (eq type 'regular))
+     (should (equal name "And input TEXT text another NAME and POS and MODE"))
+     (should (equal body (format "input \"\\(.+\\)\" text another \"\\(.+\\)\" and \\([0-9]+\\) and \\(.+\\)"))))))
+
+(ert-deftest parse-regular-step-concise-body-several-same-type-keywords ()
+  "Should parse concise body."
+  (with-parse-step
+   "body-several-same-type-keywords"
+   (lambda (name head body type arg)
+     (should (eq type 'regular))
+     (should (equal name "And input TEXT text another TEXT and TEXT"))
+     (should (equal body (format "input \"\\(.+\\)\" text another \"\\(.+\\)\" and \"\\(.+\\)\""))))))
+
+(ert-deftest parse-regular-step-concise-body-compound-keywords ()
+  "Should parse concise body."
+  (with-parse-step
+   "body-compound-keywords"
+   (lambda (name head body type arg)
+     (should (eq type 'regular))
+     (should (equal name "And select TEST-NAME in opened file LINE-POSITION and BUFFER-TEXT"))
+     (should (equal body "select \"\\(.+\\)\" in opened file \\([0-9]+\\) and \"\\(.+\\)\"")))))
+
+(ert-deftest parse-regular-step-concise-body-contents ()
+  "Should parse concise body."
+  (with-parse-step
+   "body-contents"
+   (lambda (name head body type arg)
+     (should (eq type 'regular))
+     (should (equal name "And input CONTENTS and CONTENTS and CONTENTS with action"))
+     (should (equal body "input\\(?: \"\\(.*\\)\"\\|:\\) and\\(?: \"\\(.*\\)\"\\|:\\) and\\(?: \"\\(.*\\)\"\\|:\\) with action")))))
