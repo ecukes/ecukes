@@ -32,10 +32,9 @@
   "Return t if FILE's filename is a valid step definition
 filename."
   (let ((filename (f-filename file)))
-    (when (and (s-ends-with? "-steps.el" filename)
-               (not (s-starts-with? "." filename))
-               (not (s-starts-with? "#" filename)))
-      t)))
+    (and (s-ends-with? "-steps.el" filename)
+         (not (s-starts-with? "." filename))
+         (not (s-starts-with? "#" filename)))))
 
 (defun ecukes-find-step-definitions-files ()
   "Find step definitions files."
