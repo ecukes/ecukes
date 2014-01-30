@@ -111,3 +111,14 @@ Feature: Ecukes
       2 scenarios (0 failed, 2 passed)
       0 steps
       """
+
+  Scenario: Run empty feature
+    Given feature "foo":
+      """
+      """
+    When I run ecukes "features/foo.feature --reporter magnars"
+    Then I should see command output:
+      """
+      0 scenarios
+      0 steps
+      """
