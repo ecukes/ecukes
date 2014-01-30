@@ -28,12 +28,29 @@
     (--each support-files
       (load it nil t))))
 
+(defun ecukes-step-definitions-valid-file-p (file)
+  "Return t if FILE's filename is a valid step definition
+filename."
+  (let ((filename (f-filename file)))
+    (and (s-ends-with? "-steps.el" filename)
+         (not (s-starts-with? "." filename))
+         (not (s-starts-with? "#" filename)))))
+
+(defun ecukes-find-step-definitions-files ()
+  "Find step definitions files."
+  (let ((step-definition-files
+         (f-files (ecukes-project-step-definitions-path))))
+    (-filter 'ecukes-step-definitions-valid-file-p
+             step-definition-files)))
+
 (defun ecukes-load-step-definitions ()
   "Load project step definition files."
   (let* ((step-definition-files
-          (f-glob "*-steps.el" (ecukes-project-step-definitions-path)))
-         (step-definition-files (-map 'f-no-ext step-definition-files)))
+          (ecukes-find-step-definitions-files))
+         (step-definition-files
+          (-map 'f-no-ext step-definition-files)))
     (--each step-definition-files (load it nil t))))
+
 
 (provide 'ecukes-load)
 

@@ -29,12 +29,25 @@
     (mock (load) :times 4)
     (ecukes-load-support))))
 
-(ert-deftest load-step-definitions ()
+(ert-deftest ecukes-load/load-step-definitions ()
   "Should load all step definitions."
   (with-mock
    (stub
-    f-glob =>
+    f-files =>
     '("/path/to/project/features/step-definitions/project-steps.el"
       "/path/to/project/features/step-definitions/misc-steps.el"))
    (mock (load) :times 2)
    (ecukes-load-step-definitions)))
+
+(ert-deftest ecukes-load/skip-hidden-temporal-files ()
+  "Should skip hidden and temporal files."
+  (with-mock
+   (stub
+    f-files =>
+    '("/path/to/project/features/support/.bar-steps.el"
+      "/path/to/project/features/support/#misc-steps.el#"
+      "/path/to/project/features/step-definitions/bar-steps.el"
+      "/path/to/project/features/step-definitions/misc-steps.el"))
+   (mock (load) :times 2)
+   (ecukes-load-step-definitions)))
+
