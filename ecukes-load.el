@@ -31,7 +31,7 @@
 (defun ecukes-load-step-definitions ()
   "Load project step definition files."
   (let* ((step-definition-files
-          (f-glob "*-steps.el" (ecukes-project-step-definitions-path)))
+          (f-glob "[!.#]*-steps.el" (ecukes-project-step-definitions-path)))
          (step-definition-files (-map 'f-no-ext step-definition-files)))
     (--each step-definition-files (load it nil t))))
 
