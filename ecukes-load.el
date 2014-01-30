@@ -39,7 +39,7 @@ filename."
 (defun ecukes-find-step-definitions-files ()
   "Find step definitions files."
   (let ((step-definition-files
-         (f-files (ecukes-project-step-definitions-path) nil t)))
+         (f-files (ecukes-project-step-definitions-path))))
     (-filter 'ecukes-step-definitions-valid-file-p
              step-definition-files)))
 
