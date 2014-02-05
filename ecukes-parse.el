@@ -230,7 +230,7 @@ then it replaces by default regexp which matches any string."
           (matches))
       (dolist (keyword concise-keywords)
         (while (setq matches (s-match (format "[[:upper:]0-9-]+-%s" keyword) body))
-          (setq body (s-replace (nth 0 matches) regexp body)))
+          (setq body (s-replace (car matches) regexp body)))
         (while (s-match keyword body)
           (setq body (s-replace keyword regexp body))))))
   (setq body (replace-regexp-in-string
