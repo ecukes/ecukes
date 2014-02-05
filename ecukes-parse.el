@@ -213,9 +213,8 @@
      ((ecukes-parse-table-step-p)
       (setq arg (ecukes-parse-table-step))
       (setq type 'table))
-     (t (progn 
-          (setq type 'regular)
-          (setq body (ecukes-parse-body-concise-keywords body)))))
+     (t (setq type 'regular)
+        (setq body (ecukes-parse-body-concise-keywords body))))
     (make-ecukes-step :name name :head head :body body :type type :arg arg)))
 
 (defun ecukes-parse-body-concise-keywords (body)
