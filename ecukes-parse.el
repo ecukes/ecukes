@@ -41,16 +41,6 @@
   "^\\s-*|.+|"
   "Regexp matching table.")
 
-(defvar ecukes-concise-keywords-alist '()
-  "Keywords which could be a part of step definition body and
-which while parsing replaces by a appropriate regexps.")
-
-(defun ecukes-define-keyword (name pattern)
-  "Define new keyword. Add keyword with NAME and PATTERN to the
-`ecukes-concise-keywords-alist'."
-  (let ((keyword-list (list name pattern)))
-    (add-to-list 'ecukes-concise-keywords-alist keyword-list)))
-
 (defun ecukes-parse-feature (feature-file)
   "Parse FEATURE-FILE."
   (with-temp-buffer
@@ -221,7 +211,7 @@ which while parsing replaces by a appropriate regexps.")
 
 (defun ecukes-parse-body-concise-keywords (body)
   "Replace keywords in a BODY by regexps. Keywords and regexps
-described in the `ecukes-concise-keywords-alist'."
+defined in the `ecukes-concise-keywords-alist'."
   (setq case-fold-search nil)
   (--each ecukes-concise-keywords-alist
     (let ((keyword (car it))

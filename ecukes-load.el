@@ -8,6 +8,16 @@
 (require 'ecukes-project)
 (require 'ecukes-core)
 
+(defvar ecukes-concise-keywords-alist '()
+  "Keywords which could be a part of step definition body and
+which while parsing replaces by appropriate regexps.")
+
+(defun ecukes-define-keyword (name pattern)
+  "Define new keyword. Add keyword with NAME and PATTERN to the
+`ecukes-concise-keywords-alist'."
+  (let ((keyword-list (list name pattern)))
+    (add-to-list 'ecukes-concise-keywords-alist keyword-list)))
+
 (defun ecukes-load ()
   "Load support and step definitions."
   (unless (f-dir? (ecukes-project-features-path))
