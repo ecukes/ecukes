@@ -222,6 +222,7 @@ which while parsing replaces by a appropriate regexps.")
 (defun ecukes-parse-body-concise-keywords (body)
   "Replace keywords in a BODY by regexps. Keywords and regexps
 described in the `ecukes-concise-keywords-alist'."
+  (setq case-fold-search nil)
   (dolist (keyword-list ecukes-concise-keywords-alist)
     (let ((keyword (car keyword-list))
           (regexp (cadr keyword-list))
