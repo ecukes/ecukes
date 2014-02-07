@@ -45,7 +45,7 @@
 
   (kill-all-local-variables)
   (set-syntax-table ecukes-mode-syntax-table)
-  (setq mode-name "ecukes"
+  (setq mode-name "Ecukes"
         major-mode 'ecukes-mode
         comment-start "#"
         comment-end   "")
