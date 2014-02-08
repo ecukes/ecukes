@@ -97,6 +97,10 @@ $ ls super-duper
 
 ## Usage
 
+First off, install
+[cucumber.el](https://github.com/michaelklishin/cucumber.el) to get
+proper syntax highlighting and indenting.
+
 To run Ecukes, use:
 
 ```bash
