@@ -33,7 +33,7 @@
 # Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 # Boston, MA 02110-1301, USA.
 
-ECUKES_HOME=$(dirname $(dirname $BASH_SOURCE))
+ECUKES_HOME=$(dirname "$(dirname "$BASH_SOURCE")")
 ECUKES_CLI=$ECUKES_HOME/ecukes-cli.el
 
 if [[ -n "$INSIDE_EMACS" ]]; then
