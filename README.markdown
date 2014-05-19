@@ -285,7 +285,7 @@ The corresponding step definition is:
 
 ```
 (Given "I am in buffer \"\\(.+\\)\""
-  (lambda (buffer-nane)
+  (lambda (buffer-name)
     ;; ...
     ))
 ```
