@@ -29,62 +29,68 @@
     (error "You are not visiting an Ecukes project."))
   (ecukes-load)
   (ecukes-reporter-use ecukes-cli-reporter)
-  (when ask-for-tags
-    (-each
-     (s-split "," (read-string "Run tags: "))
-     (lambda (tag)
-       (if (s-prefix-p "~" tag)
-           (!cons (s-chop-prefix "~@" tag) ecukes-exclude-tags)
-         (!cons (s-chop-prefix "@" tag) ecukes-include-tags)))))
-  (let ((feature-files
-         (if (and (buffer-file-name) (s-matches? "\.feature$" (buffer-file-name)))
-             (list (buffer-file-name))
-           (f-glob "*.feature" (ecukes-project-features-path)))))
-    (let ((ecukes-buffer (get-buffer-create ecukes-buffer-name))
-          (buffers (buffer-list))
-          (ecukes-internal-message-log)
-          (ecukes-stats-steps 0)
-          (ecukes-stats-steps-passed 0)
-          (ecukes-stats-steps-failed 0)
-          (ecukes-stats-steps-skipped 0)
-          (ecukes-stats-scenarios 0)
-          (ecukes-stats-scenarios-passed 0)
-          (ecukes-stats-scenarios-failed 0))
-      (ecukes-run feature-files)
-      (with-current-buffer ecukes-buffer
-        (setq mode-line-process nil)
-        (ecukes-mode)
-        (read-only-mode -1)
-        (erase-buffer)
-        (-each
-         ecukes-internal-message-log
-         (lambda (log)
-           (let ((type (car log))
-                 (message (cdr log)))
-             (when (or (eq type 'message) (eq type 'princ))
-               (let ((message-start (point)))
-                 (insert (ansi-color-apply message))
-                 (when (get-text-property (1- (point)) 'font-lock-face)
-                   (when (eq (elt ansi-color-names-vector 1) (cdr (get-text-property (1- (point)) 'font-lock-face)))
-                     (add-text-properties message-start (point) '(ecukes-step-error t)))))))))
-        (font-lock-mode t)
-        (goto-char (point-min))
-        (if (eq ecukes-stats-steps-failed 0)
-            (setq mode-line-process '(:propertize  " [0 Failures] " face success))
-          (setq mode-line-process `(:propertize ,(concat " ["
-                                                         (number-to-string ecukes-stats-steps-failed)
-                                                         " Failure"
-                                                         (when (> ecukes-stats-steps-failed 1) "s")
-                                                         "] ") face error)))
-        (read-only-mode 1))
+  (let (ecukes-steps-definitions
+        ecukes-hooks-before
+        ecukes-hooks-after
+        ecukes-hooks-setup
+        ecukes-hooks-teardown
+        ecukes-hooks-fail)
+    (when ask-for-tags
       (-each
-       (buffer-list)
-       (lambda (buffer)
-         (unless (-contains? buffers buffer)
-           (let ((buffer-modified-p nil))
-             (kill-buffer buffer)))))
-      (unless (string= (buffer-name) ecukes-buffer-name)
-        (display-buffer ecukes-buffer)))))
+          (s-split "," (read-string "Run tags: "))
+        (lambda (tag)
+          (if (s-prefix-p "~" tag)
+              (!cons (s-chop-prefix "~@" tag) ecukes-exclude-tags)
+            (!cons (s-chop-prefix "@" tag) ecukes-include-tags)))))
+    (let ((feature-files
+           (if (and (buffer-file-name) (s-matches? "\.feature$" (buffer-file-name)))
+               (list (buffer-file-name))
+             (f-glob "*.feature" (ecukes-project-features-path)))))
+      (let ((ecukes-buffer (get-buffer-create ecukes-buffer-name))
+            (buffers (buffer-list))
+            (ecukes-internal-message-log)
+            (ecukes-stats-steps 0)
+            (ecukes-stats-steps-passed 0)
+            (ecukes-stats-steps-failed 0)
+            (ecukes-stats-steps-skipped 0)
+            (ecukes-stats-scenarios 0)
+            (ecukes-stats-scenarios-passed 0)
+            (ecukes-stats-scenarios-failed 0))
+        (ecukes-run feature-files)
+        (with-current-buffer ecukes-buffer
+          (setq mode-line-process nil)
+          (ecukes-mode)
+          (read-only-mode -1)
+          (erase-buffer)
+          (-each
+              ecukes-internal-message-log
+            (lambda (log)
+              (let ((type (car log))
+                    (message (cdr log)))
+                (when (or (eq type 'message) (eq type 'princ))
+                  (let ((message-start (point)))
+                    (insert (ansi-color-apply message))
+                    (when (get-text-property (1- (point)) 'font-lock-face)
+                      (when (eq (elt ansi-color-names-vector 1) (cdr (get-text-property (1- (point)) 'font-lock-face)))
+                        (add-text-properties message-start (point) '(ecukes-step-error t)))))))))
+          (font-lock-mode t)
+          (goto-char (point-min))
+          (if (eq ecukes-stats-steps-failed 0)
+              (setq mode-line-process '(:propertize  " [0 Failures] " face success))
+            (setq mode-line-process `(:propertize ,(concat " ["
+                                                           (number-to-string ecukes-stats-steps-failed)
+                                                           " Failure"
+                                                           (when (> ecukes-stats-steps-failed 1) "s")
+                                                           "] ") face error)))
+          (read-only-mode 1))
+        (-each
+            (buffer-list)
+          (lambda (buffer)
+            (unless (-contains? buffers buffer)
+              (let ((buffer-modified-p nil))
+                (kill-buffer buffer)))))
+        (unless (string= (buffer-name) ecukes-buffer-name)
+          (display-buffer ecukes-buffer))))))
 
 (defun ecukes-goto-next-step-error (&optional recursive-call-p)
   (interactive)
