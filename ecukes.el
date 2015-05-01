@@ -27,14 +27,14 @@
   (interactive "P")
   (unless (ecukes-project-path)
     (error "You are not visiting an Ecukes project."))
-  (ecukes-load)
-  (ecukes-reporter-use ecukes-cli-reporter)
   (let (ecukes-steps-definitions
         ecukes-hooks-before
         ecukes-hooks-after
         ecukes-hooks-setup
         ecukes-hooks-teardown
         ecukes-hooks-fail)
+    (ecukes-load)
+    (ecukes-reporter-use ecukes-cli-reporter)
     (when ask-for-tags
       (-each
           (s-split "," (read-string "Run tags: "))
