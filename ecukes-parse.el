@@ -46,6 +46,8 @@
   "Parse FEATURE-FILE."
   (with-temp-buffer
     (insert (f-read-text feature-file 'utf-8))
+    (when (> (count-matches ecukes-parse-intro-re (point-min)) 1)
+      (error "Can only define single feature per file"))
     (goto-char (point-min))
     (let* ((tags)
            (intro (ecukes-parse-intro))
