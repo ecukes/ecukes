@@ -66,7 +66,10 @@ Add `ecukes` to your [Cask](https://github.com/rejeep/cask.el) file:
  (depends-on "ecukes"))
 ```
 
-Then run `cask` to install. To setup Ecukes for a project, run:
+Then run `cask` to install.
+
+Create an Elisp file in the root directory called `super-duper.el` and
+`(provide 'super-duper)`. To setup Ecukes for the project, run:
 
 ```
 $ cask exec ecukes new
