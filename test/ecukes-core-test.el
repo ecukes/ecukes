@@ -109,7 +109,8 @@
 
 (ert-deftest ecukes-core/quit-graphical ()
   (with-mock
-   (stub getenv => "/tmp/ecukes.XYZ")
-   (mock (kill-emacs 1) :times 1)
-   (mock (f-write-text) :times 1)
-   (ecukes-quit)))
+   (let ((ecukes-internal-message-log '((print . "foo") (princ . "bar") (message . "baz"))))
+     (stub getenv => "/tmp/ecukes.XYZ")
+     (mock (kill-emacs 1) :times 1)
+     (mock (f-write-text "\"foo\"barbaz" 'utf-8 "/tmp/ecukes.XYZ") :times 1)
+     (ecukes-quit))))

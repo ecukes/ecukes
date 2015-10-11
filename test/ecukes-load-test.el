@@ -26,7 +26,7 @@
      '("/path/to/project/features/support/env.el"
        "/path/to/project/features/support/foo.el"
        "/path/to/project/features/support/bar.el"))
-    (mock (load) :times 4)
+    (mock (load * nil t) :times 4)
     (ecukes-load-support))))
 
 (ert-deftest ecukes-load/load-step-definitions ()
@@ -36,7 +36,7 @@
     f-files =>
     '("/path/to/project/features/step-definitions/project-steps.el"
       "/path/to/project/features/step-definitions/misc-steps.el"))
-   (mock (load) :times 2)
+   (mock (load * nil t) :times 2)
    (ecukes-load-step-definitions)))
 
 (ert-deftest ecukes-load/skip-hidden-temporal-files ()
@@ -48,6 +48,6 @@
       "/path/to/project/features/support/#misc-steps.el#"
       "/path/to/project/features/step-definitions/bar-steps.el"
       "/path/to/project/features/step-definitions/misc-steps.el"))
-   (mock (load) :times 2)
+   (mock (load * nil t) :times 2)
    (ecukes-load-step-definitions)))
 

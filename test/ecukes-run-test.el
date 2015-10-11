@@ -443,7 +443,7 @@
 
 (ert-deftest ecukes-run-test/run-feature-background-no-scenarios ()
   (with-mock
-   (mock (ecukes-run-background) :times 1)
+   (mock (ecukes-run-background *) :times 1)
    (not-called ecukes-run-background-steps)
    (let ((feature (make-ecukes-feature :background (make-ecukes-background))))
      (ecukes-run-feature feature))))
@@ -451,7 +451,7 @@
 (ert-deftest ecukes-run-test/run-feature-background-single-scenario ()
   (with-mock
    (stub ecukes-run-scenario => t)
-   (mock (ecukes-run-background) :times 1)
+   (mock (ecukes-run-background *) :times 1)
    (not-called ecukes-run-background-steps)
    (let ((feature (make-ecukes-feature
                    :background (make-ecukes-background)
@@ -462,7 +462,7 @@
   (with-mock
    (stub ecukes-run-scenario => t)
    (stub ecukes-run-background => t)
-   (mock (ecukes-run-background-steps) :times 1)
+   (mock (ecukes-run-background-steps *) :times 1)
    (let ((feature (make-ecukes-feature
                    :background (make-ecukes-background)
                    :scenarios (list (make-ecukes-scenario) (make-ecukes-scenario)))))
@@ -473,7 +473,7 @@
 
 (ert-deftest ecukes-run-test/run-background-steps ()
   (with-mock
-   (mock (ecukes-run-step) :times 2)
+   (mock (ecukes-run-step *) :times 2)
    (ecukes-run-background-steps
     (make-ecukes-background :steps '(step-1 step-2)))))
 
@@ -482,7 +482,7 @@
 
 (ert-deftest ecukes-run-test/run-background ()
   (with-mock
-   (mock (ecukes-run-steps '(step-1 step-2)) :times 1)
+   (mock (ecukes-run-steps '(step-1 step-2) t) :times 1)
    (ecukes-run-background
     (make-ecukes-background :steps '(step-1 step-2)))))
 
