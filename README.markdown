@@ -1,10 +1,17 @@
-# Ecukes - Cucumber for Emacs [![Build Status](https://api.travis-ci.org/ecukes/ecukes.png?branch=master)](http://travis-ci.org/ecukes/ecukes)
+# Ecukes - Cucumber for Emacs
+
+[![Build Status](https://travis-ci.org/ecukes/ecukes.svg)](https://travis-ci.org/ecukes/ecukes)
+[![Coverage Status](https://coveralls.io/repos/ecukes/ecukes/badge.svg)](https://coveralls.io/r/ecukes/ecukes)
+[![MELPA](http://melpa.org/packages/ecukes-badge.svg)](http://melpa.org/#/ecukes)
+[![MELPA stable](http://stable.melpa.org/packages/ecukes-badge.svg)](http://stable.melpa.org/#/ecukes)
+[![Tag Version](https://img.shields.io/github/tag/ecukes/ecukes.svg)](https://github.com/ecukes/ecukes/tags)
+[![License](http://img.shields.io/:license-gpl3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 
 [<img src="http://img.youtube.com/vi/4VcH4uAQJZI/0.jpg">](https://www.youtube.com/watch?v=4VcH4uAQJZI)
 
 There are plenty of unit/regression testing tools for Emacs, and even
 some for functional testing. What Emacs is missing though is a really
-good testing framework for integration testing. This is where
+good testing framework for **integration testing**. This is where
 [Ecukes](http://github.com/rejeep/ecukes) comes in.
 
 [Cucumber](http://cukes.info/) is a great integration testing tool,
