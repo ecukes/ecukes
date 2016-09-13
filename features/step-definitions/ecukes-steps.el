@@ -74,7 +74,7 @@
 (Then "^I should see list of reporters:$"
   (lambda ()
     (-each
-     '("dot" "spec" "landing" "progress" "magnars" "gangsta")
+     '("dot" "spec" "landing" "progress" "magnars")
      (lambda (reporter)
        (Then "I should see command output:" (s-concat reporter " - "))))))
 

@@ -116,7 +116,7 @@ automatically used for each run. For example:
 ```
 --tags ~@exclude
 --no-win
---reporter gangsta
+--reporter progress
 ```
 
 ### Modes
@@ -215,7 +215,7 @@ $ cask exec ecukes list-reporters
 To use a specific reporter, run:
 
 ```bash
-$ cask exec ecukes --reporter gangsta
+$ cask exec ecukes --reporter progress
 ```
 
 Default reporter is `dot`.
