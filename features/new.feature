@@ -66,9 +66,11 @@ Feature: New
 
       (add-to-list 'load-path new-root-path)
 
-      (require 'new)
-      (require 'espuds)
-      (require 'ert)
+      ;; Ensure that we don't load old byte-compiled versions
+      (let ((load-prefer-newer t))
+        (require 'new)
+        (require 'espuds)
+        (require 'ert))
 
       (Setup
        ;; Before anything has run

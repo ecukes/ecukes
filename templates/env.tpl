@@ -11,9 +11,11 @@
 
 (add-to-list 'load-path {{project-name}}-root-path)
 
-(require '{{project-name}})
-(require 'espuds)
-(require 'ert)
+;; Ensure that we don't load old byte-compiled versions
+(let ((load-prefer-newer t))
+  (require '{{project-name}})
+  (require 'espuds)
+  (require 'ert))
 
 (Setup
  ;; Before anything has run
