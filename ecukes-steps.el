@@ -59,6 +59,26 @@ When *calling* a step, argument takes the following form:
 
 (defun ecukes-steps-define (regex fn &optional doc file)
   "Define step."
+  (when (listp regex)
+    (let ((step-definition ""))
+      (dolist (item regex)
+        (if (symbolp item)
+            (setq step-definition
+                  (concat step-definition
+                          (if (> (length step-definition) 0) " " "")
+                          (symbol-name item)))
+          (when (eq (car item) 'quote)
+            (setq step-definition
+                  (concat step-definition
+                          " "
+                          (or (when (eq (cadr item) 'string)
+                                "\"\\(.*\\)\"")
+                              (when (eq (cadr item) 'symbol)
+                                "\\([^ ]+\\)")))))))
+      (setq step-definition
+            (concat step-definition ""))
+      (setq regex step-definition)))
+
   (unless (-any?
            (lambda (step-def)
              (equal regex step-def)) ecukes-steps-definitions)
