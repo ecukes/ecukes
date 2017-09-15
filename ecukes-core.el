@@ -95,7 +95,18 @@ decent backtrace and callbacks all functions in
            (buffer-string))))
     (-each ecukes-debug-callbacks
            (lambda (callback)
-             (funcall callback backtrace)))))
+             (funcall callback backtrace))))
+
+  ;; This little hack fixes a bug in emacs 25.2 where cl-assert (which is used
+  ;; internally by espuds) was changed to call the debugger directly instead of
+  ;; signalling an error. This meant that a condition-case used by ecukes to
+  ;; detect errors was never hit, so ecukes never reported any errors. See #159.
+  (when (and (= emacs-major-version 25) (= emacs-minor-version 2))
+    (pcase debugger-args
+      (`(error (cl-assertion-failed (,args . ,_)))
+       ;; Throw with this function disabled (so that we don't handle it twice).
+       (cl-letf (((symbol-function 'ecukes-debug) (lambda (&args rest) nil)))
+         (signal 'cl-assertion-failed (list args)))))))
 
 (provide 'ecukes-core)
 
