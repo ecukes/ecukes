@@ -35,3 +35,33 @@ Feature: Error Log
         /(1 0)
         (lambda nil (/ 1 0))()
       """
+
+
+  # Emacs 25.1 and 25.2 added weird behaviour in cl-assert which broke ecukes
+  # when it was used to assert in tests.
+  @now
+  Scenario: Using cl-assert
+    Given step definition:
+      """
+      (Then "^asserting false$"
+        (lambda () (cl-assert (= 1 2))))
+      """
+    Given feature "cl-assert":
+      """
+      Feature: cl-assert
+
+        Scenario: Asserting
+          Then asserting false
+      """
+    When I run ecukes "features/cl-assert.feature --reporter spec"
+    Then I should see command error:
+      """
+      Feature: cl-assert
+
+        Scenario: Asserting
+          Then asserting false
+            Assertion failed: (= 1 2)
+
+      1 scenarios (1 failed, 0 passed)
+      1 steps (1 failed, 0 skipped, 0 passed)
+      """
