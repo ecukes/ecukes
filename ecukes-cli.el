@@ -27,6 +27,17 @@
 (setq debug-on-signal t)
 (setq debugger 'ecukes-debug)
 
+;; This little hack fixes a bug in emacs 25.2 where cl-assert (which is used
+;; internally by espuds) was changed to call the debugger directly when
+;; debug-on-error is enabled (instead of signalling an error). This meant that a
+;; condition-case used by ecukes to detect errors was never hit, so ecukes never
+;; reported any errors. See #159.
+(defun ecukes-suppress-debug-on-error (orig-fun &rest args)
+  (let ((debug-on-error nil))
+    (apply orig-fun args)))
+(when (and (= emacs-major-version 25) (= emacs-minor-version 2))
+  (advice-add 'cl--assertion-failed :around #'ecukes-suppress-debug-on-error))
+
 (defvar ecukes-include-tags nil
   "Scenario tags to include.")
 
