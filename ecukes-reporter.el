@@ -298,7 +298,7 @@ The rest of the arguments will be applied to `format'."
           (cond ((eq status 'success) 'ansi-green)
                 ((eq status 'failure) 'ansi-red)
                 ((eq status 'skipped) 'ansi-cyan))))
-    (ecukes-reporter-println 4 (funcall color (replace-regexp-in-string "%" "%%%%" name)))
+    (ecukes-reporter-println 4 (funcall color (s-replace "%" "%%%%" name)))
     (when (eq type 'table)
       (ecukes-reporter-print-table step))
     (when (eq type 'py-string)
