@@ -24,7 +24,6 @@
   (defvar ecukes-error-log-file))
 
 (setq debug-on-error t)
-(setq debug-on-signal t)
 (setq debugger 'ecukes-debug)
 
 ;; This little hack fixes various related bugs in emacs 25 caused by changes to
@@ -131,7 +130,7 @@ A tag starting with ~ excluded from the scenarios."
 (defun ecukes-cli/run (&rest args)
   (ecukes-load)
   (ecukes-reporter-use ecukes-cli-reporter)
-  (let ((feature-files))
+  (let (feature-files)
     (-each
      args
      (lambda (arg)

@@ -9,16 +9,14 @@ FEATURES = $(wildcard features/*.feature features/reporters/*.feature)
 
 all: test
 
-test: clean-elc
-	$(MAKE) unit-test
-	$(MAKE) ecukes
-	$(MAKE) compile
+test: clean-elc unit-test ecukes compile
 
 unit-test: elpa
-	$(CASK) exec ert-runner
+	$(CASK) exec ert-runner -L test -L . test/ecukes*.el
 
 elpa: $(PKG_DIR)
 $(PKG_DIR): Cask
+	$(CASK) link ecukes .
 	$(CASK) install
 	touch $@
 

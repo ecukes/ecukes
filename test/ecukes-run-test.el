@@ -764,7 +764,8 @@
           :fn
           (lambda ()
             (error "*- boom -*"))))
-   (should-not (ecukes-run-step (make-ecukes-step)))))
+   (let ((debug-on-error nil))
+     (should-not (ecukes-run-step (make-ecukes-step))))))
 
 (ert-deftest ecukes-run-test/run-step-error-message ()
   (with-mock
@@ -774,7 +775,8 @@
           :fn
           (lambda ()
             (error "*- boom -*"))))
-   (let ((step (make-ecukes-step)))
+   (let ((step (make-ecukes-step))
+         (debug-on-error nil))
      (should-not (ecukes-run-step step))
      (should (equal (ecukes-step-err step) "*- boom -*")))))
 
@@ -793,7 +795,8 @@
           :fn
           (lambda ()
             (error "*- boom -*"))))
-   (should-not (ecukes-run-step (make-ecukes-step)))))
+   (let ((debug-on-error nil))
+     (should-not (ecukes-run-step (make-ecukes-step))))))
 
 (ert-deftest ecukes-run-test/run-step-keyboard-quit ()
   (with-mock
@@ -844,7 +847,8 @@
           (lambda (callback)
             ;; not callbacked
             )))
-   (let ((step (make-ecukes-step)))
+   (let ((step (make-ecukes-step))
+         (debug-on-error nil))
      (should-not
       (ecukes-run-step step))
      (let ((expected "Did not callback async step within 0.1 seconds")
