@@ -1,4 +1,4 @@
-(define-package "ecukes" "0.6.10" "Cucumber for Emacs."
+(define-package "ecukes" "0.7.0" "Cucumber for Emacs."
   '((commander "0.6.1")
     (espuds "0.2.2")
     (ansi "0.3.0")

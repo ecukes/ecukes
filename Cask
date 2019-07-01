@@ -2,6 +2,7 @@
 (source melpa)
 
 (package "ecukes" "0.6.15" "Cucumber for Emacs.")
+(files "ecukes*" "templates" "bin" "reporters")
 
 (depends-on "f" "0.11.0")
 (depends-on "s" "1.8.0")

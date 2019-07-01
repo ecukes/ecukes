@@ -189,40 +189,39 @@
 
 (defun ecukes-run-step (step)
   "Run STEP and return true if successful, false otherwise."
-  (let (success)
-    (condition-case err
-        (let* ((body (ecukes-step-body step))
-               (arg (ecukes-step-arg step))
-               (args (ecukes-steps-args step))
-               (args (if arg (append args (list arg)) args))
-               (step-def (ecukes-steps-find body))
-               (fn (ecukes-step-def-fn step-def))
-               (fn-args-count
-                (if (byte-code-function-p fn)
-                    (car (byte-compile-arglist-signature (aref fn 0)))
-                  (length
-                   (if (listp fn)
-                       (cond ((eq (car fn) 'lambda)
-                              (cadr fn))
-                             ((eq (car fn) 'closure)
-                              (nth 2 fn))))))))
-          (if (and (not (symbolp fn)) (> fn-args-count (length args)))
-              (progn
-                (let ((wait t))
-                  (add-to-list 'args (lambda (&rest args) (setq wait nil)) t)
-                  (apply fn args)
-                  (with-timeout
-                      (ecukes-async-timeout
-                       (error "Did not callback async step within %s seconds" ecukes-async-timeout))
-                    (while wait
-                      (accept-process-output nil 0.005)))))
-            (apply fn args))
-          (setq success t))
-      (error
-       (setf (ecukes-step-err step) (error-message-string err))
-       (ecukes-hooks-run-fail))
-      (quit)) ;; allow `keyboard-quit' in step definitions
-    success))
+  (condition-case-unless-debug err
+      (let* ((body (ecukes-step-body step))
+             (arg (ecukes-step-arg step))
+             (args (ecukes-steps-args step))
+             (args (if arg (append args (list arg)) args))
+             (step-def (ecukes-steps-find body))
+             (fn (ecukes-step-def-fn step-def))
+             (fn-args-count
+              (if (byte-code-function-p fn)
+                  (car (byte-compile-arglist-signature (aref fn 0)))
+                (length
+                 (if (listp fn)
+                     (cond ((eq (car fn) 'lambda)
+                            (cadr fn))
+                           ((eq (car fn) 'closure)
+                            (nth 2 fn))))))))
+        (if (and (not (symbolp fn)) (> fn-args-count (length args)))
+            (let ((wait t))
+              (add-to-list 'args (lambda (&rest args) (setq wait nil)) t)
+              (apply fn args)
+              (with-timeout
+                  (ecukes-async-timeout
+                   (error "Did not callback async step within %s seconds" ecukes-async-timeout))
+                (while wait
+                  (accept-process-output nil 0.005))))
+          (apply fn args))
+        t)
+    (error
+     (setf (ecukes-step-err step) (error-message-string err))
+     (ecukes-hooks-run-fail)
+     nil)
+    (quit nil)) ;; allow `keyboard-quit' in step definitions
+  )
 
 (provide 'ecukes-run)
 

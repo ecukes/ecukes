@@ -19,8 +19,6 @@
 (unless (require 'ert nil 'noerror)
   (require 'ert (f-expand "ert" ecukes-test/vendor-path)))
 
-(setq debug-on-entry t)
-(setq debug-on-error t)
 (setq ecukes-include-tags nil)
 (setq ecukes-verbose t)
 (setq ecukes-path ecukes-test/root-path)
