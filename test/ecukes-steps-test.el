@@ -35,6 +35,40 @@
    (Given "^a known state$" (lambda () "x"))
    (should (equal (Given "a known state") "x"))))
 
+(ert-deftest steps-call-step-optional-argument ()
+  "Should call step with optional argument (and not treat it as a callback if omittted)."
+  (with-steps
+   (Given "^a \\(un\\)?known state$" (lambda (x) x))
+   (should (null (Given "a known state")))
+   (should (equal (Given "a unknown state") "un"))))
+
+(ert-deftest steps-call-step-optional-and-single-argument ()
+  "Should call step with optional argument and another argument."
+  (with-steps
+   (Given "^a \\(un\\)?known \\(quantity\\|state\\)$" (lambda (x y) (concat x y)))
+   (should (equal (Given "a known quantity") "quantity"))
+   (should (equal (Given "a unknown quantity") "unquantity"))))
+
+(ert-deftest steps-call-step-tickle1-optional-argument ()
+  "Tickle optional regex."
+  (with-steps
+   (Given "bar\\(fab\\)?\\(foo\\)?\\(fuz\\)? buck\\(faz\\)?$" (lambda (w x y z) (list w x y  z)))
+   (should (equal (Given "barfoo buckfaz") '(nil "foo" nil "faz")))))
+
+(ert-deftest steps-call-step-tickle2-optional-argument ()
+  "Tickle optional regex."
+  (with-steps
+   (Given "bar\\(fab\\)?\\(foo\\)?\\(fuz\\)? buck\\(faz\\)?" (lambda (w x y z) (list w x y z)))
+   (should (equal (Given "barfoo buckfaz fabio") '(nil "foo" nil "faz")))))
+
+(ert-deftest steps-call-step-tickle3-optional-argument ()
+  "Tickle optional regex."
+  (with-steps
+   (with-mock
+    (mock (error (ansi-red "Step not defined: `barfoo buckfaz fabio`")) :times 1)
+    (Given "bar\\(fab\\)?\\(foo\\)?\\(fuz\\)? buck\\(faz\\)?$" #'ignore)
+    (Given "barfoo buckfaz fabio"))))
+
 (ert-deftest steps-call-step-single-argument ()
   "Should call step with single argument."
   (with-steps

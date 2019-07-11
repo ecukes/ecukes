@@ -95,7 +95,16 @@ When *calling* a step, argument takes the following form:
   (let* ((body (ecukes-step-body step))
          (step-def (ecukes-steps-find body)))
     (if step-def
-        (cdr (s-match (ecukes-step-def-regex step-def) body))
+        (let* ((step-def-regex (ecukes-step-def-regex step-def))
+               (strict-regex (replace-regexp-in-string "\$?$"
+                                                       "\\\\(\\\\)"
+                                                       step-def-regex)))
+          ;; Matching "(foo)?bar" on "bar" results in nil when we want (nil)
+          ;; Matching "foo(bar)?" on "foo" results in nil when we want (nil)
+          ;; Matching "foo(bar)?(baz)?" on "foobar" results in (bar) when we want (bar nil)
+          ;; All is well if we append a zero-length match, e.g., "foo(bar)?(baz)?()"
+          ;; But watch out for eol anchor, so, "foo(bar)?()$" and not "foo(bar)?$()" !!!
+          (cdr (nbutlast (s-match strict-regex body))))
       (loop for sub on (cdr (split-string body "\""))
             by (function cddr)
             collect (car sub)))))
