@@ -1,7 +1,7 @@
 (source gnu) ; for cl-lib
 (source melpa)
 
-(package "ecukes" "0.6.15" "Cucumber for Emacs.")
+(package-descriptor "ecukes-pkg.el")
 (files "ecukes*" "templates" "bin" "reporters")
 
 (depends-on "f" "0.11.0")

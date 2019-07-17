@@ -35,7 +35,7 @@
 (defun ecukes-suppress-debug-on-error (orig-fun &rest args)
   (let ((debug-on-error nil))
     (apply orig-fun args)))
-(when (and (or (= emacs-major-version 25) (= emacs-major-version 26)))
+(when (>= emacs-major-version 25)
   (advice-add 'cl--assertion-failed :around #'ecukes-suppress-debug-on-error))
 
 (defvar ecukes-include-tags nil

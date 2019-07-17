@@ -16,8 +16,8 @@ unit-test: elpa
 
 elpa: $(PKG_DIR)
 $(PKG_DIR): Cask
-	$(CASK) link ecukes .
 	$(CASK) install
+	$(CASK) link ecukes .
 	touch $@
 
 compile: $(ELC)
