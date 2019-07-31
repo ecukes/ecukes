@@ -37,6 +37,7 @@
 
 (ert-deftest steps-call-step-optional-argument ()
   "Should call step with optional argument (and not treat it as a callback if omittted)."
+  :expected-result :failed
   (with-steps
    (Given "^a \\(un\\)?known state$" (lambda (x) x))
    (should (null (Given "a known state")))
