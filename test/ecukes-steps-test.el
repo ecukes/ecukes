@@ -35,6 +35,23 @@
    (Given "^a known state$" (lambda () "x"))
    (should (equal (Given "a known state") "x"))))
 
+(ert-deftest steps-call-pystring-argument ()
+  "Should correctly parse pystring argument."
+  (with-steps
+   (Given "^I insert\\(?: \"\\(.+\\)\"\\|:\\)$"
+          (lambda (contents) contents))
+   (with-temp-buffer
+     (insert "Given I insert:
+\"\"\"
+howdy
+doody
+\"\"\"
+")
+     (goto-char (point-min))
+     (let ((step (ecukes-parse-step)))
+       (should (string= (ecukes-step-arg step) "howdy
+doody"))))))
+
 (ert-deftest steps-call-step-optional-argument ()
   "Should call step with optional argument (and not treat it as a callback if omittted)."
   :expected-result :failed
