@@ -26,6 +26,31 @@
      '("/path/to/project/features/support/env.el"
        "/path/to/project/features/support/foo.el"
        "/path/to/project/features/support/bar.el"))
+    (mock (load * nil t) :times 3)
+    (ecukes-load-support))))
+
+(ert-deftest ecukes-load/support-load-env-once ()
+  (with-mock
+   (with-project
+    (stub expand-file-name => "/path/to/project/features/support/env.el")
+    (stub
+     f-files =>
+     '("/path/to/project/features/support/env.el"))
+    (mock (load * nil t) :times 1)
+    (ecukes-load-support))))
+
+(ert-deftest ecukes-load/support-load-tickle ()
+  (with-mock
+   (with-project
+    (stub expand-file-name => "/path/to/project/features/support/env.el")
+    (stub
+     f-files =>
+     '("/path/to/project/features/support/elc.gz"
+       "/path/to/project/features/support/foo.el"
+       "/path/to/project/features/support/foo.el.gz"
+       "/path/to/project/features/support/foo"
+       "/path/to/project/features/support/bar.elc"
+       "/path/to/project/features/support/bar.el"))
     (mock (load * nil t) :times 4)
     (ecukes-load-support))))
 
@@ -50,4 +75,3 @@
       "/path/to/project/features/step-definitions/misc-steps.el"))
    (mock (load * nil t) :times 2)
    (ecukes-load-step-definitions)))
-

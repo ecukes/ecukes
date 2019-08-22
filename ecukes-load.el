@@ -21,10 +21,16 @@
   "Load project support files."
   (let* ((env-file (f-expand "env" (ecukes-project-support-path)))
          (support-files
-          (f-files (ecukes-project-support-path)
-                   (lambda (file)
-                     (not (f-same? env-file file))))))
-    (load env-file nil t)
+          (let* ((get-root
+                  (lambda (y)
+                    (--min-by (> (length it) (length other))
+                              (mapcar (lambda (x)
+                                        (replace-regexp-in-string
+                                         (concat (regexp-quote x) "$") "" y))
+                                      (get-load-suffixes)))))
+                 (-compare-fn (lambda (x y)
+                                (string= (funcall get-root x) (funcall get-root y)))))
+            (-distinct (cons env-file (f-files (ecukes-project-support-path)))))))
     (--each support-files
       (load it nil t))))
 
