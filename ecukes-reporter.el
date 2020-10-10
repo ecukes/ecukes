@@ -306,8 +306,8 @@ The rest of the arguments will be applied to `format'."
     (let ((err (ecukes-step-err step)))
       (when err
         (--each (s-lines err)
-          (let ((escaped (replace-regexp-in-string "%" "%%" it)))
-            (ecukes-reporter-println 6 (ansi-red escaped))))))))
+          (let* ((escaped (replace-regexp-in-string "%" "%%" it)))
+            (ecukes-reporter-println 6 "%s" (ansi-red escaped))))))))
 
 (defun ecukes-reporter-print-failing-scenarios-summary ()
   "Print a summary of failing scenarios."
