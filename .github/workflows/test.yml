@@ -4,6 +4,7 @@ on:
   pull_request:
     paths-ignore:
     - '**.md'
+    - '**.markdown'
   push:
     paths-ignore:
     - '**.md'
