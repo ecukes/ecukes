@@ -37,7 +37,7 @@
 (defadvice princ (around princ-around activate)
   (let ((message (or (car (ad-get-args 0)) "")))
     (unless ecukes-message
-      (add-to-list 'ecukes-message-log message t 'eq))
+      (add-to-list 'ecukes-message-log (format "%s" message) t 'eq))
     (when (or ecukes-message ecukes-verbose)
       (add-to-list 'ecukes-internal-message-log `(princ . ,message) t 'eq)
       ad-do-it)))
@@ -83,7 +83,8 @@ decent backtrace and callbacks all functions in
            (let ((standard-output (current-buffer))
                  (print-escape-newlines t)
                  (print-level 8)
-                 (print-length 50))
+                 (print-length 50)
+                 (cl-print-readably t))
              (backtrace))
            (goto-char (point-min))
            (delete-region
