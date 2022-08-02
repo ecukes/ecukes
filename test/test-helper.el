@@ -70,13 +70,6 @@
                    (ecukes-scenario-steps scenario)) scenarios))))))
     (funcall fn feature intro scenarios background steps)))
 
-(defun with-messages (callback)
-  (let ((messages))
-    (flet ((ecukes-print-message
-            (format-string &rest args)
-            (add-to-list 'messages (apply 'ecukes-print-format (cons format-string args)) t 'eq)))
-      (funcall callback messages))))
-
 (defmacro with-stats (&rest body)
   `(let ((ecukes-stats-steps 0)
          (ecukes-stats-steps-passed 0)
