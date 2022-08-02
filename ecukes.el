@@ -151,8 +151,8 @@
 
 (define-minor-mode ecukes-minor-mode
   "Ecukes minor mode"
-  nil " ecukes" ecukes-minor-mode-map
-)
+  :lighter " ecukes"
+  :keymap ecukes-minor-mode-map)
 
 ;;; major mode
 (defvar ecukes-mode-map nil "Keymap for ecukes-mode.")
