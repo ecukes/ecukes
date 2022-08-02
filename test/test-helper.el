@@ -90,6 +90,8 @@
          (ecukes-new-project-name "project"))
      ,@body))
 
+(defvar ecukes-test/fixtures-path)  ; defined in ecukes-test.el
+
 (defun fixture-file-path (category name)
   (let ((category-path (f-expand category ecukes-test/fixtures-path)))
     (f-expand (format "%s.feature" name) category-path)))
