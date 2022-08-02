@@ -93,8 +93,6 @@
 
 ;;;; quit
 
-(require 'cl) ; for el-mock
-
 (ert-deftest ecukes-core/quit-success ()
   (with-mock
    (stub getenv => nil)

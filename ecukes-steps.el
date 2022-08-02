@@ -1,6 +1,6 @@
 ;;; ecukes-steps.el --- Functions to define and call step definitions
 
-(eval-when-compile (require 'cl))
+(eval-when-compile (require 'cl-lib))
 
 (require 'ansi)
 
@@ -96,9 +96,9 @@ When *calling* a step, argument takes the following form:
          (step-def (ecukes-steps-find body)))
     (if step-def
         (cdr (s-match (ecukes-step-def-regex step-def) body))
-      (loop for sub on (cdr (split-string body "\""))
-            by (function cddr)
-            collect (car sub)))))
+      (cl-loop for sub on (cdr (split-string body "\""))
+               by (function cddr)
+               collect (car sub)))))
 
 (provide 'ecukes-steps)
 
