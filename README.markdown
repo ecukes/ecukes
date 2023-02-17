@@ -55,7 +55,11 @@ about it before continuing with Ecukes.
 
 ## Installation
 
-Add `ecukes` to your [Cask](https://github.com/rejeep/cask.el) file:
+### Cask
+
+This method uses [Cask][Cask] and installs Ecukes from [MELPA][MELPA].
+
+Add `ecukes` to your [Cask][Cask] file:
 
 ```lisp
 (source melpa)
@@ -98,6 +102,27 @@ $ ls super-duper
   |-- super-duper.el
 ```
 
+### Eask
+> 💡 Eask is very similar to Cask; anything that applies to Cask will apply to Eask
+
+#### [RECOMMENDED] Using packaged version
+
+This method uses [Eask][Eask] and installs Ecukes from [MELPA][MELPA].
+
+1. Add `(depends-on "ecukes")` to `Eask` file of your project.
+2. Run `eask install-deps`.
+3. `eask exec ecukes [COMMAND] [OPTIONS]` to start the test.
+
+#### Using development version
+
+To use the development version of Ecukes, you can clone the repository
+and use the `eask link` feature to use the code from the clone.
+
+1. `git clone https://github.com/ecukes/ecukes.git` somewhere to your computer.
+2. Add `(depends-on "ecukes")` to `Eask` file of your project.
+3. Run `eask link add ecukes <path-to-ecukes-repo>`.
+4. `eask exec ecukes [COMMAND] [OPTIONS]` to start the test.
+
 ## Usage
 
 First off, install
@@ -108,6 +133,12 @@ To run Ecukes, use:
 
 ```bash
 $ cask exec ecukes [COMMAND] [OPTIONS]
+```
+
+with [Eask][Eask]:
+
+```bash
+$ eask exec ecukes [COMMAND] [OPTIONS]
 ```
 
 If you add a file called `.ecukes` in the project root, options are
@@ -627,3 +658,6 @@ To run all tests, simply run the `make` command.
 You can always report issues on Github if you're not up to fixing it
 yourself.
 
+[Cask]: https://github.com/cask/cask
+[Eask]: https://github.com/emacs-eask/cli
+[MELPA]: https://melpa.org
