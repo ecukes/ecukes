@@ -1,0 +1,8 @@
+(package "super-project" "0.0.1" "...")
+
+(source 'gnu)
+(source 'melpa)
+
+(development
+ (depends-on "ecukes")
+ (depends-on "espuds"))
