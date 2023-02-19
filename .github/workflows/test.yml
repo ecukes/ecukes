@@ -1,16 +1,15 @@
 name: CI
 
 on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+    - '**.md'
   pull_request:
     paths-ignore:
     - '**.md'
     - '**.markdown'
-  push:
-    paths-ignore:
-    - '**.md'
-    branches-ignore:
-    - 'master'
-    - 'main'
   workflow_dispatch:
 
 concurrency:
