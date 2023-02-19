@@ -35,7 +35,7 @@
   "Should create features directory."
   (with-mock
    (with-new-project
-    (mock (make-directory "/path/to/project/features") :times 1)
+    (mock (make-directory (expand-file-name "/path/to/project/features")) :times 1)
     (mock (ecukes-new-message 0 "features") :times 1)
     (ecukes-new-create-root))))
 
@@ -43,8 +43,8 @@
   "Should create step definitions directory and step definition."
   (with-mock
    (with-new-project
-    (mock (make-directory "/path/to/project/features/step-definitions") :times 1)
-    (mock (ecukes-template-write "/path/to/project/features/step-definitions/project-steps.el" *) :times 1)
+    (mock (make-directory (expand-file-name "/path/to/project/features/step-definitions")) :times 1)
+    (mock (ecukes-template-write (expand-file-name "/path/to/project/features/step-definitions/project-steps.el") *) :times 1)
     (stub ecukes-new-message)
     (ecukes-new-create-step-definitions))))
 
@@ -52,8 +52,8 @@
   "Should create support directory with env file."
   (with-mock
    (with-new-project
-    (mock (make-directory "/path/to/project/features/support") :times 1)
-    (mock (ecukes-template-write "/path/to/project/features/support/env.el" * *) :times 1)
+    (mock (make-directory (expand-file-name "/path/to/project/features/support")) :times 1)
+    (mock (ecukes-template-write (expand-file-name "/path/to/project/features/support/env.el") * *) :times 1)
     (stub ecukes-new-message)
     (ecukes-new-create-support))))
 
@@ -61,6 +61,6 @@
   "Should create feature file."
   (with-mock
    (with-new-project
-    (mock (ecukes-template-write "/path/to/project/features/project.feature" *) :times 1)
+    (mock (ecukes-template-write (expand-file-name "/path/to/project/features/project.feature") *) :times 1)
     (mock (ecukes-new-message 2 "project.feature"))
     (ecukes-new-create-feature))))

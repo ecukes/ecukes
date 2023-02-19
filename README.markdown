@@ -1,4 +1,6 @@
-# Ecukes - Cucumber for Emacs [![Build Status](https://api.travis-ci.org/ecukes/ecukes.png?branch=master)](http://travis-ci.org/ecukes/ecukes)
+# Ecukes - Cucumber for Emacs
+[![Build Status](https://api.travis-ci.org/ecukes/ecukes.png?branch=master)](http://travis-ci.org/ecukes/ecukes)
+[![CI](https://github.com/ecukes/ecukes/actions/workflows/test.yml/badge.svg)](https://github.com/ecukes/ecukes/actions/workflows/test.yml)
 
 [<img src="http://img.youtube.com/vi/4VcH4uAQJZI/0.jpg">](https://www.youtube.com/watch?v=4VcH4uAQJZI)
 
@@ -649,9 +651,8 @@ possible). Ecukes is unit tested with a testing framework called Ert
 (Emacs Lisp Regression Testing). But most notably, it's tested using
 Ecukes! :)
 
-To run the tests, you have to install
-[Cask](https://github.com/rejeep/cask.el) if you haven't already. Once
-installed, run the `cask` command to install all dependencies.
+To run the tests, you have to install [Eask][Eask] if you haven't already. Once
+installed, run the `eask` command to install all dependencies.
 
 To run all tests, simply run the `make` command.
 
