@@ -54,7 +54,15 @@ jobs:
       with:
         version: 'snapshot'
 
-    - name: test
+    - name: Run tests (Unix)
+      if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
+      continue-on-error: ${{ matrix.emacs_version == 'snapshot' }}
       run: |
         make test
+      
+    - name: Run tests (Windows)
+      if: matrix.os == 'windows-latest'
       continue-on-error: ${{ matrix.emacs_version == 'snapshot' }}
+      run: |
+        make test-dos
+      

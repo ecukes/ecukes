@@ -8,6 +8,8 @@ FEATURES = $(wildcard features/*.feature features/reporters/*.feature)
 all: test
 
 test: clean-elc unit-test ecukes compile
+# XXX: There is no binary for Windwos yet, so we omit the `ecukes` test
+test-dos: clean-elc unit-test compile
 
 unit-test:
 	$(EASK) install-deps --dev
