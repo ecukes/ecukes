@@ -99,11 +99,11 @@
 ;;;; Options
 
 (defun ecukes-cli/with-doc ()
-  "Include docstring when printing steps with 'list-steps'."
+  "Include docstring when printing steps with `list-steps'."
   (setq ecukes-cli-with-doc t))
 
 (defun ecukes-cli/with-file ()
-  "Include file name when printing steps with 'list-steps'."
+  "Include file name when printing steps with `list-steps'."
   (setq ecukes-cli-with-file t))
 
 (defun ecukes-cli/verbose ()
