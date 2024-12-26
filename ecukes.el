@@ -1,8 +1,9 @@
 ;;; ecukes.el --- Cucumber for Emacs
 
 ;; Homepage: https://github.com/ecukes/ecukes
-;; Keywords: test
+;; Version: 0.7.0
 ;; Package-Requires: ((emacs "25") (commander "0.6.1") (espuds "0.2.2") (ansi "0.3.0") (dash "2.2.0") (s "1.8.0") (f "0.11.0"))
+;; Keywords: test
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
