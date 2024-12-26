@@ -1,5 +1,12 @@
 ;;; ecukes.el --- Cucumber for Emacs
-;;; License: GNU General Public License version 3, or (at your option) any later version
+
+;; Homepage: https://github.com/ecukes/ecukes
+;; Keywords: test
+;; Package-Requires: ((emacs "25") (commander "0.6.1") (espuds "0.2.2") (ansi "0.3.0") (dash "2.2.0") (s "1.8.0") (f "0.11.0"))
+
+;; SPDX-License-Identifier: GPL-3.0-or-later
+
+;; Code:
 
 (require 'f)
 
