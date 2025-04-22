@@ -1,3 +1,5 @@
+;; -*- mode: eask; lexical-binding: t -*-
+
 (package "ecukes"
          "0.7.0"
          "Cucumber for Emacs")
