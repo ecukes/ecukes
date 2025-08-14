@@ -26,7 +26,6 @@
 (depends-on "commander" "0.6.1")
 
 (development
- (depends-on "ansi")
  (depends-on "el-mock")
  (depends-on "ert-runner")
  (depends-on "ecukes"))
