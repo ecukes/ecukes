@@ -4,7 +4,7 @@
          "0.7.0"
          "Cucumber for Emacs")
 
-(website-url "http://github.com/ecukes/ecukes")
+(website-url "https://github.com/ecukes/ecukes")
 (keywords "test")
 
 (package-file "ecukes.el")
